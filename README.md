@@ -26,3 +26,7 @@
 ### Презентация
   - Презентация [PPTX](https://github.com/LatinMapsLives/GigaGuide/blob/main/presentation/GigaGuide%20%D0%9F%D1%80%D0%B5%D0%B7%D0%B5%D0%BD%D1%82%D0%B0%D1%86%D0%B8%D1%8F.pptx) [PDF](https://github.com/LatinMapsLives/GigaGuide/blob/main/presentation/GigaGuide%20%D0%9F%D1%80%D0%B5%D0%B7%D0%B5%D0%BD%D1%82%D0%B0%D1%86%D0%B8%D1%8F.pdf)
   - Видео выступления к 1 аттестации [Google drive](https://drive.google.com/file/d/1a5Djmm-MIyd6UD06F7tifHbb_PvEhg7m/view?usp=sharing)
+    
+### Предпроектное исследование
+  - SWOT-анализ [Google таблицы] (https://docs.google.com/spreadsheets/d/1jxUEAsRuFycXZ_KhZAxvzojmkwrpYNN-9BWg3r2WFRo/edit?usp=sharing)
+
