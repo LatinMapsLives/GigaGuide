@@ -3,8 +3,8 @@
 ## ТП 9.1
 
 ### Студенты:
-- [Бордюгова Людмила](https://github.com/Amelia-coder) - PM
-- [Роготовский Дмитрий](https://github.com/Hakyur) - Back-end разработчик
+- [Бордюгова Людмила](https://github.com/Amelia-coder) - PM, бизнес-аналитик, тимлид
+- [Роготовский Дмитрий](https://github.com/Hakyur) - Back-end разработчик, системный аналитик
 - [Ячный Марк](https://github.com/MarkYachnyy) - Front-end разработчик, дизайнер
 - [Демидов Артём](https://github.com/LatinMapsLives) - QA, DevOps
 
