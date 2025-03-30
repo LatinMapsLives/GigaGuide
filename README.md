@@ -28,5 +28,5 @@
   - Видео выступления к 1 аттестации [Google drive](https://drive.google.com/file/d/1a5Djmm-MIyd6UD06F7tifHbb_PvEhg7m/view?usp=sharing)
     
 ### Предпроектное исследование
-  - SWOT-анализ [Google таблицы] (https://docs.google.com/spreadsheets/d/1jxUEAsRuFycXZ_KhZAxvzojmkwrpYNN-9BWg3r2WFRo/edit?usp=sharing)
+  - SWOT-анализ [Google таблицы](https://docs.google.com/spreadsheets/d/1jxUEAsRuFycXZ_KhZAxvzojmkwrpYNN-9BWg3r2WFRo/edit?usp=sharing)
 
