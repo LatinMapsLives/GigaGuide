@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">GigaGuide</string>
+    <string name="home_screen_closest_to_you">Рядом с вами</string>
+    <string name="home_screen_popular">Популярное в городе</string>
+</resources>
