@@ -2,4 +2,8 @@
     <string name="app_name">GigaGuide</string>
     <string name="home_screen_closest_to_you">Рядом с вами</string>
     <string name="home_screen_popular">Популярное в городе</string>
+    <string name="nav_label_home">Главная</string>
+    <string name="nav_label_map">Карта</string>
+    <string name="nav_label_favorite">Избранное</string>
+    <string name="nav_label_profile">Профиль</string>
 </resources>

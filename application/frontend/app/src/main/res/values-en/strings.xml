@@ -3,4 +3,8 @@
     <string name="app_name">GigaGuide</string>
     <string name="home_screen_closest_to_you">Closest to you</string>
     <string name="home_screen_popular">Popular in your city</string>
+    <string name="nav_label_home">Home</string>
+    <string name="nav_label_map">Map</string>
+    <string name="nav_label_favorite">Favorite</string>
+    <string name="nav_label_profile">Profile</string>
 </resources>
