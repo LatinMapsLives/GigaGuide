@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -66,7 +67,7 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
                 .padding(20.dp)
         ) {
             Image(
-                imageVector = ImageVector.vectorResource(id = R.drawable.logo),
+                imageVector = if(!isSystemInDarkTheme()) ImageVector.vectorResource(id = R.drawable.logo) else ImageVector.vectorResource(id = R.drawable.logo_dark),
                 contentScale = ContentScale.Fit,
                 contentDescription = "logo",
                 modifier = Modifier.fillMaxHeight()
@@ -110,17 +111,20 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
         ) {
             Text(
                 stringResource(R.string.home_screen_closest_to_you),
-                style = MaterialTheme.typography.headlineSmall
+                style = MaterialTheme.typography.headlineSmall,
+                color = MaterialTheme.colorScheme.onBackground
             )
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.chevron_right),
                 modifier = Modifier.size(40.dp),
-                contentDescription = "right"
+                contentDescription = "right",
+                tint = MaterialTheme.colorScheme.onBackground
             )
         }
 
         var sights = homeViewModel.closestTours
         if (sights.isEmpty()) homeViewModel.loadClosestTours()
+
         Row(
             modifier = Modifier
                 .horizontalScroll(rememberScrollState())
@@ -144,12 +148,14 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
         ) {
             Text(
                 stringResource(R.string.home_screen_popular),
-                style = MaterialTheme.typography.headlineSmall
+                style = MaterialTheme.typography.headlineSmall,
+                color = MaterialTheme.colorScheme.onBackground
             )
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.chevron_right),
                 modifier = Modifier.size(40.dp),
-                contentDescription = "right"
+                contentDescription = "right",
+                tint = MaterialTheme.colorScheme.onBackground
             )
         }
 
@@ -219,14 +225,14 @@ fun SightTourThumbnailBox(value: SightTourThumbnail?) {
                 ) {
                     var paddingLeft = 15.dp
                     if(value == null){
-
                         Spacer(modifier = Modifier.padding(paddingValues = PaddingValues(start = paddingLeft)))
                         Spacer(modifier = Modifier.width(150.dp).height(24.dp).background(color = loadingColor))
                     } else{
                         Text(
                             value.name,
                             style = MaterialTheme.typography.titleMedium,
-                            modifier = Modifier.padding(paddingValues = PaddingValues(start = paddingLeft))
+                            modifier = Modifier.padding(paddingValues = PaddingValues(start = paddingLeft)),
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     }
 
@@ -243,12 +249,14 @@ fun SightTourThumbnailBox(value: SightTourThumbnail?) {
                             } else{
                                 Text(
                                     value.rating.toString(),
-                                    style = MaterialTheme.typography.titleSmall
+                                    style = MaterialTheme.typography.titleSmall,
+                                    color = MaterialTheme.colorScheme.onBackground
                                 )
                                 Icon(
                                     imageVector = Icons.Filled.Star,
                                     modifier = Modifier.size(20.dp),
-                                    contentDescription = "star icon"
+                                    contentDescription = "star icon",
+                                    tint = MaterialTheme.colorScheme.onBackground
                                 )
                             }
 
@@ -265,12 +273,14 @@ fun SightTourThumbnailBox(value: SightTourThumbnail?) {
                             } else {
                                 Text(
                                     value.proximity.toString(),
-                                    style = MaterialTheme.typography.titleSmall
+                                    style = MaterialTheme.typography.titleSmall,
+                                    color = MaterialTheme.colorScheme.onBackground
                                 )
                                 Icon(
                                     imageVector = Icons.Outlined.Place,
                                     modifier = Modifier.size(20.dp),
-                                    contentDescription = "proximity icon"
+                                    contentDescription = "proximity icon",
+                                    tint = MaterialTheme.colorScheme.onBackground
                                 )
                             }
                         }
