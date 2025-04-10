@@ -1,0 +1,191 @@
+package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.NavigationViewModel
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.ScreenName
+
+@Preview
+@Composable
+fun SettingsScreen(navigationViewModel: NavigationViewModel = NavigationViewModel()) {
+    GigaGuideMobileTheme {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = MaterialTheme.colorScheme.background),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            UserIcon(modifier = Modifier.padding(20.dp))
+            Text(
+                modifier = Modifier.padding(horizontal = 20.dp),
+                style = MaterialTheme.typography.titleLarge,
+                text = "Войдите в аккаунт и используйте все преимущества приложения!",
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Button(
+                modifier = Modifier
+                    .padding(vertical = 20.dp)
+                    .dropShadow(offsetX = 0.dp, offsetY = 0.dp, blur = 16.dp, shape = RoundedCornerShape(20.dp),
+                        color = MediumBlue
+                    ),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                    contentColor = White
+                ),
+                onClick = {navigationViewModel.currentScreen.value = ScreenName.LOGIN}
+            ) {
+                Text(
+                    text = "ВОЙТИ",
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.padding(vertical = 5.dp, horizontal = 60.dp)
+                )
+            }
+            Text(
+                text = "Настройки",
+                modifier = Modifier
+                    .padding(start = 20.dp, end = 20.dp, bottom = 20.dp)
+                    .fillMaxWidth(),
+                style = MaterialTheme.typography.headlineSmall,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            var buttons = listOf<SettingsButtonContent>(
+                SettingsButtonContent(
+                    icon = ImageVector.vectorResource(R.drawable.language),
+                    name = "Язык",
+                    screenName = null
+                ),
+                SettingsButtonContent(
+                    icon = ImageVector.vectorResource(R.drawable.moon),
+                    name = "Тема",
+                    screenName = null
+                )
+            )
+            for (btn in buttons) {
+                GradientSeparator(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 30.dp))
+                SettingsButton(
+                    icon = btn.icon,
+                    name = btn.name,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(15.dp)
+                )
+            }
+            GradientSeparator(modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 30.dp))
+        }
+    }
+
+}
+
+@Composable
+fun UserIcon(modifier: Modifier = Modifier) {
+    GigaGuideMobileTheme {
+        Box(
+            modifier = modifier
+                .size(85.dp)
+                .border(
+                    shape = CircleShape,
+                    width = 6.dp,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+                .clip(CircleShape)
+                .background(color = MaterialTheme.colorScheme.primary)
+        ) {
+            Icon(
+                modifier = Modifier.fillMaxSize(),
+                imageVector = ImageVector.vectorResource(R.drawable.person_outline),
+                tint = MaterialTheme.colorScheme.secondary,
+                contentDescription = "user icon"
+            )
+        }
+    }
+
+}
+
+@Composable
+fun GradientSeparator(modifier: Modifier) {
+    Spacer(
+        modifier = modifier
+            .height(1.dp)
+            .background(
+                brush = Brush.horizontalGradient(
+                    colorStops = arrayOf(
+                        0.0f to MaterialTheme.colorScheme.onBackground.copy(0f),
+                        0.5f to MaterialTheme.colorScheme.onBackground,
+                        1f to MaterialTheme.colorScheme.onBackground.copy(0f)
+                    )
+                )
+            )
+    )
+}
+
+@Composable
+fun SettingsButton(icon: ImageVector, name: String, modifier: Modifier) {
+    val iconSize = 35.dp
+    Row(modifier = modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Icon(
+            imageVector = icon,
+            contentDescription = "settings icon",
+            modifier = Modifier.size(iconSize),
+            tint = MaterialTheme.colorScheme.onBackground
+        )
+        Text(
+            text = name,
+            modifier = Modifier
+                .weight(1f)
+                .padding(horizontal = 10.dp),
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.onBackground
+
+        )
+        Icon(
+            imageVector = ImageVector.vectorResource(R.drawable.chevron_right),
+            contentDescription = "chevron right",
+            modifier = Modifier.size(iconSize),
+            tint = MaterialTheme.colorScheme.onBackground
+        )
+    }
+}
+
+private class SettingsButtonContent(
+    var icon: ImageVector,
+    var name: String,
+    var screenName: ScreenName?
+)
+
+//TODO: Add strings to resources

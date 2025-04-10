@@ -48,7 +48,6 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.SightTourThumbnail
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.LightGrey
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumGrey
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.HomeViewModel
 
@@ -67,7 +66,9 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
                 .padding(20.dp)
         ) {
             Image(
-                imageVector = if(!isSystemInDarkTheme()) ImageVector.vectorResource(id = R.drawable.logo) else ImageVector.vectorResource(id = R.drawable.logo_dark),
+                imageVector = if (!isSystemInDarkTheme()) ImageVector.vectorResource(id = R.drawable.logo) else ImageVector.vectorResource(
+                    id = R.drawable.logo_dark
+                ),
                 contentScale = ContentScale.Fit,
                 contentDescription = "logo",
                 modifier = Modifier.fillMaxHeight()
@@ -130,15 +131,18 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
                 .horizontalScroll(rememberScrollState())
                 .padding(vertical = 20.dp)
         ) {
-            if(homeViewModel.loading.value){
-                for(i in 0..2){
-                    SightTourThumbnailBox(null)
+            if (homeViewModel.loading.value) {
+                for (i in 0..2) {
+                    Spacer(Modifier.width(20.dp))
+                    LoadingThumbnailBox()
                 }
-            } else{
+            } else {
                 for (sight in sights) {
+                    Spacer(Modifier.width(20.dp))
                     SightTourThumbnailBox(sight)
                 }
             }
+            Spacer(Modifier.width(20.dp))
         }
 
 
@@ -164,16 +168,18 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
                 .horizontalScroll(rememberScrollState())
                 .padding(vertical = 20.dp)
         ) {
-            if(homeViewModel.loading.value){
-                for(i in 0..2){
-                    SightTourThumbnailBox(null)
+            if (homeViewModel.loading.value) {
+                for (i in 0..2) {
+                    Spacer(Modifier.width(20.dp))
+                    LoadingThumbnailBox()
                 }
-            } else{
+            } else {
                 for (sight in sights) {
+                    Spacer(Modifier.width(20.dp))
                     SightTourThumbnailBox(sight)
                 }
             }
-
+            Spacer(Modifier.width(20.dp))
         }
 
     }
@@ -181,11 +187,112 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
 }
 
 @Composable
-fun SightTourThumbnailBox(value: SightTourThumbnail?) {
-
-    Spacer(Modifier.width(20.dp))
-
+fun LoadingThumbnailBox() {
     var loadingColor: Color = LightGrey
+    val cornerSize = 10.dp
+    val spacerCornerSize = 5.dp
+    GigaGuideMobileTheme {
+
+        Box(
+            modifier = Modifier
+                .width(275.dp)
+                .dropShadow(
+                    offsetX = 0.dp,
+                    offsetY = 0.dp,
+                    blur = 16.dp,
+                    shape = RoundedCornerShape(cornerSize)
+                ),
+            contentAlignment = Alignment.TopCenter
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(
+                        width = 2.dp,
+                        color = MaterialTheme.colorScheme.secondary,
+                        shape = RoundedCornerShape(cornerSize)
+                    )
+                    .clip(RoundedCornerShape(cornerSize))
+                    .background(color = MaterialTheme.colorScheme.background)
+            ) {
+                Spacer(
+                    modifier = Modifier
+                        .aspectRatio(300f / 135)
+                        .fillMaxWidth(),
+                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(color = MaterialTheme.colorScheme.background),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    var paddingLeft = 15.dp
+
+                    Spacer(modifier = Modifier.padding(paddingValues = PaddingValues(start = paddingLeft)))
+                    Spacer(
+                        modifier = Modifier
+                            .width(150.dp)
+                            .height(24.dp)
+                            .clip(RoundedCornerShape(spacerCornerSize))
+                            .background(color = loadingColor)
+                    )
+
+                    Column {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(PaddingValues(top = 4.dp, end = 4.dp, bottom = 2.dp)),
+                            horizontalArrangement = Arrangement.End,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Spacer(
+                                modifier = Modifier
+                                    .width(50.dp)
+                                    .height(20.dp)
+                                    .clip(RoundedCornerShape(spacerCornerSize))
+                                    .background(color = loadingColor)
+                            )
+
+
+                        }
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(PaddingValues(top = 2.dp, end = 4.dp, bottom = 4.dp)),
+                            horizontalArrangement = Arrangement.End,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Spacer(
+                                modifier = Modifier
+                                    .width(50.dp)
+                                    .height(20.dp)
+                                    .clip(RoundedCornerShape(spacerCornerSize))
+                                    .background(color = loadingColor)
+                            )
+
+                        }
+                    }
+                }
+            }
+            Image(
+                modifier = Modifier
+                    .aspectRatio(300f / 135)
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(topStart = cornerSize, topEnd = cornerSize)),
+                painter = ColorPainter(loadingColor),
+                contentScale = ContentScale.Crop,
+                contentDescription = "jonkler",
+            )
+        }
+
+
+    }
+}
+
+@Composable
+fun SightTourThumbnailBox(value: SightTourThumbnail) {
+
     val cornerSize = 10.dp
     GigaGuideMobileTheme {
 
@@ -224,17 +331,14 @@ fun SightTourThumbnailBox(value: SightTourThumbnail?) {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     var paddingLeft = 15.dp
-                    if(value == null){
-                        Spacer(modifier = Modifier.padding(paddingValues = PaddingValues(start = paddingLeft)))
-                        Spacer(modifier = Modifier.width(150.dp).height(24.dp).background(color = loadingColor))
-                    } else{
-                        Text(
-                            value.name,
-                            style = MaterialTheme.typography.titleMedium,
-                            modifier = Modifier.padding(paddingValues = PaddingValues(start = paddingLeft)),
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
-                    }
+
+                    Text(
+                        value.name,
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(paddingValues = PaddingValues(start = paddingLeft)),
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+
 
                     Column {
                         Row(
@@ -244,21 +348,19 @@ fun SightTourThumbnailBox(value: SightTourThumbnail?) {
                             horizontalArrangement = Arrangement.End,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            if(value == null){
-                                Spacer(modifier = Modifier.width(50.dp).height(20.dp).background(color = loadingColor))
-                            } else{
-                                Text(
-                                    value.rating.toString(),
-                                    style = MaterialTheme.typography.titleSmall,
-                                    color = MaterialTheme.colorScheme.onBackground
-                                )
-                                Icon(
-                                    imageVector = Icons.Filled.Star,
-                                    modifier = Modifier.size(20.dp),
-                                    contentDescription = "star icon",
-                                    tint = MaterialTheme.colorScheme.onBackground
-                                )
-                            }
+
+                            Text(
+                                value.rating.toString(),
+                                style = MaterialTheme.typography.titleSmall,
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
+                            Icon(
+                                imageVector = Icons.Filled.Star,
+                                modifier = Modifier.size(20.dp),
+                                contentDescription = "star icon",
+                                tint = MaterialTheme.colorScheme.onBackground
+                            )
+
 
                         }
                         Row(
@@ -268,21 +370,19 @@ fun SightTourThumbnailBox(value: SightTourThumbnail?) {
                             horizontalArrangement = Arrangement.End,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            if(value == null) {
-                                Spacer(modifier = Modifier.width(50.dp).height(20.dp).background(color = loadingColor))
-                            } else {
-                                Text(
-                                    value.proximity.toString(),
-                                    style = MaterialTheme.typography.titleSmall,
-                                    color = MaterialTheme.colorScheme.onBackground
-                                )
-                                Icon(
-                                    imageVector = Icons.Outlined.Place,
-                                    modifier = Modifier.size(20.dp),
-                                    contentDescription = "proximity icon",
-                                    tint = MaterialTheme.colorScheme.onBackground
-                                )
-                            }
+
+                            Text(
+                                value.proximity.toString(),
+                                style = MaterialTheme.typography.titleSmall,
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
+                            Icon(
+                                imageVector = Icons.Outlined.Place,
+                                modifier = Modifier.size(20.dp),
+                                contentDescription = "proximity icon",
+                                tint = MaterialTheme.colorScheme.onBackground
+                            )
+
                         }
                     }
                 }
@@ -290,8 +390,9 @@ fun SightTourThumbnailBox(value: SightTourThumbnail?) {
             Image(
                 modifier = Modifier
                     .aspectRatio(300f / 135)
-                    .fillMaxWidth().clip(RoundedCornerShape(topStart = cornerSize, topEnd = cornerSize)),
-                painter = if(value == null) ColorPainter(loadingColor) else painterResource(R.drawable.jonkler),
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(topStart = cornerSize, topEnd = cornerSize)),
+                painter = painterResource(R.drawable.jonkler),
                 contentScale = ContentScale.Crop,
                 contentDescription = "jonkler",
             )

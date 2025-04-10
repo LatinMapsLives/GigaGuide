@@ -25,10 +25,14 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumGrey
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.HomeScreen
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.LoginScreen
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.SettingsScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.HomeViewModel
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.LoginViewModel
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.NavigationBarViewModel
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.NavigationViewModel
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.ScreenName
 
 
 class MainActivity : ComponentActivity() {
@@ -39,6 +43,8 @@ class MainActivity : ComponentActivity() {
         val homeViewModel: HomeViewModel = ViewModelProvider(this)[HomeViewModel::class]
         val navigationBarViewModel = ViewModelProvider(this)[NavigationBarViewModel::class]
         val navigationViewModel = ViewModelProvider(this)[NavigationViewModel::class]
+        val loginViewModel = ViewModelProvider(this)[LoginViewModel::class]
+
 
         setContent {
             GigaGuideMobileTheme {
@@ -47,15 +53,23 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize().background(color = MaterialTheme.colorScheme.background),
                     verticalArrangement = Arrangement.SpaceBetween
                 ) {
-                    HomeScreen(homeViewModel)
-                    BottomNavigationBar(navigationBarViewModel, navigationViewModel)
+                    when(navigationViewModel.currentScreen.value){
+                        ScreenName.HOME -> HomeScreen(homeViewModel)
+                        ScreenName.MAP -> HomeScreen(homeViewModel)
+                        ScreenName.FAVORITE -> HomeScreen(homeViewModel)
+                        ScreenName.SETTINGS -> SettingsScreen(navigationViewModel)
+                        ScreenName.LOGIN -> LoginScreen(loginViewModel = loginViewModel, navigationViewModel = navigationViewModel)
+                    }
+                    if(navigationViewModel.showNavigationBar){
+                        BottomNavigationBar(navigationBarViewModel, navigationViewModel)
+                    }
                 }
             }
         }
     }
 
-
 }
+
 
 @Composable
 fun BottomNavigationBar(
