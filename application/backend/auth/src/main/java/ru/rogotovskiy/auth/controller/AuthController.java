@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.rogotovskiy.auth.dto.JwtResponse;
+import ru.rogotovskiy.auth.dto.LoginRequest;
 import ru.rogotovskiy.auth.dto.RegistrationUserDto;
 import ru.rogotovskiy.auth.service.AuthService;
 
@@ -21,6 +23,14 @@ public class AuthController {
     public ResponseEntity<?> register(@RequestBody RegistrationUserDto registrationUserDto) {
         authService.register(registrationUserDto);
         return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body("Пользователь успешно создан");
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        return ResponseEntity.ok(new JwtResponse(
+                "Вы успешно авторизовались",
+                authService.authorize(loginRequest)
+        ));
     }
 
 }
