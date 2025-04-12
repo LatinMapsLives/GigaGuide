@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,7 +51,7 @@ fun SettingsScreen(navigationViewModel: NavigationViewModel = NavigationViewMode
             Text(
                 modifier = Modifier.padding(horizontal = 20.dp),
                 style = MaterialTheme.typography.titleLarge,
-                text = "Войдите в аккаунт и используйте все преимущества приложения!",
+                text = stringResource(R.string.settings_screen_all_advantages_header),
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onBackground
             )
@@ -67,13 +68,13 @@ fun SettingsScreen(navigationViewModel: NavigationViewModel = NavigationViewMode
                 onClick = {navigationViewModel.currentScreen.value = ScreenName.LOGIN}
             ) {
                 Text(
-                    text = "ВОЙТИ",
+                    text = stringResource(R.string.setting_screen_login_button_text),
                     style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier.padding(vertical = 5.dp, horizontal = 60.dp)
                 )
             }
             Text(
-                text = "Настройки",
+                text = stringResource(R.string.settings_screen_settings_header),
                 modifier = Modifier
                     .padding(start = 20.dp, end = 20.dp, bottom = 20.dp)
                     .fillMaxWidth(),
@@ -83,12 +84,12 @@ fun SettingsScreen(navigationViewModel: NavigationViewModel = NavigationViewMode
             var buttons = listOf<SettingsButtonContent>(
                 SettingsButtonContent(
                     icon = ImageVector.vectorResource(R.drawable.language),
-                    name = "Язык",
+                    name = stringResource(R.string.settings_screen_setting_name_language),
                     screenName = null
                 ),
                 SettingsButtonContent(
                     icon = ImageVector.vectorResource(R.drawable.moon),
-                    name = "Тема",
+                    name = stringResource(R.string.settings_screen_setting_name_theme),
                     screenName = null
                 )
             )

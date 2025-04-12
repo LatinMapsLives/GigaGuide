@@ -18,18 +18,16 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.Invisible
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
@@ -79,49 +77,23 @@ fun LoginScreen(
                 )
 
                 Text(
-                    "Войти в аккаунт",
+                    stringResource(R.string.login_screen_log_in_header),
                     style = MaterialTheme.typography.headlineMedium,
                     modifier = Modifier.padding(20.dp),
                     color = MaterialTheme.colorScheme.onBackground
                 )
-                TextField(
-                    value = loginViewModel.emailInput.value,
-                    onValueChange = { loginViewModel.emailInput.value = it },
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = MaterialTheme.colorScheme.primary,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.primary,
-                        focusedIndicatorColor = Invisible,
-                        unfocusedIndicatorColor = Invisible,
-                        cursorColor = MaterialTheme.colorScheme.onPrimaryContainer
-                    ),
-                    shape = RoundedCornerShape(10.dp),
-                    placeholder = {
-                        Text(
-                            "Электронная почта",
-                            color = MaterialTheme.colorScheme.onPrimaryContainer
-                        )
-                    },
+                LoginRegisterTextField(
                     modifier = Modifier.dropShadow(
                         offsetY = 0.dp,
                         offsetX = 0.dp,
                         blur = 16.dp,
                         color = MaterialTheme.colorScheme.onBackground.copy(0.25f)
-                    )
-                )
-                TextField(
-                    value = loginViewModel.passwordInput.value,
-                    onValueChange = { loginViewModel.passwordInput.value = it },
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = MaterialTheme.colorScheme.primary,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.primary,
-                        focusedIndicatorColor = Invisible,
-                        unfocusedIndicatorColor = Invisible,
-                        cursorColor = MaterialTheme.colorScheme.onPrimaryContainer
                     ),
-                    shape = RoundedCornerShape(10.dp),
-                    placeholder = {
-                        Text("Пароль", color = MaterialTheme.colorScheme.onPrimaryContainer)
-                    },
+                    value = loginViewModel.emailInput.value,
+                    hint = stringResource(R.string.login_screen_email_hint),
+                    onValueChange = { loginViewModel.emailInput.value = it }
+                )
+                LoginRegisterTextField(
                     modifier = Modifier
                         .padding(25.dp)
                         .dropShadow(
@@ -129,7 +101,10 @@ fun LoginScreen(
                             offsetX = 0.dp,
                             blur = 16.dp,
                             color = MaterialTheme.colorScheme.onBackground.copy(0.25f)
-                        )
+                        ),
+                    value = loginViewModel.passwordInput.value,
+                    hint = stringResource(R.string.login_screen_password_hint),
+                    onValueChange = { loginViewModel.passwordInput.value = it }
                 )
                 Button(
                     colors = ButtonDefaults.buttonColors(
@@ -139,14 +114,14 @@ fun LoginScreen(
                     onClick = {}
                 ) {
                     Text(
-                        text = "Войти",
+                        text = stringResource(R.string.login_screen_login_button_text),
                         style = MaterialTheme.typography.headlineSmall,
                         modifier = Modifier.padding(vertical = 5.dp, horizontal = 80.dp)
                     )
                 }
                 Row(modifier = Modifier.padding(top = 20.dp)) {
-                    Text("Нет аккаунта? ", color = MaterialTheme.colorScheme.onBackground)
-                    Text("Зарегистрироваться", color = MediumBlue)
+                    Text(stringResource(R.string.login_screen_no_account_question) + ' ', color = MaterialTheme.colorScheme.onBackground)
+                    Text(stringResource(R.string.login_screen_register_link), color = MediumBlue)
                 }
             }
         }

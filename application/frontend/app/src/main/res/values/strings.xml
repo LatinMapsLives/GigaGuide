@@ -6,4 +6,15 @@
     <string name="nav_label_map">Карта</string>
     <string name="nav_label_favorite">Избранное</string>
     <string name="nav_label_profile">Профиль</string>
+    <string name="login_screen_email_hint">Электронная почта</string>
+    <string name="login_screen_password_hint">Пароль</string>
+    <string name="login_screen_no_account_question">Нет аккаунта?</string>
+    <string name="login_screen_register_link">Зарегистрироваться</string>
+    <string name="login_screen_log_in_header">Войти в аккаунт</string>
+    <string name="login_screen_login_button_text">Войти</string>
+    <string name="settings_screen_all_advantages_header">Войдите в аккаунт и используйте все преимущества приложения!</string>
+    <string name="setting_screen_login_button_text">ВОЙТИ</string>
+    <string name="settings_screen_settings_header">Настройки</string>
+    <string name="settings_screen_setting_name_theme">Цветовая тема</string>
+    <string name="settings_screen_setting_name_language">Язык приложения</string>
 </resources>

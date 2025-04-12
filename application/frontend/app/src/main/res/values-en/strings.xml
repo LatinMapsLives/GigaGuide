@@ -7,4 +7,15 @@
     <string name="nav_label_map">Map</string>
     <string name="nav_label_favorite">Favorite</string>
     <string name="nav_label_profile">Profile</string>
+    <string name="login_screen_email_hint">Email</string>
+    <string name="login_screen_password_hint">Password</string>
+    <string name="login_screen_no_account_question">No account?</string>
+    <string name="login_screen_register_link">Register</string>
+    <string name="login_screen_log_in_header">Log into account</string>
+    <string name="login_screen_login_button_text">Log in</string>
+    <string name="settings_screen_all_advantages_header">Log into account and make use of all advantages of the app!</string>
+    <string name="setting_screen_login_button_text">LOG IN</string>
+    <string name="settings_screen_settings_header">Settings</string>
+    <string name="settings_screen_setting_name_theme">Color theme</string>
+    <string name="settings_screen_setting_name_language">App language</string>
 </resources>
