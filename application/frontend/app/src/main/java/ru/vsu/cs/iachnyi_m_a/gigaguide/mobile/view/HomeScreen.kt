@@ -49,10 +49,10 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.LightGrey
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.HomeViewModel
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.HomeScreenViewModel
 
 @Composable
-fun HomeScreen(homeViewModel: HomeViewModel) {
+fun HomeScreen(homeScreenViewModel: HomeScreenViewModel) {
 
     Column(
         Modifier
@@ -123,15 +123,15 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
             )
         }
 
-        var sights = homeViewModel.closestTours
-        if (sights.isEmpty()) homeViewModel.loadClosestTours()
+        var sights = homeScreenViewModel.closestTours
+        if (sights.isEmpty()) homeScreenViewModel.loadClosestTours()
 
         Row(
             modifier = Modifier
                 .horizontalScroll(rememberScrollState())
                 .padding(vertical = 20.dp)
         ) {
-            if (homeViewModel.loading.value) {
+            if (homeScreenViewModel.loading.value) {
                 for (i in 0..2) {
                     Spacer(Modifier.width(20.dp))
                     LoadingThumbnailBox()
@@ -168,7 +168,7 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
                 .horizontalScroll(rememberScrollState())
                 .padding(vertical = 20.dp)
         ) {
-            if (homeViewModel.loading.value) {
+            if (homeScreenViewModel.loading.value) {
                 for (i in 0..2) {
                     Spacer(Modifier.width(20.dp))
                     LoadingThumbnailBox()

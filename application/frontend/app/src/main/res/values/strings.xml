@@ -17,4 +17,10 @@
     <string name="settings_screen_settings_header">Настройки</string>
     <string name="settings_screen_setting_name_theme">Цветовая тема</string>
     <string name="settings_screen_setting_name_language">Язык приложения</string>
+    <string name="register_screen_hint_username">Имя пользователя</string>
+    <string name="register_screen_hint_email">Электронная почта</string>
+    <string name="register_screen_hint_password">Пароль</string>
+    <string name="register_screen_hint_confirm_password">Подтвердите пароль</string>
+    <string name="register_screen_button_text">Регистрация</string>
+    <string name="register_screen_header">Регистрация аккаунта</string>
 </resources>

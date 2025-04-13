@@ -1,13 +1,12 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view
 
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,17 +28,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.LoginScreenViewModel
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.NavigationViewModel
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.RegisterScreenViewModel
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.ScreenName
 
 @Preview
 @Composable
-fun LoginScreen(
-    loginScreenViewModel: LoginScreenViewModel = LoginScreenViewModel(),
+fun RegisterScreen(
+    registerScreenViewModel: RegisterScreenViewModel = RegisterScreenViewModel(),
     navigationViewModel: NavigationViewModel = NavigationViewModel()
 ) {
     GigaGuideMobileTheme {
@@ -50,7 +48,7 @@ fun LoginScreen(
             contentAlignment = Alignment.Center
         ) {
             Button(
-                onClick = { navigationViewModel.currentScreen.value = ScreenName.SETTINGS },
+                onClick = { navigationViewModel.currentScreen.value = ScreenName.LOGIN },
                 contentPadding = PaddingValues(6.dp),
                 modifier = Modifier
                     .align(Alignment.TopStart)
@@ -78,7 +76,7 @@ fun LoginScreen(
                 )
 
                 Text(
-                    stringResource(R.string.login_screen_log_in_header),
+                    stringResource(R.string.register_screen_header),
                     style = MaterialTheme.typography.headlineMedium,
                     modifier = Modifier.padding(20.dp),
                     color = MaterialTheme.colorScheme.onBackground
@@ -90,9 +88,9 @@ fun LoginScreen(
                         blur = 16.dp,
                         color = MaterialTheme.colorScheme.onBackground.copy(0.25f)
                     ),
-                    value = loginScreenViewModel.emailInput.value,
-                    hint = stringResource(R.string.login_screen_email_hint),
-                    onValueChange = { loginScreenViewModel.emailInput.value = it }
+                    value = registerScreenViewModel.userNameInput.value,
+                    hint = stringResource(R.string.register_screen_hint_username),
+                    onValueChange = { registerScreenViewModel.userNameInput.value = it }
                 )
                 LoginRegisterTextField(
                     modifier = Modifier
@@ -103,9 +101,33 @@ fun LoginScreen(
                             blur = 16.dp,
                             color = MaterialTheme.colorScheme.onBackground.copy(0.25f)
                         ),
-                    value = loginScreenViewModel.passwordInput.value,
-                    hint = stringResource(R.string.login_screen_password_hint),
-                    onValueChange = { loginScreenViewModel.passwordInput.value = it }
+                    value = registerScreenViewModel.emailInput.value,
+                    hint = stringResource(R.string.register_screen_hint_email),
+                    onValueChange = { registerScreenViewModel.emailInput.value = it }
+                )
+                LoginRegisterTextField(
+                    modifier = Modifier.dropShadow(
+                        offsetY = 0.dp,
+                        offsetX = 0.dp,
+                        blur = 16.dp,
+                        color = MaterialTheme.colorScheme.onBackground.copy(0.25f)
+                    ),
+                    value = registerScreenViewModel.passwordInput.value,
+                    hint = stringResource(R.string.register_screen_hint_password),
+                    onValueChange = { registerScreenViewModel.passwordInput.value = it }
+                )
+                LoginRegisterTextField(
+                    modifier = Modifier
+                        .padding(25.dp)
+                        .dropShadow(
+                            offsetY = 0.dp,
+                            offsetX = 0.dp,
+                            blur = 16.dp,
+                            color = MaterialTheme.colorScheme.onBackground.copy(0.25f)
+                        ),
+                    value = registerScreenViewModel.passwordConfirmInput.value,
+                    hint = stringResource(R.string.register_screen_hint_confirm_password),
+                    onValueChange = { registerScreenViewModel.passwordConfirmInput.value = it }
                 )
                 Button(
                     colors = ButtonDefaults.buttonColors(
@@ -115,15 +137,10 @@ fun LoginScreen(
                     onClick = {}
                 ) {
                     Text(
-                        text = stringResource(R.string.login_screen_login_button_text),
+                        text = stringResource(R.string.register_screen_button_text),
                         style = MaterialTheme.typography.headlineSmall,
-                        modifier = Modifier.padding(vertical = 5.dp, horizontal = 80.dp)
+                        modifier = Modifier.padding(vertical = 5.dp, horizontal = 50.dp)
                     )
-                }
-                Row(modifier = Modifier.padding(top = 20.dp)) {
-                    Text(stringResource(R.string.login_screen_no_account_question) + ' ', color = MaterialTheme.colorScheme.onBackground)
-                    Text(stringResource(R.string.login_screen_register_link), color = MediumBlue, modifier = Modifier.clickable(onClick = {navigationViewModel.currentScreen.value =
-                        ScreenName.REGISTER}))
                 }
             }
         }

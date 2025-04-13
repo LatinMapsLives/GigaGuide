@@ -8,7 +8,7 @@ import kotlinx.coroutines.launch
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.SightTourThumbnail
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.SightRepository
 
-class HomeViewModel : ViewModel() {
+class HomeScreenViewModel : ViewModel() {
 
     val sightRepository = SightRepository()
 

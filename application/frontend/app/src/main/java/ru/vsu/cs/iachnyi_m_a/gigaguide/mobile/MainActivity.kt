@@ -26,12 +26,14 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumGrey
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.HomeScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.LoginScreen
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.RegisterScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.SettingsScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.HomeViewModel
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.LoginViewModel
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.HomeScreenViewModel
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.LoginScreenViewModel
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.NavigationBarViewModel
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.NavigationViewModel
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.RegisterScreenViewModel
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.ScreenName
 
 
@@ -40,11 +42,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val homeViewModel: HomeViewModel = ViewModelProvider(this)[HomeViewModel::class]
+        val homeScreenViewModel: HomeScreenViewModel = ViewModelProvider(this)[HomeScreenViewModel::class]
         val navigationBarViewModel = ViewModelProvider(this)[NavigationBarViewModel::class]
         val navigationViewModel = ViewModelProvider(this)[NavigationViewModel::class]
-        val loginViewModel = ViewModelProvider(this)[LoginViewModel::class]
-
+        val loginScreenViewModel = ViewModelProvider(this)[LoginScreenViewModel::class]
+        val registerScreenViewModel = ViewModelProvider(this)[RegisterScreenViewModel::class]
 
         setContent {
             GigaGuideMobileTheme {
@@ -54,11 +56,12 @@ class MainActivity : ComponentActivity() {
                     verticalArrangement = Arrangement.SpaceBetween
                 ) {
                     when(navigationViewModel.currentScreen.value){
-                        ScreenName.HOME -> HomeScreen(homeViewModel)
-                        ScreenName.MAP -> HomeScreen(homeViewModel)
-                        ScreenName.FAVORITE -> HomeScreen(homeViewModel)
+                        ScreenName.HOME -> HomeScreen(homeScreenViewModel)
+                        ScreenName.MAP -> HomeScreen(homeScreenViewModel)
+                        ScreenName.FAVORITE -> HomeScreen(homeScreenViewModel)
                         ScreenName.SETTINGS -> SettingsScreen(navigationViewModel)
-                        ScreenName.LOGIN -> LoginScreen(loginViewModel = loginViewModel, navigationViewModel = navigationViewModel)
+                        ScreenName.LOGIN -> LoginScreen(loginScreenViewModel = loginScreenViewModel, navigationViewModel = navigationViewModel)
+                        ScreenName.REGISTER -> RegisterScreen(registerScreenViewModel = registerScreenViewModel, navigationViewModel = navigationViewModel)
                     }
                     if(navigationViewModel.showNavigationBar){
                         BottomNavigationBar(navigationBarViewModel, navigationViewModel)

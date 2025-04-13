@@ -5,5 +5,6 @@ enum class ScreenName {
     MAP,
     FAVORITE,
     SETTINGS,
-    LOGIN
+    LOGIN,
+    REGISTER
 }
