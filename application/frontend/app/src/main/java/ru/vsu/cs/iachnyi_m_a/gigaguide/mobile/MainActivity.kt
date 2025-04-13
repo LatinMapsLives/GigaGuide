@@ -24,11 +24,13 @@ import androidx.lifecycle.ViewModelProvider
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumGrey
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.FavoriteScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.HomeScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.LoginScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.RegisterScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.SettingsScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.FavoriteScreenViewModel
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.HomeScreenViewModel
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.LoginScreenViewModel
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.NavigationBarViewModel
@@ -42,28 +44,42 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val homeScreenViewModel: HomeScreenViewModel = ViewModelProvider(this)[HomeScreenViewModel::class]
+        val homeScreenViewModel: HomeScreenViewModel =
+            ViewModelProvider(this)[HomeScreenViewModel::class]
         val navigationBarViewModel = ViewModelProvider(this)[NavigationBarViewModel::class]
         val navigationViewModel = ViewModelProvider(this)[NavigationViewModel::class]
         val loginScreenViewModel = ViewModelProvider(this)[LoginScreenViewModel::class]
         val registerScreenViewModel = ViewModelProvider(this)[RegisterScreenViewModel::class]
+        val favoriteScreenViewModel = ViewModelProvider(this)[FavoriteScreenViewModel::class]
 
         setContent {
             GigaGuideMobileTheme {
                 Column(
                     modifier = Modifier
-                        .fillMaxSize().background(color = MaterialTheme.colorScheme.background),
+                        .fillMaxSize()
+                        .background(color = MaterialTheme.colorScheme.background),
                     verticalArrangement = Arrangement.SpaceBetween
                 ) {
-                    when(navigationViewModel.currentScreen.value){
-                        ScreenName.HOME -> HomeScreen(homeScreenViewModel)
-                        ScreenName.MAP -> HomeScreen(homeScreenViewModel)
-                        ScreenName.FAVORITE -> HomeScreen(homeScreenViewModel)
-                        ScreenName.SETTINGS -> SettingsScreen(navigationViewModel)
-                        ScreenName.LOGIN -> LoginScreen(loginScreenViewModel = loginScreenViewModel, navigationViewModel = navigationViewModel)
-                        ScreenName.REGISTER -> RegisterScreen(registerScreenViewModel = registerScreenViewModel, navigationViewModel = navigationViewModel)
+                    when (navigationViewModel.currentScreen.value) {
+                        ScreenName.HOME -> HomeScreen(homeScreenViewModel = homeScreenViewModel)
+                        ScreenName.MAP -> HomeScreen(homeScreenViewModel = homeScreenViewModel)
+                        ScreenName.FAVORITE -> FavoriteScreen(
+                            favoriteScreenViewModel = favoriteScreenViewModel,
+                            navigationViewModel = navigationViewModel
+                        )
+
+                        ScreenName.SETTINGS -> SettingsScreen(navigationViewModel = navigationViewModel)
+                        ScreenName.LOGIN -> LoginScreen(
+                            loginScreenViewModel = loginScreenViewModel,
+                            navigationViewModel = navigationViewModel
+                        )
+
+                        ScreenName.REGISTER -> RegisterScreen(
+                            registerScreenViewModel = registerScreenViewModel,
+                            navigationViewModel = navigationViewModel
+                        )
                     }
-                    if(navigationViewModel.showNavigationBar){
+                    if (navigationViewModel.showNavigationBar) {
                         BottomNavigationBar(navigationBarViewModel, navigationViewModel)
                     }
                 }
@@ -80,7 +96,12 @@ fun BottomNavigationBar(
     navigationViewModel: NavigationViewModel
 ) {
 
-    NavigationBar(modifier = Modifier.background(MaterialTheme.colorScheme.background).dropShadow(offsetX = 0.dp, offsetY = 0.dp, blur = 16.dp), containerColor = MaterialTheme.colorScheme.background) {
+    NavigationBar(
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.background)
+            .dropShadow(offsetX = 0.dp, offsetY = 0.dp, blur = 16.dp),
+        containerColor = MaterialTheme.colorScheme.background
+    ) {
         navigationBarViewModel.iconIds.forEachIndexed { i, iconId ->
             NavigationBarItem(
                 onClick = {

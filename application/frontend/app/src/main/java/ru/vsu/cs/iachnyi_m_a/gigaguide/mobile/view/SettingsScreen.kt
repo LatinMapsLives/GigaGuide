@@ -58,14 +58,18 @@ fun SettingsScreen(navigationViewModel: NavigationViewModel = NavigationViewMode
             Button(
                 modifier = Modifier
                     .padding(vertical = 20.dp)
-                    .dropShadow(offsetX = 0.dp, offsetY = 0.dp, blur = 16.dp, shape = RoundedCornerShape(20.dp),
+                    .dropShadow(
+                        offsetX = 0.dp,
+                        offsetY = 0.dp,
+                        blur = 16.dp,
+                        shape = RoundedCornerShape(20.dp),
                         color = MediumBlue
                     ),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.secondary,
                     contentColor = White
                 ),
-                onClick = {navigationViewModel.currentScreen.value = ScreenName.LOGIN}
+                onClick = { navigationViewModel.currentScreen.value = ScreenName.LOGIN }
             ) {
                 Text(
                     text = stringResource(R.string.setting_screen_login_button_text),
@@ -94,9 +98,11 @@ fun SettingsScreen(navigationViewModel: NavigationViewModel = NavigationViewMode
                 )
             )
             for (btn in buttons) {
-                GradientSeparator(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 30.dp))
+                GradientSeparator(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 30.dp)
+                )
                 SettingsButton(
                     icon = btn.icon,
                     name = btn.name,
@@ -105,9 +111,11 @@ fun SettingsScreen(navigationViewModel: NavigationViewModel = NavigationViewMode
                         .padding(15.dp)
                 )
             }
-            GradientSeparator(modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 30.dp))
+            GradientSeparator(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 30.dp)
+            )
         }
     }
 

@@ -66,14 +66,13 @@ fun LoginRegisterTextField(
 }
 
 @Composable
-fun SightTourThumbnailBox(value: SightTourThumbnail) {
+fun SightTourThumbnailBox(modifier: Modifier, value: SightTourThumbnail) {
 
     val cornerSize = 10.dp
     GigaGuideMobileTheme {
 
         Box(
-            modifier = Modifier
-                .width(275.dp)
+            modifier = modifier
                 .dropShadow(
                     offsetX = 0.dp,
                     offsetY = 0.dp,
@@ -179,14 +178,14 @@ fun SightTourThumbnailBox(value: SightTourThumbnail) {
 }
 
 @Composable
-fun LoadingThumbnailBox() {
+fun LoadingThumbnailBox(modifier: Modifier) {
     var loadingColor: Color = LightGrey
     val cornerSize = 10.dp
     val spacerCornerSize = 5.dp
     GigaGuideMobileTheme {
 
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .width(275.dp)
                 .dropShadow(
                     offsetX = 0.dp,

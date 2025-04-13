@@ -1,12 +1,9 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -24,8 +21,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -34,19 +29,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.SightTourThumbnail
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.LightGrey
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.HomeScreenViewModel
@@ -134,12 +123,12 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel) {
             if (homeScreenViewModel.loading.value) {
                 for (i in 0..2) {
                     Spacer(Modifier.width(20.dp))
-                    LoadingThumbnailBox()
+                    LoadingThumbnailBox(modifier = Modifier.width(275.dp))
                 }
             } else {
                 for (sight in sights) {
                     Spacer(Modifier.width(20.dp))
-                    SightTourThumbnailBox(sight)
+                    SightTourThumbnailBox(modifier = Modifier.width(275.dp), value = sight)
                 }
             }
             Spacer(Modifier.width(20.dp))
@@ -171,12 +160,12 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel) {
             if (homeScreenViewModel.loading.value) {
                 for (i in 0..2) {
                     Spacer(Modifier.width(20.dp))
-                    LoadingThumbnailBox()
+                    LoadingThumbnailBox(modifier = Modifier.width(275.dp))
                 }
             } else {
                 for (sight in sights) {
                     Spacer(Modifier.width(20.dp))
-                    SightTourThumbnailBox(sight)
+                    SightTourThumbnailBox(modifier = Modifier.width(275.dp), value = sight)
                 }
             }
             Spacer(Modifier.width(20.dp))

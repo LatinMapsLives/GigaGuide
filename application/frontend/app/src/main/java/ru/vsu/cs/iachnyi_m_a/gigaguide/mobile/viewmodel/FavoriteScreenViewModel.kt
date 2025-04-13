@@ -1,4 +1,8 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel
 
-class FavoriteScreenViewModel {
+import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.ViewModel
+
+class FavoriteScreenViewModel: ViewModel(){
+    var isAuthorized = mutableStateOf(false)
 }

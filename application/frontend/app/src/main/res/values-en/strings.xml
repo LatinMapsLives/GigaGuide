@@ -24,4 +24,5 @@
     <string name="register_screen_hint_confirm_password">Confirm password</string>
     <string name="register_screen_button_text">Register</string>
     <string name="register_screen_header">Register an account</string>
+    <string name="favorite_screen_log_in_button_text">LOG IN</string>
 </resources>
