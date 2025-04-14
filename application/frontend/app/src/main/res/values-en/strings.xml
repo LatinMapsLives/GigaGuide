@@ -24,5 +24,8 @@
     <string name="register_screen_hint_confirm_password">Confirm password</string>
     <string name="register_screen_button_text">Register</string>
     <string name="register_screen_header">Register an account</string>
+    <string name="favorite_screen_label_log_in_to_use">Adding places and tours to favorites is availabel to authorized users only</string>
     <string name="favorite_screen_log_in_button_text">LOG IN</string>
+    <string name="favorite_screen_header">Favorites</string>
+    <string name="favorite_screen_header_empty">The favorites list is currently empty</string>
 </resources>

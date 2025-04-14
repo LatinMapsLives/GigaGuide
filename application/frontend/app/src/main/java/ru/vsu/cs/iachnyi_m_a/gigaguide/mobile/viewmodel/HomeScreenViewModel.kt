@@ -11,8 +11,6 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.SightRepository
 class HomeScreenViewModel : ViewModel() {
 
     val sightRepository = SightRepository()
-
-
     var closestTours = mutableStateListOf<SightTourThumbnail>()
     var loading = mutableStateOf<Boolean>(false)
 
@@ -25,4 +23,5 @@ class HomeScreenViewModel : ViewModel() {
             loading.value = false;
         }
     }
+
 }

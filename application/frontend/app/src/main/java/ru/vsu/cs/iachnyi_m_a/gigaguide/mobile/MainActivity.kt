@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Icon
@@ -14,6 +15,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -54,11 +56,11 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             GigaGuideMobileTheme {
-                Column(
+                Box(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(color = MaterialTheme.colorScheme.background),
-                    verticalArrangement = Arrangement.SpaceBetween
+                    contentAlignment = Alignment.TopCenter
                 ) {
                     when (navigationViewModel.currentScreen.value) {
                         ScreenName.HOME -> HomeScreen(homeScreenViewModel = homeScreenViewModel)
@@ -80,7 +82,7 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     if (navigationViewModel.showNavigationBar) {
-                        BottomNavigationBar(navigationBarViewModel, navigationViewModel)
+                        BottomNavigationBar(modifier = Modifier.align(Alignment.BottomCenter), navigationBarViewModel=navigationBarViewModel, navigationViewModel=navigationViewModel)
                     }
                 }
             }
@@ -92,12 +94,13 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun BottomNavigationBar(
+    modifier: Modifier,
     navigationBarViewModel: NavigationBarViewModel,
     navigationViewModel: NavigationViewModel
 ) {
 
     NavigationBar(
-        modifier = Modifier
+        modifier = modifier
             .background(MaterialTheme.colorScheme.background)
             .dropShadow(offsetX = 0.dp, offsetY = 0.dp, blur = 16.dp),
         containerColor = MaterialTheme.colorScheme.background

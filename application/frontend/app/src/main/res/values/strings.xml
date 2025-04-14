@@ -25,4 +25,6 @@
     <string name="register_screen_header">Регистрация аккаунта</string>
     <string name="favorite_screen_label_log_in_to_use">Добавление мест и туров в избранное доступно только зарегистрированным пользователям</string>
     <string name="favorite_screen_log_in_button_text">ВОЙТИ</string>
+    <string name="favorite_screen_header">Избранное</string>
+    <string name="favorite_screen_header_empty">На данный момент список избранного пуст</string>
 </resources>

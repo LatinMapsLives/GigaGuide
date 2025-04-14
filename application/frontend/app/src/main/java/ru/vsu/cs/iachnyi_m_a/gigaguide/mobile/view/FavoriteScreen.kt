@@ -2,9 +2,14 @@ package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -44,7 +49,9 @@ fun FavoriteScreen(
                     imageVector = ImageVector.vectorResource(R.drawable.bookmark),
                     tint = MaterialTheme.colorScheme.secondary,
                     contentDescription = "favorite icon",
-                    modifier = Modifier.padding(20.dp).size(100.dp)
+                    modifier = Modifier
+                        .padding(20.dp)
+                        .size(100.dp)
                 )
                 Text(
                     text = stringResource(R.string.favorite_screen_label_log_in_to_use),
@@ -76,6 +83,51 @@ fun FavoriteScreen(
                 }
             }
 
+        } else {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
+                    .background(
+                        MaterialTheme.colorScheme.background
+                    )
+                    .padding(20.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.favorite_screen_header),
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    textAlign = TextAlign.Left,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                var favoriteSights = favoriteScreenViewModel.favoriteSightTourThumbnails
+                if (favoriteScreenViewModel.needToLoad.value && !(favoriteScreenViewModel.loading.value)) favoriteScreenViewModel.loadFavorites()
+
+                Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                    if (favoriteScreenViewModel.loading.value) {
+                        for (i in 0..3) {
+                            Spacer(modifier = Modifier.height(30.dp))
+                            LoadingThumbnailBox(modifier = Modifier.fillMaxWidth())
+                        }
+                    } else if (!favoriteSights.isEmpty()) {
+                        for (thumbnail in favoriteScreenViewModel.favoriteSightTourThumbnails) {
+                            Spacer(modifier = Modifier.height(30.dp))
+                            SightTourThumbnailBox(
+                                modifier = Modifier.fillMaxWidth(),
+                                value = thumbnail
+                            )
+                        }
+                    } else {
+                        Text(
+                            text=stringResource(R.string.favorite_screen_header_empty),
+                            modifier = Modifier.padding(top = 20.dp),
+                            style = MaterialTheme.typography.headlineSmall,
+                            textAlign = TextAlign.Center,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(100.dp))
+                }
+            }
         }
     }
 

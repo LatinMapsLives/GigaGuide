@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 
 class LoginScreenViewModel: ViewModel() {
+
     var emailInput = mutableStateOf<String>("")
     var passwordInput = mutableStateOf<String>("")
 }
