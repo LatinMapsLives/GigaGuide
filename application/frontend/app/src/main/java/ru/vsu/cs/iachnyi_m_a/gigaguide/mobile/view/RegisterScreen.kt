@@ -26,19 +26,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.LoginScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.NavigationViewModel
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.RegisterScreenViewModel
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.ScreenName
 
-@Preview
 @Composable
 fun RegisterScreen(
     registerScreenViewModel: RegisterScreenViewModel = RegisterScreenViewModel(),
-    navigationViewModel: NavigationViewModel = NavigationViewModel()
+    navController: NavController
 ) {
     GigaGuideMobileTheme {
         Box(
@@ -48,7 +48,7 @@ fun RegisterScreen(
             contentAlignment = Alignment.Center
         ) {
             Button(
-                onClick = { navigationViewModel.currentScreen.value = ScreenName.LOGIN },
+                onClick = { navController.popBackStack() },
                 contentPadding = PaddingValues(6.dp),
                 modifier = Modifier
                     .align(Alignment.TopStart)

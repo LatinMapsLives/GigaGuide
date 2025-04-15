@@ -6,7 +6,7 @@
     <string name="nav_label_home">Home</string>
     <string name="nav_label_map">Map</string>
     <string name="nav_label_favorite">Favorite</string>
-    <string name="nav_label_profile">Profile</string>
+    <string name="nav_label_settings">Settings</string>
     <string name="login_screen_email_hint">Email</string>
     <string name="login_screen_password_hint">Password</string>
     <string name="login_screen_no_account_question">No account?</string>

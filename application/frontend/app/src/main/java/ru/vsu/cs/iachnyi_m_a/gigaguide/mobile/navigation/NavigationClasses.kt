@@ -1,0 +1,24 @@
+package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation
+
+import kotlinx.serialization.Serializable
+
+interface ScreenObject
+
+@Serializable
+object HomeScreenObject
+@Serializable
+object FavoriteScreenObject
+@Serializable
+object SettingsScreenObject
+@Serializable
+object LoginScreenObject
+@Serializable
+object RegisterScreenObject
+@Serializable
+data class SightScreenClass(
+    val sightId: Long
+)
+@Serializable
+data class TourScreenClass(
+    val tourId: Long
+)

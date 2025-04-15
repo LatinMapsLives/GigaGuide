@@ -29,17 +29,17 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.LoginScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.NavigationViewModel
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.ScreenName
 
-@Preview
 @Composable
-fun SettingsScreen(navigationViewModel: NavigationViewModel = NavigationViewModel()) {
+fun SettingsScreen(navController: NavController) {
     GigaGuideMobileTheme {
         Column(
             modifier = Modifier
@@ -69,7 +69,7 @@ fun SettingsScreen(navigationViewModel: NavigationViewModel = NavigationViewMode
                     containerColor = MaterialTheme.colorScheme.secondary,
                     contentColor = White
                 ),
-                onClick = { navigationViewModel.currentScreen.value = ScreenName.LOGIN }
+                onClick = { navController.navigate(LoginScreenObject) }
             ) {
                 Text(
                     text = stringResource(R.string.setting_screen_login_button_text),

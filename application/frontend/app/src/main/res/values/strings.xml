@@ -5,7 +5,7 @@
     <string name="nav_label_home">Главная</string>
     <string name="nav_label_map">Карта</string>
     <string name="nav_label_favorite">Избранное</string>
-    <string name="nav_label_profile">Профиль</string>
+    <string name="nav_label_settings">Настройки</string>
     <string name="login_screen_email_hint">Электронная почта</string>
     <string name="login_screen_password_hint">Пароль</string>
     <string name="login_screen_no_account_question">Нет аккаунта?</string>
