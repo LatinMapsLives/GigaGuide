@@ -14,7 +14,7 @@ class FavoriteScreenViewModel : ViewModel() {
     var favoriteSightTourThumbnails = mutableStateListOf<SightTourThumbnail>()
     var loading = mutableStateOf(false)
     var needToLoad = mutableStateOf(true)
-    var favoriteRepository: FavoriteSightsRepository = FavoriteSightsRepository();
+    var favoriteRepository: FavoriteSightsRepository = FavoriteSightsRepository()
 
     fun loadFavorites() {
         loading.value = true;

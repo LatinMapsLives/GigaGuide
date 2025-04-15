@@ -104,7 +104,7 @@ fun FavoriteScreen(
 
                 Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                     if (favoriteScreenViewModel.loading.value) {
-                        for (i in 0..3) {
+                        for (i in 0..2) {
                             Spacer(modifier = Modifier.height(30.dp))
                             LoadingThumbnailBox(modifier = Modifier.fillMaxWidth())
                         }
