@@ -56,4 +56,17 @@ public class TourController {
     public ResponseEntity<?> searchTours(@RequestParam(required = false) String name) {
         return ResponseEntity.ok(tourService.searchTours(name));
     }
+
+    @GetMapping("/filter")
+    public ResponseEntity<?> filterTours(
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) Integer minDuration,
+            @RequestParam(required = false) Integer maxDuration,
+            @RequestParam(required = false) Double minDistance,
+            @RequestParam(required = false) Double maxDistance
+    ) {
+        return ResponseEntity.ok(
+                tourService.filterTours(category, minDuration, maxDuration, minDistance, maxDistance)
+        );
+    }
 }
