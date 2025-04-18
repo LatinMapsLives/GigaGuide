@@ -55,4 +55,9 @@ public class SightController {
         sightService.deleteSight(id);
         return ResponseEntity.ok(new SuccessResponse("Достопримечательность успешно удалена"));
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchSights(@RequestParam(required = false) String name) {
+        return ResponseEntity.ok(sightService.searchSights(name));
+    }
 }

@@ -63,4 +63,10 @@ public class TourService {
         Tour tour = getTourById(id);
         tourRepository.delete(tour);
     }
+
+    public List<TourDto> searchTours(String name) {
+        return tourRepository.findByNameContainingIgnoreCase(name).stream()
+                .map(tourMapper::toDto)
+                .toList();
+    }
 }

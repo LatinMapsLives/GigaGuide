@@ -60,4 +60,10 @@ public class SightService {
                 .map(sightMapper::toDto)
                 .toList();
     }
+
+    public List<SightDto> searchSights(String name) {
+        return sightRepository.findByNameContainingIgnoreCase(name).stream()
+                .map(sightMapper::toDto)
+                .toList();
+    }
 }

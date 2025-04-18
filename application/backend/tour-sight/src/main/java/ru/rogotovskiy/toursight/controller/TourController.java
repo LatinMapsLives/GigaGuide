@@ -51,4 +51,9 @@ public class TourController {
         tourService.deleteTour(id);
         return ResponseEntity.ok("Тур успешно удалён");
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchTours(@RequestParam(required = false) String name) {
+        return ResponseEntity.ok(tourService.searchTours(name));
+    }
 }
