@@ -28,4 +28,7 @@
     <string name="favorite_screen_log_in_button_text">LOG IN</string>
     <string name="favorite_screen_header">Favorites</string>
     <string name="favorite_screen_header_empty">The favorites list is currently empty</string>
+    <string name="sight_page_screen_header_description">Description</string>
+    <string name="sight_page_screen_header_moments">Moments</string>
+    <string name="sight_page_screen_button_explore_sight">Explore sight</string>
 </resources>

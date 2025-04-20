@@ -1,6 +1,7 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -34,14 +35,16 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SightPageScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.HomeScreenViewModel
 
 @Composable
-fun HomeScreen(homeScreenViewModel: HomeScreenViewModel) {
+fun HomeScreen(homeScreenViewModel: HomeScreenViewModel, navController: NavController) {
 
     Column(
         Modifier
@@ -128,7 +131,13 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel) {
             } else {
                 for (sight in sights) {
                     Spacer(Modifier.width(20.dp))
-                    SightTourThumbnailBox(modifier = Modifier.width(275.dp), value = sight)
+                    SightTourThumbnailBox(modifier = Modifier
+                        .width(275.dp)
+                        .clickable(onClick = {
+                            navController.navigate(
+                                SightPageScreenClass(sightId = sight.sightId)
+                            )
+                        }), value = sight)
                 }
             }
             Spacer(Modifier.width(20.dp))
@@ -165,7 +174,11 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel) {
             } else {
                 for (sight in sights) {
                     Spacer(Modifier.width(20.dp))
-                    SightTourThumbnailBox(modifier = Modifier.width(275.dp), value = sight)
+                    SightTourThumbnailBox(modifier = Modifier.width(275.dp).clickable(onClick = {
+                        navController.navigate(
+                            SightPageScreenClass(sightId = sight.sightId)
+                        )
+                    }), value = sight)
                 }
             }
             Spacer(Modifier.width(20.dp))

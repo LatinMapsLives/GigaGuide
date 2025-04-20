@@ -5,5 +5,5 @@ data class SightInfo (
     var name: String,
     var description: String,
     var momentNames: List<String>,
-    var rating: Float
+    var time: Int
 )

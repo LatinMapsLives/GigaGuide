@@ -8,15 +8,19 @@ import kotlinx.coroutines.launch
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.SightInfo
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.SightRepository
 
-class SightPageScreenViewModel(var sightRepository: SightRepository): ViewModel() {
+class SightPageScreenViewModel(): ViewModel() {
 
+    var sightRepository = SightRepository();
     var sightId = mutableLongStateOf(-1)
     var sight = mutableStateOf<SightInfo?>(null)
     var loading = mutableStateOf<Boolean>(false)
 
     fun loadSight(){
         viewModelScope.launch {
-            var sight:SightInfo = sightRepository.getSightById(sightId.longValue)
+            loading.value = true
+            var loadedSight:SightInfo = sightRepository.getSightById(sightId.longValue)
+            sight.value = loadedSight
+            loading.value = false
         }
     }
 }

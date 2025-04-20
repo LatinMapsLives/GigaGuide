@@ -34,6 +34,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.FavoriteScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.HomeScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.LoginScreenObject
@@ -41,6 +42,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.MapScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.NavBarItem
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.RegisterScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SettingsScreenObject
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SightPageScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumGrey
@@ -50,11 +52,13 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.LoginScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.MapScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.RegisterScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.SettingsScreen
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.SightPageScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.FavoriteScreenViewModel
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.HomeScreenViewModel
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.LoginScreenViewModel
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.RegisterScreenViewModel
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.SightPageScreenViewModel
 
 
 class MainActivity : ComponentActivity() {
@@ -109,6 +113,7 @@ class MainActivity : ComponentActivity() {
         val loginScreenViewModel = ViewModelProvider(this)[LoginScreenViewModel::class]
         val registerScreenViewModel = ViewModelProvider(this)[RegisterScreenViewModel::class]
         val favoriteScreenViewModel = ViewModelProvider(this)[FavoriteScreenViewModel::class]
+        val sightPageScreenViewModel = ViewModelProvider(this)[SightPageScreenViewModel::class]
 
         val startScreenObject = HomeScreenObject;
 
@@ -146,7 +151,7 @@ class MainActivity : ComponentActivity() {
                         popExitTransition = { ExitTransition.None },
                     ) {
                         composable<HomeScreenObject> {
-                            HomeScreen(homeScreenViewModel = homeScreenViewModel);
+                            HomeScreen(homeScreenViewModel = homeScreenViewModel, navController = navController);
                             showNavigationBar.value = true;
                         }
                         composable<MapScreenObject> {
@@ -177,6 +182,11 @@ class MainActivity : ComponentActivity() {
                                 navController = navController,
                                 registerScreenViewModel = registerScreenViewModel
                             )
+                        }
+                        composable<SightPageScreenClass>{
+                            val args = it.toRoute<SightPageScreenClass>()
+                            showNavigationBar.value = false
+                            SightPageScreen(sightId = args.sightId, sightPageScreenViewModel = sightPageScreenViewModel, navController = navController)
                         }
                     }
                     if (showNavigationBar.value) BottomNavigationBar(

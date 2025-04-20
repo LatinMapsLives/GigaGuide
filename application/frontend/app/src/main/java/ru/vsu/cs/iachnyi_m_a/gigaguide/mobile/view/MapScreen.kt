@@ -1,5 +1,6 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -12,11 +13,12 @@ import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.TilesOverlay
 
 @Composable
 fun MapScreen() {
     var geoPoint by remember { mutableStateOf(GeoPoint(51.672, 39.1843)) }
-
+    var dark = isSystemInDarkTheme();
     AndroidView(
         modifier = Modifier.fillMaxSize(),
         factory = { context ->
@@ -30,6 +32,9 @@ fun MapScreen() {
                 Configuration.getInstance().userAgentValue = "GigaGuide"
                 setOnClickListener {
                     TODO("Handle click here")
+                }
+                if(dark){
+                    this.overlayManager.tilesOverlay.setColorFilter(TilesOverlay.INVERT_COLORS)
                 }
             }
         },

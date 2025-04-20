@@ -15,10 +15,6 @@ object LoginScreenObject
 @Serializable
 object RegisterScreenObject
 @Serializable
-data class SightScreenClass(
+data class SightPageScreenClass(
     val sightId: Long
-)
-@Serializable
-data class TourScreenClass(
-    val tourId: Long
 )

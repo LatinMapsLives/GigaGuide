@@ -27,4 +27,7 @@
     <string name="favorite_screen_log_in_button_text">ВОЙТИ</string>
     <string name="favorite_screen_header">Избранное</string>
     <string name="favorite_screen_header_empty">На данный момент список избранного пуст</string>
+    <string name="sight_page_screen_header_description">Описание</string>
+    <string name="sight_page_screen_header_moments">Моменты</string>
+    <string name="sight_page_screen_button_explore_sight">Исследовать место</string>
 </resources>
