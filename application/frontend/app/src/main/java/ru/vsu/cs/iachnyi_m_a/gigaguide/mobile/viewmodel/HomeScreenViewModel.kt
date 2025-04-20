@@ -6,11 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.SightTourThumbnail
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.SightRepository
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.SightThumbnailRepository
 
 class HomeScreenViewModel : ViewModel() {
 
-    val sightRepository = SightRepository()
+    val sightRepository = SightThumbnailRepository()
     var closestTours = mutableStateListOf<SightTourThumbnail>()
     var loading = mutableStateOf<Boolean>(false)
 

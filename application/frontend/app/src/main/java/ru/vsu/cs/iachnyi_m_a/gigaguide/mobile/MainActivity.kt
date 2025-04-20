@@ -1,5 +1,7 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -25,6 +27,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -33,6 +37,7 @@ import androidx.navigation.compose.rememberNavController
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.FavoriteScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.HomeScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.LoginScreenObject
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.MapScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.NavBarItem
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.RegisterScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SettingsScreenObject
@@ -42,6 +47,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumGrey
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.FavoriteScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.HomeScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.LoginScreen
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.MapScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.RegisterScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.SettingsScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
@@ -53,8 +59,50 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.RegisterScreenViewModel
 
 class MainActivity : ComponentActivity() {
 
+    private fun checkPermissionsState() {
+        val internetPermissionCheck = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.INTERNET
+        )
+
+        val networkStatePermissionCheck = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_NETWORK_STATE
+        )
+
+        val writeExternalStoragePermissionCheck = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+
+
+        val wifiStatePermissionCheck = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_WIFI_STATE
+        )
+
+        if (internetPermissionCheck == PackageManager.PERMISSION_GRANTED
+            && networkStatePermissionCheck == PackageManager.PERMISSION_GRANTED
+            && writeExternalStoragePermissionCheck == PackageManager.PERMISSION_GRANTED
+            && wifiStatePermissionCheck == PackageManager.PERMISSION_GRANTED) {
+        } else {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf<String>(
+                    Manifest.permission.INTERNET,
+                    Manifest.permission.ACCESS_NETWORK_STATE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.ACCESS_WIFI_STATE
+                ),
+                4
+            )
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        checkPermissionsState()
 
         val homeScreenViewModel: HomeScreenViewModel =
             ViewModelProvider(this)[HomeScreenViewModel::class]
@@ -66,11 +114,11 @@ class MainActivity : ComponentActivity() {
 
         var navItems = listOf(
             NavBarItem(R.drawable.home, HomeScreenObject, R.string.nav_label_home), NavBarItem(
-                R.drawable.map, HomeScreenObject, R.string.nav_label_map
+                R.drawable.map, MapScreenObject, R.string.nav_label_map
             ), NavBarItem(
                 R.drawable.bookmark, FavoriteScreenObject, R.string.nav_label_favorite
             ), NavBarItem(
-                R.drawable.person, SettingsScreenObject, R.string.nav_label_settings
+                R.drawable.person_navbar, SettingsScreenObject, R.string.nav_label_settings
             )
         )
 
@@ -99,6 +147,10 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable<HomeScreenObject> {
                             HomeScreen(homeScreenViewModel = homeScreenViewModel);
+                            showNavigationBar.value = true;
+                        }
+                        composable<MapScreenObject> {
+                            MapScreen()
                             showNavigationBar.value = true;
                         }
                         composable<FavoriteScreenObject> {

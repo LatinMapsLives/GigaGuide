@@ -2,10 +2,10 @@ package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation
 
 import kotlinx.serialization.Serializable
 
-interface ScreenObject
-
 @Serializable
 object HomeScreenObject
+@Serializable
+object MapScreenObject
 @Serializable
 object FavoriteScreenObject
 @Serializable

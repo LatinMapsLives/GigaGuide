@@ -57,11 +57,10 @@ fun LoginRegisterTextField(
             unfocusedIndicatorColor = Invisible,
             cursorColor = MaterialTheme.colorScheme.onPrimaryContainer
         ),
-        shape = RoundedCornerShape(10.dp),
         placeholder = {
             Text(hint, color = MaterialTheme.colorScheme.onPrimaryContainer)
         },
-        modifier = modifier
+        modifier = modifier.clip(RoundedCornerShape(10.dp)).background(color = Invisible)
     )
 }
 
