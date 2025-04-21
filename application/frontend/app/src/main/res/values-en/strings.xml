@@ -31,4 +31,5 @@
     <string name="sight_page_screen_header_description">Description</string>
     <string name="sight_page_screen_header_moments">Moments</string>
     <string name="sight_page_screen_button_explore_sight">Explore sight</string>
+    <string name="map_screen_open_sight_button_label">Open sight</string>
 </resources>

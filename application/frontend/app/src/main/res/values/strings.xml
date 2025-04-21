@@ -30,4 +30,5 @@
     <string name="sight_page_screen_header_description">Описание</string>
     <string name="sight_page_screen_header_moments">Моменты</string>
     <string name="sight_page_screen_button_explore_sight">Исследовать место</string>
+    <string name="map_screen_open_sight_button_label">Открыть место</string>
 </resources>

@@ -171,11 +171,12 @@ fun SightPageScreen(
                     Text(
                         text = stringResource(R.string.sight_page_screen_header_description),
                         style = MaterialTheme.typography.headlineSmall,
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                     Icon(
                         modifier = Modifier
-                            .width(30.dp)
-                            .padding(horizontal = 20.dp),
+                            .padding(horizontal = 10.dp)
+                            .width(30.dp),
                         imageVector = ImageVector.vectorResource(R.drawable.chevron_down),
                         tint = MaterialTheme.colorScheme.onBackground,
                         contentDescription = "chevron down"
@@ -195,7 +196,8 @@ fun SightPageScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 20.dp),
-                        text = sightPageScreenViewModel.sight.value!!.description
+                        text = sightPageScreenViewModel.sight.value!!.description,
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 }
 
@@ -205,7 +207,8 @@ fun SightPageScreen(
                 ) {
                     Text(
                         text = stringResource(R.string.sight_page_screen_header_moments),
-                        style = MaterialTheme.typography.headlineSmall
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                     Icon(
                         modifier = Modifier
@@ -234,7 +237,8 @@ fun SightPageScreen(
                         Text(
                             modifier = Modifier.padding(bottom = 5.dp),
                             style = MaterialTheme.typography.titleSmall,
-                            text = "${i + 1}. ${s}"
+                            text = "${i + 1}. ${s}",
+                            color = MaterialTheme.colorScheme.onBackground
                         )
 
                     }
@@ -281,7 +285,8 @@ fun SightPageScreen(
             Text(
                 text = stringResource(R.string.sight_page_screen_button_explore_sight),
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(vertical = 5.dp, horizontal = 30.dp)
+                modifier = Modifier.padding(vertical = 5.dp, horizontal = 30.dp),
+                color = White
             )
         }
     }

@@ -66,7 +66,7 @@ fun LoginScreen(
             ) {
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.chevron_left),
-                    contentDescription = "search",
+                    contentDescription = "chevron_left",
                     modifier = Modifier.fillMaxSize()
                 )
             }

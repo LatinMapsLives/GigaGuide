@@ -57,6 +57,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.FavoriteScreenViewModel
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.HomeScreenViewModel
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.LoginScreenViewModel
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.MapScreenViewModel
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.RegisterScreenViewModel
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.SightPageScreenViewModel
 
@@ -88,7 +89,8 @@ class MainActivity : ComponentActivity() {
         if (internetPermissionCheck == PackageManager.PERMISSION_GRANTED
             && networkStatePermissionCheck == PackageManager.PERMISSION_GRANTED
             && writeExternalStoragePermissionCheck == PackageManager.PERMISSION_GRANTED
-            && wifiStatePermissionCheck == PackageManager.PERMISSION_GRANTED) {
+            && wifiStatePermissionCheck == PackageManager.PERMISSION_GRANTED
+        ) {
         } else {
             ActivityCompat.requestPermissions(
                 this,
@@ -114,6 +116,7 @@ class MainActivity : ComponentActivity() {
         val registerScreenViewModel = ViewModelProvider(this)[RegisterScreenViewModel::class]
         val favoriteScreenViewModel = ViewModelProvider(this)[FavoriteScreenViewModel::class]
         val sightPageScreenViewModel = ViewModelProvider(this)[SightPageScreenViewModel::class]
+        val mapScreenViewModel = ViewModelProvider(this)[MapScreenViewModel::class]
 
         val startScreenObject = HomeScreenObject;
 
@@ -151,11 +154,17 @@ class MainActivity : ComponentActivity() {
                         popExitTransition = { ExitTransition.None },
                     ) {
                         composable<HomeScreenObject> {
-                            HomeScreen(homeScreenViewModel = homeScreenViewModel, navController = navController);
+                            HomeScreen(
+                                homeScreenViewModel = homeScreenViewModel,
+                                navController = navController
+                            );
                             showNavigationBar.value = true;
                         }
                         composable<MapScreenObject> {
-                            MapScreen()
+                            MapScreen(
+                                navController = navController,
+                                mapScreenViewModel = mapScreenViewModel
+                            )
                             showNavigationBar.value = true;
                         }
                         composable<FavoriteScreenObject> {
@@ -183,10 +192,14 @@ class MainActivity : ComponentActivity() {
                                 registerScreenViewModel = registerScreenViewModel
                             )
                         }
-                        composable<SightPageScreenClass>{
+                        composable<SightPageScreenClass> {
                             val args = it.toRoute<SightPageScreenClass>()
                             showNavigationBar.value = false
-                            SightPageScreen(sightId = args.sightId, sightPageScreenViewModel = sightPageScreenViewModel, navController = navController)
+                            SightPageScreen(
+                                sightId = args.sightId,
+                                sightPageScreenViewModel = sightPageScreenViewModel,
+                                navController = navController
+                            )
                         }
                     }
                     if (showNavigationBar.value) BottomNavigationBar(
