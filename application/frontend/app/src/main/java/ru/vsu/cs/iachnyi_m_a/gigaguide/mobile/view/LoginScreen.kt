@@ -27,6 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.RegisterScreenObject
@@ -35,11 +36,10 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.LoginScreenViewModel
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.ScreenName
 
 @Composable
 fun LoginScreen(
-    loginScreenViewModel: LoginScreenViewModel = LoginScreenViewModel(),
+    loginScreenViewModel: LoginScreenViewModel = hiltViewModel<LoginScreenViewModel>(),
     navController: NavController
 ) {
     GigaGuideMobileTheme {

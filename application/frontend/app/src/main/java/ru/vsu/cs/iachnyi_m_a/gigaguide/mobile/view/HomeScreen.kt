@@ -35,6 +35,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SightPageScreenClass
@@ -44,7 +45,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.HomeScreenViewModel
 
 @Composable
-fun HomeScreen(homeScreenViewModel: HomeScreenViewModel, navController: NavController) {
+fun HomeScreen(homeScreenViewModel: HomeScreenViewModel = hiltViewModel<HomeScreenViewModel>(), navController: NavController) {
 
     Column(
         Modifier

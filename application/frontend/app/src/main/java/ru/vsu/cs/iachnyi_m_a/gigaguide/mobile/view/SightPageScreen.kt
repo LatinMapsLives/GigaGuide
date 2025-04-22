@@ -34,6 +34,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.Black
@@ -45,7 +46,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.SightPageScreenViewModel
 fun SightPageScreen(
     modifier: Modifier = Modifier,
     sightId: Long = 0,
-    sightPageScreenViewModel: SightPageScreenViewModel = SightPageScreenViewModel(),
+    sightPageScreenViewModel: SightPageScreenViewModel = hiltViewModel<SightPageScreenViewModel>(),
     navController: NavController
 ) {
     if (sightPageScreenViewModel.sightId.longValue != sightId) {

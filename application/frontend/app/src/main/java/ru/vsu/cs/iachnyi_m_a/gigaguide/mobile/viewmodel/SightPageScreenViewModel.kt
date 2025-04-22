@@ -6,11 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.SightPageInfo
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.SightRepository
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.mock.SightRepositoryMock
 
 class SightPageScreenViewModel(): ViewModel() {
 
-    var sightRepository = SightRepository();
+    var sightRepositoryMock = SightRepositoryMock();
     var sightId = mutableLongStateOf(-1)
     var sight = mutableStateOf<SightPageInfo?>(null)
     var loading = mutableStateOf<Boolean>(false)
@@ -18,7 +18,7 @@ class SightPageScreenViewModel(): ViewModel() {
     fun loadSight(){
         viewModelScope.launch {
             loading.value = true
-            var loadedSight:SightPageInfo = sightRepository.getSightPageInfoById(sightId.longValue)
+            var loadedSight:SightPageInfo = sightRepositoryMock.getSightPageInfoById(sightId.longValue)
             sight.value = loadedSight
             loading.value = false
         }

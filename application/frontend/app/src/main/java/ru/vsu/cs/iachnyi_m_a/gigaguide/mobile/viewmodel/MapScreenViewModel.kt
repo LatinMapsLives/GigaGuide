@@ -5,14 +5,16 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import jakarta.inject.Inject
 import kotlinx.coroutines.launch
 import org.osmdroid.util.GeoPoint
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.SightOnMapInfo
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.SightRepository
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.mock.SightRepositoryMock
 
-class  MapScreenViewModel: ViewModel(){
-
-    private var sightRepository = SightRepository();
+@HiltViewModel
+class  MapScreenViewModel @Inject constructor(private val sightRepository: SightRepository): ViewModel(){
 
     var center = GeoPoint(51.670859, 39.210282)
     var zoom = 16.0

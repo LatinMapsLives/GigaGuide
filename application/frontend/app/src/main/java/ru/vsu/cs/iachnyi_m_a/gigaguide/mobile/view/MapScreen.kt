@@ -1,6 +1,5 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view
 
-import android.graphics.drawable.Drawable
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -16,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -36,12 +34,14 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.res.ResourcesCompat
 import androidx.navigation.NavController
 import org.osmdroid.config.Configuration
+import org.osmdroid.events.MapEventsReceiver
 import org.osmdroid.events.MapListener
 import org.osmdroid.events.ScrollEvent
 import org.osmdroid.events.ZoomEvent
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.TilesOverlay
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
@@ -63,7 +63,8 @@ fun MapScreen(mapScreenViewModel: MapScreenViewModel, navController: NavControll
     }
     Box(modifier = Modifier.fillMaxSize()) {
         AndroidView(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize(),
             factory = { context ->
                 MapView(context).apply {
                     setMultiTouchControls(true)
@@ -94,6 +95,16 @@ fun MapScreen(mapScreenViewModel: MapScreenViewModel, navController: NavControll
                 Log.d("MAP", mapScreenViewModel.center.toString())
                 if (!mapScreenViewModel.loading.value) {
                     view.overlays.clear()
+                    view.overlays.add(MapEventsOverlay(object : MapEventsReceiver {
+                        override fun singleTapConfirmedHelper(p: GeoPoint): Boolean {
+                            mapScreenViewModel.selected.value = false
+                            return false
+                        }
+
+                        override fun longPressHelper(p: GeoPoint?): Boolean {
+                            return false
+                        }
+                    }))
                     for (sight in sights) {
                         var marker = Marker(view)
                         marker.setOnMarkerClickListener { mk, mv ->
@@ -104,13 +115,13 @@ fun MapScreen(mapScreenViewModel: MapScreenViewModel, navController: NavControll
                         }
                         marker.position = GeoPoint(sight.latitude, sight.longitude)
                         marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
-                        var drawableId = if(mapScreenViewModel.selected.value && mapScreenViewModel.selectedIndex.longValue == sight.id){
-                            R.drawable.map_marker_selected
-                        } else {
-                            R.drawable.map_marker_unselected
-
-                        }
-                        marker.icon =  ResourcesCompat.getDrawable(
+                        var drawableId =
+                            if (mapScreenViewModel.selected.value && mapScreenViewModel.selectedIndex.longValue == sight.id) {
+                                R.drawable.map_marker_selected
+                            } else {
+                                R.drawable.map_marker_unselected
+                            }
+                        marker.icon = ResourcesCompat.getDrawable(
                             view.resources,
                             drawableId,
                             null
@@ -144,18 +155,20 @@ fun SightBox(
     GigaGuideMobileTheme {
         Column(
             modifier = modifier
+                .clip(RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp))
                 .background(MaterialTheme.colorScheme.background)
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Icon(
                 modifier = Modifier
-                    .padding(top = 10.dp)
-                    .width(30.dp)
-                    .height(15.dp)
                     .clickable(onClick = {
                         mapScreenViewModel.selected.value = false
-                    }),
+                    })
+                    .background(color = MaterialTheme.colorScheme.tertiary)
+                    .padding(vertical = 10.dp)
+                    .fillMaxWidth()
+                    .height(10.dp),
                 imageVector = ImageVector.vectorResource(R.drawable.chevron_down),
                 tint = MaterialTheme.colorScheme.onBackground,
                 contentDescription = "chevron down"

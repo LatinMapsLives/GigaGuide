@@ -29,12 +29,14 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import dagger.hilt.android.AndroidEntryPoint
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.FavoriteScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.HomeScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.LoginScreenObject
@@ -61,62 +63,11 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.MapScreenViewModel
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.RegisterScreenViewModel
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.SightPageScreenViewModel
 
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-    private fun checkPermissionsState() {
-        val internetPermissionCheck = ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.INTERNET
-        )
-
-        val networkStatePermissionCheck = ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACCESS_NETWORK_STATE
-        )
-
-        val writeExternalStoragePermissionCheck = ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-
-
-        val wifiStatePermissionCheck = ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACCESS_WIFI_STATE
-        )
-
-        if (internetPermissionCheck == PackageManager.PERMISSION_GRANTED
-            && networkStatePermissionCheck == PackageManager.PERMISSION_GRANTED
-            && writeExternalStoragePermissionCheck == PackageManager.PERMISSION_GRANTED
-            && wifiStatePermissionCheck == PackageManager.PERMISSION_GRANTED
-        ) {
-        } else {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf<String>(
-                    Manifest.permission.INTERNET,
-                    Manifest.permission.ACCESS_NETWORK_STATE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.ACCESS_WIFI_STATE
-                ),
-                4
-            )
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        checkPermissionsState()
-
-        val homeScreenViewModel: HomeScreenViewModel =
-            ViewModelProvider(this)[HomeScreenViewModel::class]
-        val loginScreenViewModel = ViewModelProvider(this)[LoginScreenViewModel::class]
-        val registerScreenViewModel = ViewModelProvider(this)[RegisterScreenViewModel::class]
-        val favoriteScreenViewModel = ViewModelProvider(this)[FavoriteScreenViewModel::class]
-        val sightPageScreenViewModel = ViewModelProvider(this)[SightPageScreenViewModel::class]
-        val mapScreenViewModel = ViewModelProvider(this)[MapScreenViewModel::class]
 
         val startScreenObject = HomeScreenObject;
 
@@ -137,6 +88,9 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             GigaGuideMobileTheme {
+                val homeScreenViewModel: HomeScreenViewModel = hiltViewModel<HomeScreenViewModel>()
+                val favoriteScreenViewModel: FavoriteScreenViewModel = hiltViewModel<FavoriteScreenViewModel>()
+                val mapScreenViewModel: MapScreenViewModel = hiltViewModel<MapScreenViewModel>()
 
                 val navController = rememberNavController();
 
@@ -181,15 +135,13 @@ class MainActivity : ComponentActivity() {
                         composable<LoginScreenObject> {
                             showNavigationBar.value = false
                             LoginScreen(
-                                navController = navController,
-                                loginScreenViewModel = loginScreenViewModel
+                                navController = navController
                             )
                         }
                         composable<RegisterScreenObject> {
                             showNavigationBar.value = false
                             RegisterScreen(
-                                navController = navController,
-                                registerScreenViewModel = registerScreenViewModel
+                                navController = navController
                             )
                         }
                         composable<SightPageScreenClass> {
@@ -197,7 +149,6 @@ class MainActivity : ComponentActivity() {
                             showNavigationBar.value = false
                             SightPageScreen(
                                 sightId = args.sightId,
-                                sightPageScreenViewModel = sightPageScreenViewModel,
                                 navController = navController
                             )
                         }

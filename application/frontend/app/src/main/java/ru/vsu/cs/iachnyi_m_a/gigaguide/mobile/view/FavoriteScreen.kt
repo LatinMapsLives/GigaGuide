@@ -35,7 +35,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.FavoriteScreenViewModel
 
 @Composable
 fun FavoriteScreen(
-    favoriteScreenViewModel: FavoriteScreenViewModel = FavoriteScreenViewModel(),
+    favoriteScreenViewModel: FavoriteScreenViewModel,
     navController: NavController
 ) {
     GigaGuideMobileTheme {

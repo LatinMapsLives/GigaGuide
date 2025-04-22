@@ -36,7 +36,6 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.ScreenName
 
 @Composable
 fun SettingsScreen(navController: NavController) {
@@ -88,13 +87,11 @@ fun SettingsScreen(navController: NavController) {
             var buttons = listOf<SettingsButtonContent>(
                 SettingsButtonContent(
                     icon = ImageVector.vectorResource(R.drawable.language),
-                    name = stringResource(R.string.settings_screen_setting_name_language),
-                    screenName = null
+                    name = stringResource(R.string.settings_screen_setting_name_language)
                 ),
                 SettingsButtonContent(
                     icon = ImageVector.vectorResource(R.drawable.moon),
-                    name = stringResource(R.string.settings_screen_setting_name_theme),
-                    screenName = null
+                    name = stringResource(R.string.settings_screen_setting_name_theme)
                 )
             )
             for (btn in buttons) {
@@ -194,7 +191,6 @@ fun SettingsButton(icon: ImageVector, name: String, modifier: Modifier) {
 private class SettingsButtonContent(
     var icon: ImageVector,
     var name: String,
-    var screenName: ScreenName?
 )
 
 //TODO: Add strings to resources
