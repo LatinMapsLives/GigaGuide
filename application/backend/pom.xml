@@ -12,6 +12,9 @@
     <modules>
         <module>auth</module>
         <module>tour-sight</module>
+        <module>guide</module>
+        <module>user-service</module>
+        <module>map</module>
     </modules>
 
     <properties>
