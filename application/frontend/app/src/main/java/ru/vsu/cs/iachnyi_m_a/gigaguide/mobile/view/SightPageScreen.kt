@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ExploreSightScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.Black
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.LightGrey
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
@@ -281,7 +282,7 @@ fun SightPageScreen(
                 containerColor = MaterialTheme.colorScheme.secondary,
                 contentColor = White
             ),
-            onClick = {}
+            onClick = {navController.navigate(ExploreSightScreenClass(0))}
         ) {
             Text(
                 text = stringResource(R.string.sight_page_screen_button_explore_sight),

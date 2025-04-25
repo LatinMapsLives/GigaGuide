@@ -18,3 +18,7 @@ object RegisterScreenObject
 data class SightPageScreenClass(
     val sightId: Long
 )
+@Serializable
+data class ExploreSightScreenClass(
+    val sightId: Long
+)

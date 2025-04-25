@@ -48,7 +48,9 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.SightOnMapInfo
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SightPageScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.Invisible
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.Red
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.MapScreenViewModel
@@ -92,7 +94,6 @@ fun MapScreen(mapScreenViewModel: MapScreenViewModel, navController: NavControll
             update = { view ->
                 view.controller.setCenter(mapScreenViewModel.center)
                 view.controller.setZoom(mapScreenViewModel.zoom)
-                Log.d("MAP", mapScreenViewModel.center.toString())
                 if (!mapScreenViewModel.loading.value) {
                     view.overlays.clear()
                     view.overlays.add(MapEventsOverlay(object : MapEventsReceiver {
@@ -108,7 +109,8 @@ fun MapScreen(mapScreenViewModel: MapScreenViewModel, navController: NavControll
                     for (sight in sights) {
                         var marker = Marker(view)
                         marker.setOnMarkerClickListener { mk, mv ->
-                            mapScreenViewModel.center = GeoPoint(sight.latitude, sight.longitude)
+                            var point = GeoPoint(sight.latitude, sight.longitude)
+                            view.controller.animateTo(point, 18.0, 400)
                             mapScreenViewModel.selectedIndex.longValue = sight.id
                             mapScreenViewModel.selected.value = true
                             return@setOnMarkerClickListener true
