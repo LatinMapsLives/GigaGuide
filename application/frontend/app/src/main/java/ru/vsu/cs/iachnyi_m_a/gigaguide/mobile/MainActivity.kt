@@ -49,6 +49,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SightPageScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumGrey
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.AudioTestScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.ExploreSightScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.FavoriteScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.HomeScreen
@@ -97,77 +98,78 @@ class MainActivity : ComponentActivity() {
 
                 val navController = rememberNavController();
 
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(color = MaterialTheme.colorScheme.background),
-                    contentAlignment = Alignment.TopCenter
-                ) {
-                    NavHost(
-                        navController = navController, startDestination = startScreenObject,
-                        enterTransition = { EnterTransition.None },
-                        exitTransition = { ExitTransition.None },
-                        popEnterTransition = { EnterTransition.None },
-                        popExitTransition = { ExitTransition.None },
-                    ) {
-                        composable<HomeScreenObject> {
-                            HomeScreen(
-                                homeScreenViewModel = homeScreenViewModel,
-                                navController = navController
-                            );
-                            showNavigationBar.value = true;
-                        }
-                        composable<MapScreenObject> {
-                            MapScreen(
-                                navController = navController,
-                                mapScreenViewModel = mapScreenViewModel
-                            )
-                            showNavigationBar.value = true;
-                        }
-                        composable<FavoriteScreenObject> {
-                            FavoriteScreen(
-                                favoriteScreenViewModel = favoriteScreenViewModel,
-                                navController = navController
-                            )
-                            showNavigationBar.value = true;
-                        }
-                        composable<SettingsScreenObject> {
-                            showNavigationBar.value = true;
-                            SettingsScreen(navController = navController)
-                        }
-                        composable<LoginScreenObject> {
-                            showNavigationBar.value = false
-                            LoginScreen(
-                                navController = navController
-                            )
-                        }
-                        composable<RegisterScreenObject> {
-                            showNavigationBar.value = false
-                            RegisterScreen(
-                                navController = navController
-                            )
-                        }
-                        composable<SightPageScreenClass> {
-                            val args = it.toRoute<SightPageScreenClass>()
-                            showNavigationBar.value = false
-                            SightPageScreen(
-                                sightId = args.sightId,
-                                navController = navController
-                            )
-                        }
-                        composable<ExploreSightScreenClass>{
-                            val args = it.toRoute<ExploreSightScreenClass>()
-                            showNavigationBar.value = false;
-                            ExploreSightScreen(exploreSightScreenViewModel = hiltViewModel<ExploreSightScreenViewModel>(), navController = navController, sightId = args.sightId)
-                        }
-                    }
-                    if (showNavigationBar.value) BottomNavigationBar(
-                        modifier = Modifier.align(Alignment.BottomCenter),
-                        navItems = navItems,
-                        selectedIndex = selectedNavItemIndex,
-                        navController = navController
-                    )
-                }
+                AudioTestScreen(this)
+//                Box(
+//                    modifier = Modifier
+//                        .fillMaxSize()
+//                        .background(color = MaterialTheme.colorScheme.background),
+//                    contentAlignment = Alignment.TopCenter
+//                ) {
+//                    NavHost(
+//                        navController = navController, startDestination = startScreenObject,
+//                        enterTransition = { EnterTransition.None },
+//                        exitTransition = { ExitTransition.None },
+//                        popEnterTransition = { EnterTransition.None },
+//                        popExitTransition = { ExitTransition.None },
+//                    ) {
+//                        composable<HomeScreenObject> {
+//                            HomeScreen(
+//                                homeScreenViewModel = homeScreenViewModel,
+//                                navController = navController
+//                            );
+//                            showNavigationBar.value = true;
+//                        }
+//                        composable<MapScreenObject> {
+//                            MapScreen(
+//                                navController = navController,
+//                                mapScreenViewModel = mapScreenViewModel
+//                            )
+//                            showNavigationBar.value = true;
+//                        }
+//                        composable<FavoriteScreenObject> {
+//                            FavoriteScreen(
+//                                favoriteScreenViewModel = favoriteScreenViewModel,
+//                                navController = navController
+//                            )
+//                            showNavigationBar.value = true;
+//                        }
+//                        composable<SettingsScreenObject> {
+//                            showNavigationBar.value = true;
+//                            SettingsScreen(navController = navController)
+//                        }
+//                        composable<LoginScreenObject> {
+//                            showNavigationBar.value = false
+//                            LoginScreen(
+//                                navController = navController
+//                            )
+//                        }
+//                        composable<RegisterScreenObject> {
+//                            showNavigationBar.value = false
+//                            RegisterScreen(
+//                                navController = navController
+//                            )
+//                        }
+//                        composable<SightPageScreenClass> {
+//                            val args = it.toRoute<SightPageScreenClass>()
+//                            showNavigationBar.value = false
+//                            SightPageScreen(
+//                                sightId = args.sightId,
+//                                navController = navController
+//                            )
+//                        }
+//                        composable<ExploreSightScreenClass>{
+//                            val args = it.toRoute<ExploreSightScreenClass>()
+//                            showNavigationBar.value = false;
+//                            ExploreSightScreen(exploreSightScreenViewModel = hiltViewModel<ExploreSightScreenViewModel>(), navController = navController, sightId = args.sightId)
+//                        }
+//                    }
+//                    if (showNavigationBar.value) BottomNavigationBar(
+//                        modifier = Modifier.align(Alignment.BottomCenter),
+//                        navItems = navItems,
+//                        selectedIndex = selectedNavItemIndex,
+//                        navController = navController
+//                    )
+//                }
             }
         }
     }
