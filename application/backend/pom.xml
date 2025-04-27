@@ -15,6 +15,7 @@
         <module>guide</module>
         <module>user-service</module>
         <module>map</module>
+        <module>reviews</module>
     </modules>
 
     <properties>
