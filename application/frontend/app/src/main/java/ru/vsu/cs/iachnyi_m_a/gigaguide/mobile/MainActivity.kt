@@ -37,6 +37,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import dagger.hilt.android.AndroidEntryPoint
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.AudioTestScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ExploreSightScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.FavoriteScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.HomeScreenObject
@@ -98,78 +99,81 @@ class MainActivity : ComponentActivity() {
 
                 val navController = rememberNavController();
 
-                AudioTestScreen(this)
-//                Box(
-//                    modifier = Modifier
-//                        .fillMaxSize()
-//                        .background(color = MaterialTheme.colorScheme.background),
-//                    contentAlignment = Alignment.TopCenter
-//                ) {
-//                    NavHost(
-//                        navController = navController, startDestination = startScreenObject,
-//                        enterTransition = { EnterTransition.None },
-//                        exitTransition = { ExitTransition.None },
-//                        popEnterTransition = { EnterTransition.None },
-//                        popExitTransition = { ExitTransition.None },
-//                    ) {
-//                        composable<HomeScreenObject> {
-//                            HomeScreen(
-//                                homeScreenViewModel = homeScreenViewModel,
-//                                navController = navController
-//                            );
-//                            showNavigationBar.value = true;
-//                        }
-//                        composable<MapScreenObject> {
-//                            MapScreen(
-//                                navController = navController,
-//                                mapScreenViewModel = mapScreenViewModel
-//                            )
-//                            showNavigationBar.value = true;
-//                        }
-//                        composable<FavoriteScreenObject> {
-//                            FavoriteScreen(
-//                                favoriteScreenViewModel = favoriteScreenViewModel,
-//                                navController = navController
-//                            )
-//                            showNavigationBar.value = true;
-//                        }
-//                        composable<SettingsScreenObject> {
-//                            showNavigationBar.value = true;
-//                            SettingsScreen(navController = navController)
-//                        }
-//                        composable<LoginScreenObject> {
-//                            showNavigationBar.value = false
-//                            LoginScreen(
-//                                navController = navController
-//                            )
-//                        }
-//                        composable<RegisterScreenObject> {
-//                            showNavigationBar.value = false
-//                            RegisterScreen(
-//                                navController = navController
-//                            )
-//                        }
-//                        composable<SightPageScreenClass> {
-//                            val args = it.toRoute<SightPageScreenClass>()
-//                            showNavigationBar.value = false
-//                            SightPageScreen(
-//                                sightId = args.sightId,
-//                                navController = navController
-//                            )
-//                        }
-//                        composable<ExploreSightScreenClass>{
-//                            val args = it.toRoute<ExploreSightScreenClass>()
-//                            showNavigationBar.value = false;
-//                            ExploreSightScreen(exploreSightScreenViewModel = hiltViewModel<ExploreSightScreenViewModel>(), navController = navController, sightId = args.sightId)
-//                        }
-//                    }
-//                    if (showNavigationBar.value) BottomNavigationBar(
-//                        modifier = Modifier.align(Alignment.BottomCenter),
-//                        navItems = navItems,
-//                        selectedIndex = selectedNavItemIndex,
-//                        navController = navController
-//                    )
-//                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color = MaterialTheme.colorScheme.background),
+                    contentAlignment = Alignment.TopCenter
+                ) {
+                    NavHost(
+                        navController = navController, startDestination = startScreenObject,
+                        enterTransition = { EnterTransition.None },
+                        exitTransition = { ExitTransition.None },
+                        popEnterTransition = { EnterTransition.None },
+                        popExitTransition = { ExitTransition.None },
+                    ) {
+                        composable<HomeScreenObject> {
+                            HomeScreen(
+                                homeScreenViewModel = homeScreenViewModel,
+                                navController = navController
+                            );
+                            showNavigationBar.value = true;
+                        }
+                        composable<MapScreenObject> {
+                            MapScreen(
+                                navController = navController,
+                                mapScreenViewModel = mapScreenViewModel
+                            )
+                            showNavigationBar.value = true;
+                        }
+                        composable<FavoriteScreenObject> {
+                            FavoriteScreen(
+                                favoriteScreenViewModel = favoriteScreenViewModel,
+                                navController = navController
+                            )
+                            showNavigationBar.value = true;
+                        }
+                        composable<SettingsScreenObject> {
+                            showNavigationBar.value = true;
+                            SettingsScreen(navController = navController)
+                        }
+                        composable<LoginScreenObject> {
+                            showNavigationBar.value = false
+                            LoginScreen(
+                                navController = navController
+                            )
+                        }
+                        composable<RegisterScreenObject> {
+                            showNavigationBar.value = false
+                            RegisterScreen(
+                                navController = navController
+                            )
+                        }
+                        composable<SightPageScreenClass> {
+                            val args = it.toRoute<SightPageScreenClass>()
+                            showNavigationBar.value = false
+                            SightPageScreen(
+                                sightId = args.sightId,
+                                navController = navController
+                            )
+                        }
+                        composable<ExploreSightScreenClass>{
+                            val args = it.toRoute<ExploreSightScreenClass>()
+                            showNavigationBar.value = false;
+                            ExploreSightScreen(exploreSightScreenViewModel = hiltViewModel<ExploreSightScreenViewModel>(), navController = navController, sightId = args.sightId, context = this@MainActivity)
+                        }
+                        composable<AudioTestScreenObject>{
+                            AudioTestScreen(this@MainActivity)
+                            showNavigationBar.value = false
+                        }
+                    }
+                    if (showNavigationBar.value) BottomNavigationBar(
+                        modifier = Modifier.align(Alignment.BottomCenter),
+                        navItems = navItems,
+                        selectedIndex = selectedNavItemIndex,
+                        navController = navController
+                    )
+                }
             }
         }
     }

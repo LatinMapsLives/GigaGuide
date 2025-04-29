@@ -17,10 +17,10 @@ class RouteRepositoryMock : RouteRepository {
                 MapPoint(51.673825, 39.211688),
                 MapPoint(51.67373, 39.212067)
             ), moments = listOf(
-                Moment("Солнечные часы", 51.67393, 39.211287),
-                Moment("Пушки", 51.673811, 39.211592),
-                Moment("Памятник Петру I", 51.673825, 39.211688),
-                Moment("Фонтан", 51.67373, 39.212067)
+                Moment("Солнечные часы", 51.67393, 39.211287, "https://drive.google.com/uc?export=download&id=1TGLfYaxjLhAfPUcYAFWIAdGtpd2C0N0L"),
+                Moment("Пушки", 51.673811, 39.211592, "https://drive.google.com/uc?export=download&id=1LecUqI3_67PO6F2jppHWtfFbKlWHz4Ar"),
+                Moment("Памятник Петру I", 51.673825, 39.211688, "https://drive.google.com/uc?export=download&id=1TGLfYaxjLhAfPUcYAFWIAdGtpd2C0N0L"),
+                Moment("Фонтан", 51.67373, 39.212067, "https://drive.google.com/uc?export=download&id=1LecUqI3_67PO6F2jppHWtfFbKlWHz4Ar")
             )
         )
     }

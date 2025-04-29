@@ -7,6 +7,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.net.toUri
 import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
 import androidx.media3.common.util.Log
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultDataSource
@@ -19,7 +20,6 @@ import androidx.media3.ui.PlayerView
 @OptIn(UnstableApi::class)
 @Composable
 fun AudioTestScreen(context: Context) {
-    Log.d("APsP", "recomposed")
 
     val thePlayer = remember {
         ExoPlayer.Builder(context)
@@ -29,9 +29,14 @@ fun AudioTestScreen(context: Context) {
             ).build()
     }
 
+    thePlayer.addListener(object: Player.Listener{
+        override fun onPlaybackStateChanged(playbackState: Int) {
+            super.onPlaybackStateChanged(playbackState)
+        }
+    })
     // Создание MediaItem из URL
     val mediaItem =
-        MediaItem.fromUri("https://drive.google.com/uc?export=download&id=1LecUqI3_67PO6F2jppHWtfFbKlWHz4Ar".toUri())
+        MediaItem.fromUri("http://192.168.1.84:8083/api/guide?id=1".toUri())
 
     // Создание MediaSource
     val dataSourceFactory = DefaultDataSource.Factory(context)
