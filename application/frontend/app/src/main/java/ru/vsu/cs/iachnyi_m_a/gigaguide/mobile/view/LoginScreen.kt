@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,23 +26,33 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.RegisterScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.Green
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumGrey
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.Red
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.LoginScreenViewModel
+
+enum class LoginScreenError{
+    FIELDS_EMPTY,
+    LOGIN_ERROR,
+    NONE
+}
 
 @Composable
 fun LoginScreen(
     loginScreenViewModel: LoginScreenViewModel = hiltViewModel<LoginScreenViewModel>(),
     navController: NavController
 ) {
+    loginScreenViewModel.popNavigationBackStackCallback = {navController.popBackStack()}
     GigaGuideMobileTheme {
         Box(
             modifier = Modifier
@@ -92,11 +103,12 @@ fun LoginScreen(
                     ),
                     value = loginScreenViewModel.emailInput.value,
                     hint = stringResource(R.string.login_screen_email_hint),
-                    onValueChange = { loginScreenViewModel.emailInput.value = it }
+                    onValueChange = { loginScreenViewModel.emailInput.value = it },
+                    isPassword = false
                 )
                 LoginRegisterTextField(
                     modifier = Modifier
-                        .padding(25.dp)
+                        .padding(top=25.dp)
                         .dropShadow(
                             offsetY = 0.dp,
                             offsetX = 0.dp,
@@ -105,14 +117,35 @@ fun LoginScreen(
                         ),
                     value = loginScreenViewModel.passwordInput.value,
                     hint = stringResource(R.string.login_screen_password_hint),
-                    onValueChange = { loginScreenViewModel.passwordInput.value = it }
+                    onValueChange = { loginScreenViewModel.passwordInput.value = it },
+                    isPassword = true
+                )
+                var text = ""
+                var error: LoginScreenError = loginScreenViewModel.error.value
+                if (error == LoginScreenError.FIELDS_EMPTY) {
+                    text = stringResource(R.string.login_screen_error_fields_empty)
+                } else if (error == LoginScreenError.LOGIN_ERROR) {
+                    text = stringResource(R.string.login_screen_error_login_error)
+                } else if (loginScreenViewModel.loginSuccess.value) {
+                    text = stringResource(R.string.login_screen_success)
+                }
+                Text(
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .fillMaxWidth(),
+                    text = text,
+                    textAlign = TextAlign.Center,
+                    color = if (loginScreenViewModel.loginSuccess.value) Green else Red,
+                    style = MaterialTheme.typography.titleMedium
                 )
                 Button(
                     colors = ButtonDefaults.buttonColors(
+                        disabledContainerColor = MediumGrey,
                         containerColor = MaterialTheme.colorScheme.secondary,
                         contentColor = White
                     ),
-                    onClick = {}
+                    onClick = { loginScreenViewModel.loginUser() },
+                    enabled = loginScreenViewModel.loginButtonActive.value
                 ) {
                     Text(
                         text = stringResource(R.string.login_screen_login_button_text),

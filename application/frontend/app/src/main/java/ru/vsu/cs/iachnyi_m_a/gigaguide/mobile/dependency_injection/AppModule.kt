@@ -1,24 +1,28 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dependency_injection
 
+import android.content.Context
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.api.AuthAPI
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.api.UserAPI
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.datastore.DataStoreManager
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.AuthRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.FavoriteSightRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.RouteRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.SightRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.SightThumbnailRepository
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.UserRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.mock.FavoriteSightsRepositoryMock
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.mock.RouteRepositoryMock
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.mock.SightRepositoryMock
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.mock.SightThumbnailRepositoryMock
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.retrofit.AuthRepositoryRetrofit
-import java.util.concurrent.TimeUnit
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.retrofit.UserRepositoryRetrofit
 import javax.inject.Singleton
 
 
@@ -65,5 +69,25 @@ object AppModule {
                     GsonConverterFactory.create()
                 ).build()
         return retrofit.create(AuthAPI::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideUserAPI(): UserAPI {
+        var retrofit = Retrofit.Builder().baseUrl("http://192.168.1.84:8084/api/user/")
+            .addConverterFactory(GsonConverterFactory.create()).build()
+        return retrofit.create(UserAPI::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserRepository(): UserRepository {
+        return UserRepositoryRetrofit(provideUserAPI())
+    }
+
+    @Provides
+    @Singleton
+    fun provideDatastoreManager(@ApplicationContext context: Context): DataStoreManager {
+        return DataStoreManager(context)
     }
 }

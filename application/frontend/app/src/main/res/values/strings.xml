@@ -36,4 +36,7 @@
     <string name="register_screen_error_register_failed">Ошибка регистрации</string>
     <string name="register_screen_success">Аккаунт зарегистрирован</string>
     <string name="register_screen_error_email_wrong_format">Неверный формат почты</string>
+    <string name="login_screen_error_fields_empty">Заполните все поля</string>
+    <string name="login_screen_error_login_error">Неверная почта или пароль</string>
+    <string name="login_screen_success">Успешный вход</string>
 </resources>

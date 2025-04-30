@@ -70,9 +70,12 @@ dependencies {
     implementation (libs.androidx.media3.common)
     implementation (libs.retrofit2.retrofit)
     implementation (libs.retrofit2.converter.gson)
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
 
     ksp(libs.hilt.android.compiler)
     ksp(libs.androidx.hilt.compiler)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

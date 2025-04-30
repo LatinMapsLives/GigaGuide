@@ -37,4 +37,7 @@
     <string name="register_screen_error_register_failed">Register error</string>
     <string name="register_screen_success">Account registered</string>
     <string name="register_screen_error_email_wrong_format">Wrong email format</string>
+    <string name="login_screen_error_fields_empty">All fields must be filled</string>
+    <string name="login_screen_error_login_error">Wrong email or password</string>
+    <string name="login_screen_success">Login successful</string>
 </resources>

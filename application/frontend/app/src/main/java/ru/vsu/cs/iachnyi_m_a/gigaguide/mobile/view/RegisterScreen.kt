@@ -97,7 +97,8 @@ fun RegisterScreen(
                         registerScreenViewModel.registerScreenError.value =
                             RegisterScreenError.NONE
                         registerScreenViewModel.userNameInput.value = it
-                    }
+                    },
+                    isPassword = false
                 )
                 LoginRegisterTextField(
                     modifier = Modifier
@@ -115,6 +116,7 @@ fun RegisterScreen(
                             RegisterScreenError.NONE
                         registerScreenViewModel.emailInput.value = it
                     }
+                    , isPassword = false
                 )
                 LoginRegisterTextField(
                     modifier = Modifier.dropShadow(
@@ -129,7 +131,8 @@ fun RegisterScreen(
                         registerScreenViewModel.registerScreenError.value =
                             RegisterScreenError.NONE
                         registerScreenViewModel.passwordInput.value = it
-                    }
+                    },
+                    isPassword = true
                 )
                 LoginRegisterTextField(
                     modifier = Modifier
@@ -146,7 +149,8 @@ fun RegisterScreen(
                         registerScreenViewModel.registerScreenError.value =
                             RegisterScreenError.NONE
                         registerScreenViewModel.passwordConfirmInput.value = it
-                    }
+                    },
+                    isPassword = true
                 )
                 var text = ""
                 var error: RegisterScreenError = registerScreenViewModel.registerScreenError.value

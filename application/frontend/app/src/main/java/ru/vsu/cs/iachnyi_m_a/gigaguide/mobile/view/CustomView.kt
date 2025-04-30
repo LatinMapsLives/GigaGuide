@@ -32,6 +32,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.SightTourThumbnail
@@ -45,7 +47,8 @@ fun LoginRegisterTextField(
     modifier: Modifier,
     hint: String,
     value: String,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
+    isPassword: Boolean
 ) {
     TextField(
         value = value,
@@ -60,7 +63,10 @@ fun LoginRegisterTextField(
         placeholder = {
             Text(hint, color = MaterialTheme.colorScheme.onPrimaryContainer)
         },
-        modifier = modifier.clip(RoundedCornerShape(10.dp)).background(color = Invisible)
+        modifier = modifier
+            .clip(RoundedCornerShape(10.dp))
+            .background(color = Invisible),
+        visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None
     )
 }
 

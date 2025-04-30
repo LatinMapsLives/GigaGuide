@@ -1,5 +1,6 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -15,10 +16,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,7 +30,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
@@ -36,9 +38,13 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.SettingsScreenViewModel
 
 @Composable
-fun SettingsScreen(navController: NavController) {
+fun SettingsScreen(settingsScreenViewModel: SettingsScreenViewModel, navController: NavController) {
+    LaunchedEffect(Unit) {
+        settingsScreenViewModel.discoverJWT()
+    }
     GigaGuideMobileTheme {
         Column(
             modifier = Modifier
@@ -46,36 +52,65 @@ fun SettingsScreen(navController: NavController) {
                 .background(color = MaterialTheme.colorScheme.background),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            UserIcon(modifier = Modifier.padding(20.dp))
-            Text(
-                modifier = Modifier.padding(horizontal = 20.dp),
-                style = MaterialTheme.typography.titleLarge,
-                text = stringResource(R.string.settings_screen_all_advantages_header),
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-            Button(
-                modifier = Modifier
-                    .padding(vertical = 20.dp)
-                    .dropShadow(
-                        offsetX = 0.dp,
-                        offsetY = 0.dp,
-                        blur = 16.dp,
-                        shape = RoundedCornerShape(20.dp),
-                        color = MediumBlue
-                    ),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.secondary,
-                    contentColor = White
-                ),
-                onClick = { navController.navigate(LoginScreenObject) }
-            ) {
-                Text(
-                    text = stringResource(R.string.setting_screen_login_button_text),
-                    style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier.padding(vertical = 5.dp, horizontal = 60.dp)
+            if (settingsScreenViewModel.loading.value) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .padding(20.dp)
+                        .size(100.dp)
                 )
+            } else {
+                if (settingsScreenViewModel.userData.value != null) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        UserIcon(modifier = Modifier.padding(20.dp))
+                        Text("Выполнен вход под именем ${settingsScreenViewModel.userData.value!!.username}")
+                        Icon(
+                            imageVector = ImageVector.vectorResource(R.drawable.chevron_right),
+                            contentDescription = "chevron right",
+                            modifier = Modifier.size(40.dp),
+                            tint = MaterialTheme.colorScheme.onBackground
+                        )
+                    }
+                    GradientSeparator(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(35.dp))
+                } else {
+                    UserIcon(modifier = Modifier.padding(20.dp))
+                    Text(
+                        modifier = Modifier.padding(horizontal = 20.dp),
+                        style = MaterialTheme.typography.titleLarge,
+                        text = stringResource(R.string.settings_screen_all_advantages_header),
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                    Button(
+                        modifier = Modifier
+                            .padding(vertical = 20.dp)
+                            .dropShadow(
+                                offsetX = 0.dp,
+                                offsetY = 0.dp,
+                                blur = 16.dp,
+                                shape = RoundedCornerShape(20.dp),
+                                color = MediumBlue
+                            ),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.secondary,
+                            contentColor = White
+                        ),
+                        onClick = { navController.navigate(LoginScreenObject) }
+                    ) {
+                        Text(
+                            text = stringResource(R.string.setting_screen_login_button_text),
+                            style = MaterialTheme.typography.headlineSmall,
+                            modifier = Modifier.padding(vertical = 5.dp, horizontal = 60.dp)
+                        )
+                    }
+                }
             }
+
+
             Text(
                 text = stringResource(R.string.settings_screen_settings_header),
                 modifier = Modifier
@@ -192,5 +227,3 @@ private class SettingsButtonContent(
     var icon: ImageVector,
     var name: String,
 )
-
-//TODO: Add strings to resources
