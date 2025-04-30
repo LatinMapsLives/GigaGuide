@@ -1,5 +1,6 @@
 [versions]
 agp = "8.9.1"
+converterGsonVersion = "2.1.0"
 hiltAndroid = "2.56.1"
 hiltAndroidCompiler = "2.56.1"
 hiltLifecycleViewmodel = "1.0.0-alpha03"
@@ -22,6 +23,7 @@ media3Exoplayer = "1.6.1"
 media3Ui = "1.6.1"
 navigationCompose = "2.8.9"
 osmdroidAndroid = "6.1.16"
+retrofitVersion = "2.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -55,6 +57,8 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
 osmdroid-android = { module = "org.osmdroid:osmdroid-android", version.ref = "osmdroidAndroid" }
+retrofit2-converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGsonVersion" }
+retrofit2-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofitVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

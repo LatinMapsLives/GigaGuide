@@ -32,4 +32,9 @@
     <string name="sight_page_screen_header_moments">Moments</string>
     <string name="sight_page_screen_button_explore_sight">Explore sight</string>
     <string name="map_screen_open_sight_button_label">Open sight</string>
+    <string name="register_screen_error_empty_fields">All fields must be filled</string>
+    <string name="register_screen_error_password_mismatch">Passwords don\'t match</string>
+    <string name="register_screen_error_register_failed">Register error</string>
+    <string name="register_screen_success">Account registered</string>
+    <string name="register_screen_error_email_wrong_format">Wrong email format</string>
 </resources>

@@ -68,6 +68,9 @@ dependencies {
     implementation (libs.androidx.media3.exoplayer)
     implementation (libs.androidx.media3.ui)
     implementation (libs.androidx.media3.common)
+    implementation (libs.retrofit2.retrofit)
+    implementation (libs.retrofit2.converter.gson)
+
     ksp(libs.hilt.android.compiler)
     ksp(libs.androidx.hilt.compiler)
     testImplementation(libs.junit)

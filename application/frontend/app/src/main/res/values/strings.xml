@@ -31,4 +31,9 @@
     <string name="sight_page_screen_header_moments">Моменты</string>
     <string name="sight_page_screen_button_explore_sight">Исследовать место</string>
     <string name="map_screen_open_sight_button_label">Открыть место</string>
+    <string name="register_screen_error_empty_fields">Заполните все поля</string>
+    <string name="register_screen_error_password_mismatch">Пароли не совпадают</string>
+    <string name="register_screen_error_register_failed">Ошибка регистрации</string>
+    <string name="register_screen_success">Аккаунт зарегистрирован</string>
+    <string name="register_screen_error_email_wrong_format">Неверный формат почты</string>
 </resources>
