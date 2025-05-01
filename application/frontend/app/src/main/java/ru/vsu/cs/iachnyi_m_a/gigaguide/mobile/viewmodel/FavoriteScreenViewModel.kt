@@ -7,9 +7,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.launch
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.SightTourThumbnail
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.SightTourThumbnail
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.FavoriteSightRepository
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.mock.FavoriteSightsRepositoryMock
 
 @HiltViewModel
 class FavoriteScreenViewModel @Inject constructor(private val favoriteSightRepository: FavoriteSightRepository): ViewModel() {

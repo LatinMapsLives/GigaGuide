@@ -1,9 +1,11 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.mock
 
+import android.util.Log
 import kotlinx.coroutines.delay
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.Sight
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.SightOnMapInfo
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.SightPageInfo
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.SightDTO
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.Sight
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.SightInfo
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.SightOnMapInfo
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.SightRepository
 
 class SightRepositoryMock: SightRepository {
@@ -29,13 +31,14 @@ class SightRepositoryMock: SightRepository {
         )
     )
 
-    override suspend fun getSightPageInfoById(id: Long): SightPageInfo {
+    override suspend fun getSightPageInfoById(id: Long): SightInfo? {
+        Log.e("dasas", "ID: $id")
         delay(1000)
-        return SightPageInfo(sights.find { sight -> sight.id == id }!!)
+        return SightInfo(sights.find { sight -> sight.id == id }!!).let { return@let SightInfo(id = it.id, name = it.name, description = it.description, time = 30) }
     }
 
-    override suspend fun getAllSightOnMapInfos(): List<SightOnMapInfo> {
+    override suspend fun getAllSightInfos(): List<SightInfo>? {
         delay(1000)
-        return sights.map { s -> SightOnMapInfo(s) }
+        return sights.map { si -> SightInfo(id = si.id, name = si.name, description = si.description, time = si.time) }
     }
 }

@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Paint.Style
 import android.graphics.Rect
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -56,11 +55,10 @@ import androidx.core.graphics.drawable.toDrawable
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.media3.common.MediaItem
-import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.Timeline
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.exoplayer.util.EventLogger
 import androidx.navigation.NavController
 import org.osmdroid.config.Configuration
 import org.osmdroid.events.MapEventsReceiver
@@ -75,7 +73,7 @@ import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polyline
 import org.osmdroid.views.overlay.TilesOverlay
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.Moment
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.MomentOnMap
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.LightGrey
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
@@ -85,6 +83,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.ExploreSightScreenViewMo
 import kotlin.math.max
 
 
+@androidx.annotation.OptIn(UnstableApi::class)
 @Composable
 fun ExploreSightScreen(
     context: Context,
@@ -119,14 +118,14 @@ fun ExploreSightScreen(
             }
         })
         exploreSightScreenViewModel.loadRoute()
-        if (exploreSightScreenViewModel.route.value != null) {
+        if (!exploreSightScreenViewModel.route.isEmpty() && !exploreSightScreenViewModel.momentOnMaps.isEmpty()) {
             exploreSightScreenViewModel.selectedMomentIndex.intValue = 0;
             exploreSightScreenViewModel.needToAnimateTo = GeoPoint(
                 exploreSightScreenViewModel.currentMoment()!!.latitude,
                 exploreSightScreenViewModel.currentMoment()!!.longitude
             )
-            for (moment: Moment in exploreSightScreenViewModel.route.value!!.moments) {
-                exploreSightScreenViewModel.player.addMediaItem(MediaItem.fromUri(moment.audioLink.toUri()))
+            for (momentOnMap: MomentOnMap in exploreSightScreenViewModel.momentOnMaps) {
+                exploreSightScreenViewModel.player.addMediaItem(MediaItem.fromUri(momentOnMap.audioLink.toUri()))
             }
             exploreSightScreenViewModel.selected.value = true
         }
@@ -167,7 +166,7 @@ fun ExploreSightScreen(
             view.controller.setCenter(exploreSightScreenViewModel.center)
             view.controller.setZoom(exploreSightScreenViewModel.zoom)
 
-            if (exploreSightScreenViewModel.route.value != null && !exploreSightScreenViewModel.loadingRoute.value) {
+            if (!exploreSightScreenViewModel.route.isEmpty() && !exploreSightScreenViewModel.momentOnMaps.isEmpty() && !exploreSightScreenViewModel.loadingRoute.value) {
 
 
                 view.overlays.clear()
@@ -186,13 +185,13 @@ fun ExploreSightScreen(
                 var line = Polyline()
                 line.width = 5f
                 line.color = MediumBlue.toArgb()
-                for (point in exploreSightScreenViewModel.route.value!!.routePoints) {
+                for (point in exploreSightScreenViewModel.route) {
                     line.addPoint(GeoPoint(point.latitude, point.longitude))
                 }
                 view.overlays.add(line)
 
-                for (i in 0..exploreSightScreenViewModel.route.value!!.moments.size - 1) {
-                    var m = exploreSightScreenViewModel.route.value!!.moments[i]
+                for (i in 0..exploreSightScreenViewModel.momentOnMaps.size - 1) {
+                    var m = exploreSightScreenViewModel.momentOnMaps[i]
                     view.overlays.add(
                         numberedMarker(
                             number = i + 1,
@@ -267,8 +266,8 @@ fun ExploreSightScreen(
                         exploreSightScreenViewModel.currentMoment()!!.longitude
                     )
                 },
-                hasNext = exploreSightScreenViewModel.selectedMomentIndex.intValue < exploreSightScreenViewModel.route.value!!.moments.size &&
-                        exploreSightScreenViewModel.selectedMomentIndex.intValue < exploreSightScreenViewModel.route.value!!.moments.size,
+                hasNext = exploreSightScreenViewModel.selectedMomentIndex.intValue < exploreSightScreenViewModel.momentOnMaps.size &&
+                        exploreSightScreenViewModel.selectedMomentIndex.intValue < exploreSightScreenViewModel.momentOnMaps.size,
                 hasPrevious = exploreSightScreenViewModel.selectedMomentIndex.intValue > 0,
                 chevronDownOnClick = deselectCallback,
                 seekCallbackSeconds = { sec ->

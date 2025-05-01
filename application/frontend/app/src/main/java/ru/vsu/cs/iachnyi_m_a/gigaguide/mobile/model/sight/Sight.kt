@@ -1,4 +1,4 @@
-package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model
+package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight
 
 data class Sight(
     var id: Long,
