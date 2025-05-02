@@ -6,6 +6,6 @@ import retrofit2.http.Header
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.UserDataDTO
 
 interface UserAPI {
-    @GET("/")
+    @GET("user")
     fun getUserData(@Header("Authorization") token: String): Call<UserDataDTO>
 }

@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Paint.Style
 import android.graphics.Rect
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -45,7 +44,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -60,6 +58,7 @@ import androidx.media3.common.Timeline
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.navigation.NavController
+import coil3.compose.AsyncImage
 import org.osmdroid.config.Configuration
 import org.osmdroid.events.MapEventsReceiver
 import org.osmdroid.events.MapListener
@@ -73,7 +72,6 @@ import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polyline
 import org.osmdroid.views.overlay.TilesOverlay
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.MomentOnMap
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.LightGrey
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
@@ -124,12 +122,15 @@ fun ExploreSightScreen(
                 exploreSightScreenViewModel.currentMoment()!!.latitude,
                 exploreSightScreenViewModel.currentMoment()!!.longitude
             )
-            for (momentOnMap: MomentOnMap in exploreSightScreenViewModel.momentOnMaps) {
+            for (i in 0..exploreSightScreenViewModel.momentOnMaps.size - 1) {
+                var momentOnMap =
+                    exploreSightScreenViewModel.momentOnMaps[i]
                 exploreSightScreenViewModel.player.addMediaItem(MediaItem.fromUri(momentOnMap.audioLink.toUri()))
             }
             exploreSightScreenViewModel.selected.value = true
         }
         exploreSightScreenViewModel.player.prepare()
+        exploreSightScreenViewModel.player.seekTo(0, 0)
         exploreSightScreenViewModel.launchPositionUpdateLoop()
     }
     var dark = isSystemInDarkTheme()
@@ -245,7 +246,10 @@ fun ExploreSightScreen(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 isPlayerLoading = exploreSightScreenViewModel.playerIsLoading.value,
                 momentNumber = exploreSightScreenViewModel.selectedMomentIndex.intValue + 1,
-                momentDurationMs = max(exploreSightScreenViewModel.currentTrackDurationMs.longValue, 1),
+                momentDurationMs = max(
+                    exploreSightScreenViewModel.currentTrackDurationMs.longValue,
+                    1
+                ),
                 currentPositionMs = exploreSightScreenViewModel.currentTrackPositionMs.longValue,
                 momentName = exploreSightScreenViewModel.currentMoment()!!.name,
                 nextOnClick = {
@@ -275,13 +279,15 @@ fun ExploreSightScreen(
                 },
                 isPlaying = exploreSightScreenViewModel.player.isPlaying,
                 pausePlayButtonOnClick = {
-                    if(exploreSightScreenViewModel.player.isPlaying){
+                    if (exploreSightScreenViewModel.player.isPlaying) {
                         exploreSightScreenViewModel.player.pause()
                     } else {
                         exploreSightScreenViewModel.player.play()
                     }
-                }
+                },
+                momentImageLink = exploreSightScreenViewModel.currentMoment()!!.imageLink
             )
+            android.util.Log.e("IMAGE", exploreSightScreenViewModel.currentMoment()!!.imageLink)
         }
     }
 }
@@ -342,6 +348,7 @@ fun MomentBox(
     modifier: Modifier = Modifier,
     momentName: String = "Момент1",
     momentNumber: Int = 1,
+    momentImageLink: String,
     momentDurationMs: Long = 90,
     currentPositionMs: Long = 45,
     isPlayerLoading: Boolean = false,
@@ -380,8 +387,7 @@ fun MomentBox(
                     .fillMaxWidth()
                     .padding(5.dp)
             ) {
-                Image(
-                    painter = painterResource(R.drawable.jonkler),
+                AsyncImage(
                     modifier = Modifier
                         .fillMaxWidth(0.3f)
                         .dropShadow(offsetX = 0.dp, offsetY = 0.dp, blur = 16.dp)
@@ -390,7 +396,8 @@ fun MomentBox(
                         )
                         .aspectRatio(1f),
                     contentDescription = "image",
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    model = momentImageLink
                 )
                 Column(
                     modifier = Modifier
@@ -432,7 +439,7 @@ fun MomentBox(
                                     .clip(CircleShape)
                                     .background(color = MediumBlue)
                                     .padding(10.dp),
-                                imageVector = ImageVector.vectorResource(if(isPlaying) R.drawable.pause else R.drawable.play),
+                                imageVector = ImageVector.vectorResource(if (isPlaying) R.drawable.pause else R.drawable.play),
                                 contentDescription = null,
                                 tint = MaterialTheme.colorScheme.background
                             )

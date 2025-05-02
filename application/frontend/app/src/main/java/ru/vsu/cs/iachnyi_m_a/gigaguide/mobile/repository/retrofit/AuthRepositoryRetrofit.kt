@@ -1,6 +1,5 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.retrofit
 
-import kotlinx.coroutines.delay
 import retrofit2.Response
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.api.AuthAPI
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.JWTResponse
@@ -18,7 +17,7 @@ class AuthRepositoryRetrofit(private val authAPI: AuthAPI): AuthRepository {
     override suspend fun login(loginRequestDTO: LoginRequestDTO): String? {
         var response: Response<JWTResponse> = authAPI.login(loginRequestDTO).execute()
         return if(response.isSuccessful){
-            response.body().token
+            response.body()!!.token
         } else {
             null
         }

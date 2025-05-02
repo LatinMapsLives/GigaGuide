@@ -1,6 +1,5 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -25,13 +24,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.res.ResourcesCompat
 import androidx.navigation.NavController
+import coil3.compose.AsyncImage
 import org.osmdroid.config.Configuration
 import org.osmdroid.events.MapEventsReceiver
 import org.osmdroid.events.MapListener
@@ -40,6 +40,7 @@ import org.osmdroid.events.ZoomEvent
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
+import org.osmdroid.views.Projection
 import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.TilesOverlay
@@ -63,7 +64,7 @@ fun MapScreen(mapScreenViewModel: MapScreenViewModel, navController: NavControll
     Box(modifier = Modifier.fillMaxSize()) {
         AndroidView(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize().testTag("MAP_VIEW"),
             factory = { context ->
                 MapView(context).apply {
                     setMultiTouchControls(true)
@@ -93,7 +94,7 @@ fun MapScreen(mapScreenViewModel: MapScreenViewModel, navController: NavControll
                 view.controller.setZoom(mapScreenViewModel.zoom)
                 if (!mapScreenViewModel.loading.value) {
                     view.overlays.clear()
-                    view.overlays.add(MapEventsOverlay(object : MapEventsReceiver {
+                    var clickOverlay = MapEventsOverlay(object : MapEventsReceiver {
                         override fun singleTapConfirmedHelper(p: GeoPoint): Boolean {
                             mapScreenViewModel.selected.value = false
                             return false
@@ -102,16 +103,19 @@ fun MapScreen(mapScreenViewModel: MapScreenViewModel, navController: NavControll
                         override fun longPressHelper(p: GeoPoint?): Boolean {
                             return false
                         }
-                    }))
+                    })
+                    view.overlays.add(clickOverlay)
                     for (sight in sights) {
                         var marker = Marker(view)
-                        marker.setOnMarkerClickListener { mk, mv ->
+                        var listener = Marker.OnMarkerClickListener { mk, mv ->
                             var point = GeoPoint(sight.latitude, sight.longitude)
                             view.controller.animateTo(point, 18.0, 400)
                             mapScreenViewModel.selectedIndex.longValue = sight.id
                             mapScreenViewModel.selected.value = true
-                            return@setOnMarkerClickListener true
+                            true
                         }
+                        mapScreenViewModel.clickMapMethod = {listener.onMarkerClick(marker, view)}
+                        marker.setOnMarkerClickListener(listener)
                         marker.position = GeoPoint(sight.latitude, sight.longitude)
                         marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
                         var drawableId =
@@ -154,6 +158,7 @@ fun SightBox(
     GigaGuideMobileTheme {
         Column(
             modifier = modifier
+
                 .clip(RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp))
                 .background(MaterialTheme.colorScheme.background)
                 .fillMaxWidth(),
@@ -179,15 +184,17 @@ fun SightBox(
                     .fillMaxWidth()
                     .padding(5.dp)
             ) {
-                Image(
-                    painter = painterResource(R.drawable.jonkler), modifier = Modifier
+                AsyncImage(
+                    modifier = Modifier
+                        .background(MaterialTheme.colorScheme.tertiary)
                         .fillMaxWidth(0.4f)
                         .dropShadow(offsetX = 0.dp, offsetY = 0.dp, blur = 16.dp)
                         .clip(
                             RoundedCornerShape(5.dp)
                         )
                         .aspectRatio(180f / 100),
-                    contentDescription = "image"
+                    contentDescription = "image",
+                    model = "https://vestivrn.ru/media/archive/image/2024/05/LT7zhWmmZ-tD6ilZ4nQcUPkF1S4SIdph.jpg"
                 )
                 Column(
                     modifier = Modifier

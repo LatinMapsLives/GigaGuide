@@ -1,5 +1,6 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -35,6 +36,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.SightTourThumbnail
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
@@ -118,7 +120,6 @@ fun SightTourThumbnailBox(modifier: Modifier, value: SightTourThumbnail) {
                         color = MaterialTheme.colorScheme.onBackground
                     )
 
-
                     Column {
                         Row(
                             modifier = Modifier
@@ -166,14 +167,15 @@ fun SightTourThumbnailBox(modifier: Modifier, value: SightTourThumbnail) {
                     }
                 }
             }
-            Image(
+            AsyncImage(
                 modifier = Modifier
+                    .background(MaterialTheme.colorScheme.tertiary)
                     .aspectRatio(300f / 135)
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(topStart = cornerSize, topEnd = cornerSize)),
-                painter = painterResource(R.drawable.jonkler),
                 contentScale = ContentScale.Crop,
-                contentDescription = "jonkler",
+                contentDescription = null,
+                model = value.imageLink,
             )
         }
 
@@ -184,7 +186,7 @@ fun SightTourThumbnailBox(modifier: Modifier, value: SightTourThumbnail) {
 
 @Composable
 fun LoadingThumbnailBox(modifier: Modifier) {
-    var loadingColor: Color = LightGrey
+    var loadingColor: Color = MaterialTheme.colorScheme.tertiary
     val cornerSize = 10.dp
     val spacerCornerSize = 5.dp
     GigaGuideMobileTheme {

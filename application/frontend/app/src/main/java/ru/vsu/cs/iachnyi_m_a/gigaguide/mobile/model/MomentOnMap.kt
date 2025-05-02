@@ -5,5 +5,6 @@ data class MomentOnMap(
     var name: String,
     var latitude: Double,
     var longitude: Double,
-    var audioLink: String
+    var audioLink: String,
+    var imageLink: String
 )

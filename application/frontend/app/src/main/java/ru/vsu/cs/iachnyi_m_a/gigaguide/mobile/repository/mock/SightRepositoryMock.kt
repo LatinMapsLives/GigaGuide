@@ -34,11 +34,10 @@ class SightRepositoryMock: SightRepository {
     override suspend fun getSightPageInfoById(id: Long): SightInfo? {
         Log.e("dasas", "ID: $id")
         delay(1000)
-        return SightInfo(sights.find { sight -> sight.id == id }!!).let { return@let SightInfo(id = it.id, name = it.name, description = it.description, time = 30) }
+        return SightInfo(sights.find { sight -> sight.id == id }!!).let { return@let SightInfo(id = it.id, name = it.name, description = it.description, time = 30, imageLink = "") }
     }
 
     override suspend fun getAllSightInfos(): List<SightInfo>? {
-        delay(1000)
-        return sights.map { si -> SightInfo(id = si.id, name = si.name, description = si.description, time = si.time) }
+        return sights.map { si -> SightInfo(id = si.id, name = si.name, description = si.description, time = si.time, imageLink = "") }
     }
 }

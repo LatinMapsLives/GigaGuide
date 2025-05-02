@@ -4,5 +4,6 @@ data class SightTourThumbnail(
     var sightId: Long,
     var name: String,
     var rating: Float,
-    var proximity: Float
+    var proximity: Float,
+    var imageLink: String
 )

@@ -10,7 +10,7 @@ class MapRepositoryRetrofit(private val mapAPI: MapAPI): MapRepository {
     override suspend fun getCoordinatedOfSight(sightId: Long): MapPoint? {
         var response: Response<CoordinatesDTO> = mapAPI.getSightCoordinates(sightId).execute()
         return if (response.isSuccessful){
-            MapPoint(latitude = response.body().latitude, longitude = response.body().longitude)
+            MapPoint(latitude = response.body()!!.latitude, longitude = response.body()!!.longitude)
         } else {
             null
         }
@@ -19,7 +19,7 @@ class MapRepositoryRetrofit(private val mapAPI: MapAPI): MapRepository {
     override suspend fun getCoordinatesOfMoment(sightId: Long): MapPoint? {
         var response: Response<CoordinatesDTO> = mapAPI.getMomentCoordinates(sightId).execute()
         return if (response.isSuccessful){
-            MapPoint(latitude = response.body().latitude, longitude = response.body().longitude)
+            MapPoint(latitude = response.body()!!.latitude, longitude = response.body()!!.longitude)
         } else {
             null
         }
@@ -31,7 +31,6 @@ class MapRepositoryRetrofit(private val mapAPI: MapAPI): MapRepository {
             MapPoint(51.673846, 39.211615),
             MapPoint(51.673811, 39.211592),
             MapPoint(51.673825, 39.211688),
-            MapPoint(51.67373, 39.212067)
         )
     }
 

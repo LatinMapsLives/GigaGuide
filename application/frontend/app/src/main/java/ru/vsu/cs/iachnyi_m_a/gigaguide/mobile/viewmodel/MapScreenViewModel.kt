@@ -29,6 +29,7 @@ class MapScreenViewModel @Inject constructor(
     var loading = mutableStateOf(false)
     var selected = mutableStateOf(false)
     var selectedIndex = mutableLongStateOf(-1)
+    lateinit var clickMapMethod: () -> Unit
 
     fun loadSightsOnMap() {
         viewModelScope.launch {

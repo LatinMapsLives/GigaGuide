@@ -1,6 +1,5 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,16 +30,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil3.compose.AsyncImage
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ExploreSightScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.Black
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.LightGrey
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.SightPageScreenViewModel
 
@@ -55,7 +53,7 @@ fun SightPageScreen(
         sightPageScreenViewModel.sightId = sightId
         sightPageScreenViewModel.loadSight()
     }
-    val loadingColor = LightGrey
+    val loadingColor = MaterialTheme.colorScheme.tertiary
     if (sightPageScreenViewModel.loading.value || sightPageScreenViewModel.sight.value == null) {
         LoadingScreen(navController)
     } else {
@@ -73,13 +71,14 @@ fun SightPageScreen(
                         .fillMaxWidth()
                         .aspectRatio(aspectRation)
                 ) {
-                    Image(
+                    AsyncImage(
                         modifier = Modifier
+                            .background(MaterialTheme.colorScheme.tertiary)
                             .fillMaxWidth()
                             .aspectRatio(aspectRation),
-                        painter = painterResource(R.drawable.jonkler),
                         contentDescription = "Tour image",
-                        contentScale = ContentScale.Crop
+                        contentScale = ContentScale.Crop,
+                        model = sightPageScreenViewModel.sight.value!!.imageLink
                     )
 
                     Column(
@@ -283,6 +282,7 @@ fun LoadingScreen(navController: NavController) {
                 ) {
                     Spacer(
                         modifier = Modifier
+                            .padding(bottom = 10.dp)
                             .clip(RoundedCornerShape(spacerCornerSize))
                             .background(loadingColor)
                             .fillMaxWidth(0.75f)
@@ -350,8 +350,18 @@ fun LoadingScreen(navController: NavController) {
                         .clip(RoundedCornerShape(spacerCornerSize))
                         .background(loadingColor)
                         .fillMaxWidth()
-                        .height(50.dp)
+                        .height(20.dp)
                 )
+                for (i in 0..4) {
+                    Spacer(
+                        Modifier
+                            .padding(bottom = 20.dp)
+                            .clip(RoundedCornerShape(spacerCornerSize))
+                            .background(loadingColor)
+                            .fillMaxWidth()
+                            .height(20.dp)
+                    )
+                }
 
 
                 Row(
@@ -381,7 +391,6 @@ fun LoadingScreen(navController: NavController) {
                         .width(50.dp)
                         .height(20.dp)
                         .background(color = loadingColor)
-
                 )
 
 

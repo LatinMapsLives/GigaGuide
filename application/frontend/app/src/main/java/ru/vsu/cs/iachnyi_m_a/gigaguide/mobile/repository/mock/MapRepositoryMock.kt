@@ -45,28 +45,32 @@ class MapRepositoryMock : MapRepository {
             "Солнечные часы",
             51.67393,
             39.211287,
-            "https://drive.google.com/uc?export=download&id=1TGLfYaxjLhAfPUcYAFWIAdGtpd2C0N0L"
+            "https://drive.google.com/uc?export=download&id=1TGLfYaxjLhAfPUcYAFWIAdGtpd2C0N0L",
+            ""
         ),
         MomentOnMap(
             2,
             "Пушки",
             51.673811,
             39.211592,
-            "https://drive.google.com/uc?export=download&id=1LecUqI3_67PO6F2jppHWtfFbKlWHz4Ar"
+            "https://drive.google.com/uc?export=download&id=1LecUqI3_67PO6F2jppHWtfFbKlWHz4Ar",
+            ""
         ),
         MomentOnMap(
             3,
             "Памятник Петру I",
             51.673825,
             39.211688,
-            "https://drive.google.com/uc?export=download&id=1TGLfYaxjLhAfPUcYAFWIAdGtpd2C0N0L"
+            "https://drive.google.com/uc?export=download&id=1TGLfYaxjLhAfPUcYAFWIAdGtpd2C0N0L",
+            ""
         ),
         MomentOnMap(
             4,
             "Фонтан",
             51.67373,
             39.212067,
-            "https://drive.google.com/uc?export=download&id=1LecUqI3_67PO6F2jppHWtfFbKlWHz4Ar"
+            "https://drive.google.com/uc?export=download&id=1LecUqI3_67PO6F2jppHWtfFbKlWHz4Ar",
+            ""
         )
     )
 
@@ -84,7 +88,6 @@ class MapRepositoryMock : MapRepository {
             MapPoint(51.673846, 39.211615),
             MapPoint(51.673811, 39.211592),
             MapPoint(51.673825, 39.211688),
-            MapPoint(51.67373, 39.212067)
         )
     }
 }

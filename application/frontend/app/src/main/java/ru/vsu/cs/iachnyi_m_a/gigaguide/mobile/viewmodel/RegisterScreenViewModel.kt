@@ -1,5 +1,6 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel
 
+import android.util.Log
 import android.util.Patterns
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -11,6 +12,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.RegisterUserDTO
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.AuthRepository
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.validator.EmailValidator
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.RegisterScreenError
 import java.net.ConnectException
 import java.net.SocketTimeoutException
@@ -35,7 +37,7 @@ class RegisterScreenViewModel @Inject constructor(private val authRepository: Au
             passwordConfirmInput.value.trim().isEmpty()
         ) {
             registerScreenError.value = RegisterScreenError.FIELDS_EMPTY
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(emailInput.value.trim()).matches()) {
+        } else if (!EmailValidator().validate(emailInput.value.trim())) {
             registerScreenError.value = RegisterScreenError.EMAIL_WRONG_FORMAT
         } else if (passwordInput.value != passwordConfirmInput.value) {
             registerScreenError.value = RegisterScreenError.PASSWORD_MISMATCH

@@ -50,7 +50,7 @@ class SettingsScreenViewModel @Inject constructor(
                                 null
                             }
                     }
-                    Log.d("JWT", "userdata" + data.toString())
+                    Log.d("JWT", "userdata$data")
                     if (data == null) {
                         dataStoreManager.deleteJWT()
                     }

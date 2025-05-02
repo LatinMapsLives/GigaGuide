@@ -45,7 +45,6 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SightPageScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumGrey
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.AudioTestScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.ExploreSightScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.FavoriteScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.HomeScreen
@@ -154,10 +153,6 @@ class MainActivity : ComponentActivity() {
                             val args = it.toRoute<ExploreSightScreenClass>()
                             showNavigationBar.value = false;
                             ExploreSightScreen(exploreSightScreenViewModel = hiltViewModel<ExploreSightScreenViewModel>(), navController = navController, sightId = args.sightId, context = this@MainActivity)
-                        }
-                        composable<AudioTestScreenObject>{
-                            AudioTestScreen(this@MainActivity)
-                            showNavigationBar.value = false
                         }
                     }
                     if (showNavigationBar.value) BottomNavigationBar(

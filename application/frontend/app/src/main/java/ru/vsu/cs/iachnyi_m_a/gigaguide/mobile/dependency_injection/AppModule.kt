@@ -8,6 +8,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.api.AuthAPI
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.api.MapAPI
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.api.MomentAPI
@@ -37,6 +38,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
+    private val RETROFIT_BASE_URL = "http://192.168.1.84:8080"
     //<--------------REPOSITORIES------------->
     @Provides
     @Singleton
@@ -80,8 +82,9 @@ object AppModule {
     @Singleton
     fun provideAuthAPI(): AuthAPI {
         var retrofit =
-            Retrofit.Builder().baseUrl("http://192.168.1.84:8081/api/auth/")
-                .addConverterFactory(
+            Retrofit.Builder().baseUrl("$RETROFIT_BASE_URL/api/auth/")
+                .addConverterFactory(ScalarsConverterFactory.create())
+        .addConverterFactory(
                     GsonConverterFactory.create()
                 ).build()
         return retrofit.create(AuthAPI::class.java)
@@ -90,7 +93,7 @@ object AppModule {
     @Singleton
     @Provides
     fun provideUserAPI(): UserAPI {
-        var retrofit = Retrofit.Builder().baseUrl("http://192.168.1.84:8084/api/user/")
+        var retrofit = Retrofit.Builder().baseUrl("$RETROFIT_BASE_URL/api/")
             .addConverterFactory(GsonConverterFactory.create()).build()
         return retrofit.create(UserAPI::class.java)
     }
@@ -98,7 +101,7 @@ object AppModule {
     @Singleton
     @Provides
     fun provideSightAPI(): SightAPI{
-        var retrofit = Retrofit.Builder().baseUrl("http://192.168.1.84:8082/api/")
+        var retrofit = Retrofit.Builder().baseUrl("$RETROFIT_BASE_URL/api/tour-sight/")
             .addConverterFactory(GsonConverterFactory.create()).build()
         return retrofit.create(SightAPI::class.java)
     }
@@ -106,7 +109,7 @@ object AppModule {
     @Singleton
     @Provides
     fun provideMomentAPI(): MomentAPI{
-        var retrofit = Retrofit.Builder().baseUrl("http://192.168.1.84:8082/api/moments/")
+        var retrofit = Retrofit.Builder().baseUrl("$RETROFIT_BASE_URL/api/tour-sight/moments/")
             .addConverterFactory(GsonConverterFactory.create()).build()
         return retrofit.create(MomentAPI::class.java)
     }
@@ -114,7 +117,7 @@ object AppModule {
     @Singleton
     @Provides
     fun provideMapAPI(): MapAPI {
-        var retrofit = Retrofit.Builder().baseUrl("http://192.168.1.84:8086/api/map/")
+        var retrofit = Retrofit.Builder().baseUrl("$RETROFIT_BASE_URL/api/map/")
             .addConverterFactory(GsonConverterFactory.create()).build()
         return retrofit.create(MapAPI::class.java)    }
 

@@ -43,7 +43,8 @@ class HomeScreenViewModel @Inject constructor(private val sightRepository: Sight
                         sightId = si.id,
                         name = si.name,
                         rating = Random(13471407342).nextInt(40, 51) / 10f,
-                        proximity = Random(13471407342).nextInt(2, 20) / 10f
+                        proximity = Random(13471407342).nextInt(2, 20) / 10f,
+                        imageLink = si.imageLink
                     )
                 });
             }

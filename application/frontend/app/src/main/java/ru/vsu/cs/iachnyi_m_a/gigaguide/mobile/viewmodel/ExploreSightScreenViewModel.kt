@@ -50,19 +50,7 @@ class ExploreSightScreenViewModel @Inject constructor(
 
     suspend fun loadRoute() {
         loadingRoute.value = true
-        var loadedRoute = try {
-            withContext(Dispatchers.IO) {
-                mapRepository.getRouteOfSight(sightId)
-            }
-        } catch (e: ConnectException) {
-            null
-        } catch (e: SocketTimeoutException) {
-            null
-        }
-        route.clear()
-        if(loadedRoute != null){
-            route.addAll(loadedRoute)
-        }
+
         momentOnMaps.clear()
         var loadedMoments = try {
             withContext(Dispatchers.IO) {
@@ -73,8 +61,8 @@ class ExploreSightScreenViewModel @Inject constructor(
         } catch (e: SocketTimeoutException) {
             null
         }
-        if(loadedMoments != null){
-            for(momentInfo in loadedMoments){
+        if (loadedMoments != null) {
+            for (momentInfo in loadedMoments) {
                 var mapPoint = try {
                     withContext(Dispatchers.IO) {
                         mapRepository.getCoordinatesOfMoment(momentInfo.id)
@@ -84,11 +72,37 @@ class ExploreSightScreenViewModel @Inject constructor(
                 } catch (e: SocketTimeoutException) {
                     null
                 }
-                if(mapPoint != null){
-                    momentOnMaps.add(MomentOnMap(id = momentInfo.id, name = momentInfo.name, latitude = mapPoint.latitude, longitude = mapPoint.longitude, audioLink = "http://192.168.1.84:8083/api/guide?id=${momentInfo.id}"))
+                if (mapPoint != null) {
+                    momentOnMaps.add(
+                        MomentOnMap(
+                            id = momentInfo.id,
+                            name = momentInfo.name,
+                            latitude = mapPoint.latitude,
+                            longitude = mapPoint.longitude,
+                            audioLink = "http://192.168.1.84:8080/api/guideff?id=${momentInfo.id}",
+                            imageLink = momentInfo.imagePath
+                        )
+                    )
                 }
             }
         }
+
+        var loadedRoute = try {
+//            withContext(Dispatchers.IO) {
+//                mapRepository.getRouteOfSight(sightId)
+//            }
+
+            momentOnMaps.map { m -> MapPoint(m.latitude, m.longitude) }
+        } catch (e: ConnectException) {
+            null
+        } catch (e: SocketTimeoutException) {
+            null
+        }
+        route.clear()
+        if (loadedRoute != null) {
+            route.addAll(loadedRoute)
+        }
+
         loadingRoute.value = false
         needToSelectFirst = true
 

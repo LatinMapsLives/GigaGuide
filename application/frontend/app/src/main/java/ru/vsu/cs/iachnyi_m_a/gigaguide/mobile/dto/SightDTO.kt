@@ -4,5 +4,6 @@ data class SightDTO(
     var id: Long,
     var name: String,
     var description: String,
-    var city: String
+    var city: String,
+    var imagePath: String
 )
