@@ -79,7 +79,7 @@ class ExploreSightScreenViewModel @Inject constructor(
                             name = momentInfo.name,
                             latitude = mapPoint.latitude,
                             longitude = mapPoint.longitude,
-                            audioLink = "http://192.168.1.84:8080/api/guideff?id=${momentInfo.id}",
+                            audioLink = "http://192.168.1.84:8080/api/guide?id=${momentInfo.id}",
                             imageLink = momentInfo.imagePath
                         )
                     )
@@ -91,7 +91,6 @@ class ExploreSightScreenViewModel @Inject constructor(
 //            withContext(Dispatchers.IO) {
 //                mapRepository.getRouteOfSight(sightId)
 //            }
-
             momentOnMaps.map { m -> MapPoint(m.latitude, m.longitude) }
         } catch (e: ConnectException) {
             null

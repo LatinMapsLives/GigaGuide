@@ -7,11 +7,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -61,23 +63,65 @@ fun SettingsScreen(settingsScreenViewModel: SettingsScreenViewModel, navControll
             } else {
                 if (settingsScreenViewModel.userData.value != null) {
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .background(color = MaterialTheme.colorScheme.tertiary)
+                            .padding(20.dp)
+                            .fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        UserIcon(modifier = Modifier.padding(20.dp))
-                        Text("Выполнен вход под именем ${settingsScreenViewModel.userData.value!!.username}")
+                        Box(
+                            modifier = Modifier
+                                .size(50.dp)
+                                .border(
+                                    shape = CircleShape,
+                                    width = 3.dp,
+                                    color = MaterialTheme.colorScheme.secondary
+                                )
+                                .clip(CircleShape)
+                                .background(color = MaterialTheme.colorScheme.primary)
+                        ) {
+                            Icon(
+                                modifier = Modifier.fillMaxSize(),
+                                imageVector = ImageVector.vectorResource(R.drawable.person_outline),
+                                tint = MaterialTheme.colorScheme.secondary,
+                                contentDescription = "user icon"
+                            )
+                        }
+                        //Text("")
+                        Text(style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onBackground, text = "${stringResource(R.string.settings_screen_logged_in_as)} ${settingsScreenViewModel.userData.value!!.username}", modifier = Modifier
+                            .weight(1f)
+                            .padding(horizontal = 20.dp))
                         Icon(
                             imageVector = ImageVector.vectorResource(R.drawable.chevron_right),
                             contentDescription = "chevron right",
-                            modifier = Modifier.size(40.dp),
+                            modifier = Modifier
+                                .size(50.dp),
                             tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
                     GradientSeparator(modifier = Modifier
                         .fillMaxWidth()
-                        .padding(35.dp))
+                        .padding(horizontal = 35.dp))
                 } else {
-                    UserIcon(modifier = Modifier.padding(20.dp))
+                    Box(
+                        modifier = Modifier
+                            .padding(20.dp)
+                            .size(80.dp)
+                            .border(
+                                shape = CircleShape,
+                                width = 6.dp,
+                                color = MaterialTheme.colorScheme.secondary
+                            )
+                            .clip(CircleShape)
+                            .background(color = MaterialTheme.colorScheme.primary)
+                    ) {
+                        Icon(
+                            modifier = Modifier.fillMaxSize(),
+                            imageVector = ImageVector.vectorResource(R.drawable.person_outline),
+                            tint = MaterialTheme.colorScheme.secondary,
+                            contentDescription = "user icon"
+                        )
+                    }
                     Text(
                         modifier = Modifier.padding(horizontal = 20.dp),
                         style = MaterialTheme.typography.titleLarge,
@@ -114,7 +158,7 @@ fun SettingsScreen(settingsScreenViewModel: SettingsScreenViewModel, navControll
             Text(
                 text = stringResource(R.string.settings_screen_settings_header),
                 modifier = Modifier
-                    .padding(start = 20.dp, end = 20.dp, bottom = 20.dp)
+                    .padding(20.dp)
                     .fillMaxWidth(),
                 style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.onBackground
@@ -158,7 +202,7 @@ fun UserIcon(modifier: Modifier = Modifier) {
     GigaGuideMobileTheme {
         Box(
             modifier = modifier
-                .size(85.dp)
+                .size(60.dp)
                 .border(
                     shape = CircleShape,
                     width = 6.dp,

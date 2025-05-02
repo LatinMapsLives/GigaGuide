@@ -114,7 +114,6 @@ fun MapScreen(mapScreenViewModel: MapScreenViewModel, navController: NavControll
                             mapScreenViewModel.selected.value = true
                             true
                         }
-                        mapScreenViewModel.clickMapMethod = {listener.onMarkerClick(marker, view)}
                         marker.setOnMarkerClickListener(listener)
                         marker.position = GeoPoint(sight.latitude, sight.longitude)
                         marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)

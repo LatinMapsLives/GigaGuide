@@ -39,4 +39,5 @@
     <string name="login_screen_error_fields_empty">Заполните все поля</string>
     <string name="login_screen_error_login_error">Неверная почта или пароль</string>
     <string name="login_screen_success">Успешный вход</string>
+    <string name="settings_screen_logged_in_as">Выполнен вход под именем</string>
 </resources>

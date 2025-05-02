@@ -270,8 +270,8 @@ fun ExploreSightScreen(
                         exploreSightScreenViewModel.currentMoment()!!.longitude
                     )
                 },
-                hasNext = exploreSightScreenViewModel.selectedMomentIndex.intValue < exploreSightScreenViewModel.momentOnMaps.size &&
-                        exploreSightScreenViewModel.selectedMomentIndex.intValue < exploreSightScreenViewModel.momentOnMaps.size,
+                hasNext =
+                    exploreSightScreenViewModel.selectedMomentIndex.intValue < exploreSightScreenViewModel.momentOnMaps.size - 1,
                 hasPrevious = exploreSightScreenViewModel.selectedMomentIndex.intValue > 0,
                 chevronDownOnClick = deselectCallback,
                 seekCallbackSeconds = { sec ->
