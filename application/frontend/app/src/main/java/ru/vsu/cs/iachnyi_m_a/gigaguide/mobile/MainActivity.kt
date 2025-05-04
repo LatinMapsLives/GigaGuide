@@ -40,6 +40,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.MapScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.NavBarItem
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.RegisterScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ReviewScreenClass
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SearchScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SettingsScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SightPageScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
@@ -52,6 +53,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.LoginScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.MapScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.RegisterScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.ReviewScreen
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.SearchScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.SettingsScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.SightPageScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
@@ -158,6 +160,10 @@ class MainActivity : ComponentActivity() {
                             val args = it.toRoute<ReviewScreenClass>()
                             showNavigationBar.value = false
                             ReviewScreen(sightId = args.sightId, navController = navController)
+                        }
+                        composable<SearchScreenObject>{
+                            showNavigationBar.value = false
+                            SearchScreen(navController = navController)
                         }
                     }
                     if (showNavigationBar.value) BottomNavigationBar(

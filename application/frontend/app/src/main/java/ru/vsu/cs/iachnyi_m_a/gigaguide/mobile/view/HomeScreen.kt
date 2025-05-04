@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SearchScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SightPageScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
@@ -45,7 +46,10 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.HomeScreenViewModel
 
 @Composable
-fun HomeScreen(homeScreenViewModel: HomeScreenViewModel = hiltViewModel<HomeScreenViewModel>(), navController: NavController) {
+fun HomeScreen(
+    homeScreenViewModel: HomeScreenViewModel = hiltViewModel<HomeScreenViewModel>(),
+    navController: NavController
+) {
 
     Column(
         Modifier
@@ -91,6 +95,11 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel = hiltViewModel<HomeScre
                         imageVector = Icons.Filled.Search,
                         contentDescription = "search",
                         modifier = Modifier
+                            .clickable(onClick = {
+                                navController.navigate(
+                                    SearchScreenObject
+                                )
+                            })
                             .fillMaxSize()
                     )
                 }
@@ -132,13 +141,15 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel = hiltViewModel<HomeScre
             } else {
                 for (sight in sights) {
                     Spacer(Modifier.width(20.dp))
-                    SightTourThumbnailBox(modifier = Modifier
-                        .width(275.dp)
-                        .clickable(onClick = {
-                            navController.navigate(
-                                SightPageScreenClass(sightId = sight.sightId)
-                            )
-                        }), value = sight)
+                    SightTourThumbnailBox(
+                        modifier = Modifier
+                            .width(275.dp)
+                            .clickable(onClick = {
+                                navController.navigate(
+                                    SightPageScreenClass(sightId = sight.sightId)
+                                )
+                            }), value = sight
+                    )
                 }
             }
             Spacer(Modifier.width(20.dp))
@@ -175,11 +186,13 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel = hiltViewModel<HomeScre
             } else {
                 for (sight in sights) {
                     Spacer(Modifier.width(20.dp))
-                    SightTourThumbnailBox(modifier = Modifier.width(275.dp).clickable(onClick = {
-                        navController.navigate(
-                            SightPageScreenClass(sightId = sight.sightId)
-                        )
-                    }), value = sight)
+                    SightTourThumbnailBox(modifier = Modifier
+                        .width(275.dp)
+                        .clickable(onClick = {
+                            navController.navigate(
+                                SightPageScreenClass(sightId = sight.sightId)
+                            )
+                        }), value = sight)
                 }
             }
             Spacer(Modifier.width(20.dp))

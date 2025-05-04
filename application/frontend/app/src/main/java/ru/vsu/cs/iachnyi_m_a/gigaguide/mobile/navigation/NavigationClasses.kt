@@ -26,3 +26,9 @@ data class ExploreSightScreenClass(
 data class ReviewScreenClass(
     val sightId: Long
 )
+@Serializable
+object SearchScreenObject
+@Serializable
+data class TourPageScreenClass(
+    val tourId: Long
+)
