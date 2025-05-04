@@ -1,0 +1,16 @@
+package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.mapper
+
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.SightDTO
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.SightInfo
+
+class SightDTOtoSightInfoMapper : Mapper<SightDTO, SightInfo> {
+    override fun map(value: SightDTO): SightInfo {
+        return SightInfo(
+            id = value.id,
+            name = value.name,
+            description = value.description,
+            time = 30,
+            imageLink = "http://192.168.1.84:8080/api/tour-sight/image?fileName=${value.imagePath}"
+        )
+    }
+}
