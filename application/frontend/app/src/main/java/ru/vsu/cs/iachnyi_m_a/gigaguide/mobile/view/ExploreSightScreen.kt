@@ -376,7 +376,7 @@ fun MomentBox(
                     .padding(vertical = 10.dp)
                     .fillMaxWidth()
                     .height(10.dp),
-                imageVector = ImageVector.vectorResource(R.drawable.chevron_down),
+                imageVector = ImageVector.vectorResource(R.drawable.chevron_down_flat),
                 tint = MaterialTheme.colorScheme.onBackground,
                 contentDescription = "chevron down"
             )

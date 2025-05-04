@@ -40,7 +40,6 @@ import org.osmdroid.events.ZoomEvent
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
-import org.osmdroid.views.Projection
 import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.TilesOverlay
@@ -57,8 +56,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.MapScreenViewModel
 @Composable
 fun MapScreen(mapScreenViewModel: MapScreenViewModel, navController: NavController) {
     var dark = isSystemInDarkTheme()
-    var sights = mapScreenViewModel.sights
-    if (sights.isEmpty()) {
+    if(mapScreenViewModel.needToLoad) {
         mapScreenViewModel.loadSightsOnMap()
     }
     Box(modifier = Modifier.fillMaxSize()) {
@@ -105,7 +103,7 @@ fun MapScreen(mapScreenViewModel: MapScreenViewModel, navController: NavControll
                         }
                     })
                     view.overlays.add(clickOverlay)
-                    for (sight in sights) {
+                    for (sight in mapScreenViewModel.sights) {
                         var marker = Marker(view)
                         var listener = Marker.OnMarkerClickListener { mk, mv ->
                             var point = GeoPoint(sight.latitude, sight.longitude)
@@ -172,7 +170,7 @@ fun SightBox(
                     .padding(vertical = 10.dp)
                     .fillMaxWidth()
                     .height(10.dp),
-                imageVector = ImageVector.vectorResource(R.drawable.chevron_down),
+                imageVector = ImageVector.vectorResource(R.drawable.chevron_down_flat),
                 tint = MaterialTheme.colorScheme.onBackground,
                 contentDescription = "chevron down"
             )

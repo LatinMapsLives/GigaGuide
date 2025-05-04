@@ -23,14 +23,16 @@ class MapScreenViewModel @Inject constructor(
     private val sightRepository: SightRepository
 ) : ViewModel() {
 
-    var center = GeoPoint(51.670859, 39.210282)
+    var center = GeoPoint(51.665859, 39.211282)
     var zoom = 16.0
     var sights = mutableStateListOf<SightOnMapInfo>()
+    var needToLoad = true
     var loading = mutableStateOf(false)
     var selected = mutableStateOf(false)
     var selectedIndex = mutableLongStateOf(-1)
 
     fun loadSightsOnMap() {
+        needToLoad = false
         viewModelScope.launch {
             loading.value = true
             var loadedSights = try {

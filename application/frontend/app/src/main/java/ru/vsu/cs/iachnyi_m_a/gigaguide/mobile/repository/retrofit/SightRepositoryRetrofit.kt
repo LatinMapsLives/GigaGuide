@@ -1,5 +1,6 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.retrofit
 
+import kotlinx.coroutines.delay
 import retrofit2.Response
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.api.SightAPI
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.SightDTO
@@ -9,6 +10,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.SightRepository
 class SightRepositoryRetrofit(private val sightAPI: SightAPI) : SightRepository {
 
     override suspend fun getSightPageInfoById(id: Long): SightInfo? {
+        delay(500)
         var call = sightAPI.getSightById(id)
         var response: Response<SightDTO> = call.execute()
         return if (response.isSuccessful) {
@@ -27,6 +29,7 @@ class SightRepositoryRetrofit(private val sightAPI: SightAPI) : SightRepository 
     }
 
     override suspend fun getAllSightInfos(): List<SightInfo>? {
+        delay(500)
         var response: Response<List<SightDTO>> = sightAPI.getAllSights().execute()
         return if (response.isSuccessful) {
             response.body()!!.map { dto ->

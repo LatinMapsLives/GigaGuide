@@ -32,7 +32,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import dagger.hilt.android.AndroidEntryPoint
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.AudioTestScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ExploreSightScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.FavoriteScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.HomeScreenObject
@@ -40,6 +39,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.LoginScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.MapScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.NavBarItem
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.RegisterScreenObject
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ReviewScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SettingsScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SightPageScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
@@ -51,6 +51,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.HomeScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.LoginScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.MapScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.RegisterScreen
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.ReviewScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.SettingsScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.SightPageScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
@@ -81,7 +82,6 @@ class MainActivity : ComponentActivity() {
 
         var selectedNavItemIndex = mutableIntStateOf(0);
         var showNavigationBar = mutableStateOf(false);
-
 
         setContent {
             GigaGuideMobileTheme {
@@ -153,6 +153,11 @@ class MainActivity : ComponentActivity() {
                             val args = it.toRoute<ExploreSightScreenClass>()
                             showNavigationBar.value = false;
                             ExploreSightScreen(exploreSightScreenViewModel = hiltViewModel<ExploreSightScreenViewModel>(), navController = navController, sightId = args.sightId, context = this@MainActivity)
+                        }
+                        composable<ReviewScreenClass>{
+                            val args = it.toRoute<ReviewScreenClass>()
+                            showNavigationBar.value = false
+                            ReviewScreen(sightId = args.sightId, navController = navController)
                         }
                     }
                     if (showNavigationBar.value) BottomNavigationBar(

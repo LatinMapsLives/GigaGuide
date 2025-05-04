@@ -23,4 +23,6 @@ data class ExploreSightScreenClass(
     val sightId: Long
 )
 @Serializable
-object AudioTestScreenObject
+data class ReviewScreenClass(
+    val sightId: Long
+)

@@ -1,6 +1,7 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,10 +14,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -38,8 +42,10 @@ import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ExploreSightScreenClass
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ReviewScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.Black
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.Yellow
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.SightPageScreenViewModel
 
 @Composable
@@ -141,6 +147,34 @@ fun SightPageScreen(
                         .fillMaxWidth()
                         .padding(20.dp)
                 ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .padding(bottom = 10.dp)
+                            .clickable(onClick = {
+                                navController.navigate(
+                                    ReviewScreenClass(sightId)
+                                )
+                            })
+                    ) {
+                        Text(
+                            text = "16 отзывов | 4.8",
+                            style = MaterialTheme.typography.headlineSmall,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                        Icon(
+                            imageVector = Icons.Filled.Star,
+                            tint = Yellow,
+                            modifier = Modifier.size(30.dp),
+                            contentDescription = null
+                        )
+                        Icon(
+                            imageVector = ImageVector.vectorResource(R.drawable.chevron_right),
+                            contentDescription = null,
+                            modifier = Modifier.size(40.dp),
+                            tint = MaterialTheme.colorScheme.onBackground
+                        )
+                    }
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
                             text = stringResource(R.string.sight_page_screen_header_description),
@@ -197,10 +231,7 @@ fun SightPageScreen(
 
                     }
 
-
-
                     Spacer(modifier = Modifier.height(50.dp))
-
                 }
             }
 
@@ -233,7 +264,7 @@ fun SightPageScreen(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.secondary, contentColor = White
                 ),
-                onClick = { navController.navigate(ExploreSightScreenClass(0)) }) {
+                onClick = { navController.navigate(ExploreSightScreenClass(sightId = sightPageScreenViewModel.sightId)) }) {
                 Text(
                     text = stringResource(R.string.sight_page_screen_button_explore_sight),
                     style = MaterialTheme.typography.titleMedium,
@@ -339,7 +370,7 @@ fun LoadingScreen(navController: NavController) {
                         modifier = Modifier
                             .padding(horizontal = 10.dp)
                             .width(30.dp),
-                        imageVector = ImageVector.vectorResource(R.drawable.chevron_down),
+                        imageVector = ImageVector.vectorResource(R.drawable.chevron_down_flat),
                         tint = MaterialTheme.colorScheme.onBackground,
                         contentDescription = "chevron down"
                     )

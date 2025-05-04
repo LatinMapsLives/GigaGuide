@@ -54,7 +54,7 @@ class ExploreSightScreenViewModel @Inject constructor(
         momentOnMaps.clear()
         var loadedMoments = try {
             withContext(Dispatchers.IO) {
-                momentRepository.getSightMoments(0)
+                momentRepository.getSightMoments(sightId)
             }
         } catch (e: ConnectException) {
             null
