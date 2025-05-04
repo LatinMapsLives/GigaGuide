@@ -43,6 +43,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ReviewScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SearchScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SettingsScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SightPageScreenClass
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.TourPageScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumGrey
@@ -56,6 +57,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.ReviewScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.SearchScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.SettingsScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.SightPageScreen
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.TourPageScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.ExploreSightScreenViewModel
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.FavoriteScreenViewModel
@@ -164,6 +166,11 @@ class MainActivity : ComponentActivity() {
                         composable<SearchScreenObject>{
                             showNavigationBar.value = false
                             SearchScreen(navController = navController)
+                        }
+                        composable<TourPageScreenClass>{
+                            val args = it.toRoute<TourPageScreenClass>()
+                            showNavigationBar.value = false
+                            TourPageScreen(tourId = args.tourId, navController = navController)
                         }
                     }
                     if (showNavigationBar.value) BottomNavigationBar(

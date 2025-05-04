@@ -1,5 +1,7 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation
 
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -30,5 +32,5 @@ data class ReviewScreenClass(
 object SearchScreenObject
 @Serializable
 data class TourPageScreenClass(
-    val tourId: Long
+    val tourId: Long,
 )

@@ -96,7 +96,7 @@ fun SearchScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Close,
-                        contentDescription = "chevron_left",
+                        contentDescription = null,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
@@ -111,28 +111,35 @@ fun SearchScreen(
                     Icon(
                         modifier = Modifier.size(20.dp),
                         imageVector = ImageVector.vectorResource(R.drawable.sort),
-                        contentDescription = null
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onBackground
                     )
                     Text(
                         text = "Сортировка",
                         style = MaterialTheme.typography.labelLarge,
-                        modifier = Modifier.padding(start = 10.dp)
+                        modifier = Modifier.padding(start = 10.dp),
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = "Фильтры",
                         style = MaterialTheme.typography.labelLarge,
-                        modifier = Modifier.padding(end = 10.dp)
+                        modifier = Modifier.padding(end = 10.dp),
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                     Icon(
                         modifier = Modifier.size(20.dp),
                         imageVector = ImageVector.vectorResource(R.drawable.settings2_svgrepo_com),
-                        contentDescription = null
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onBackground
                     )
                 }
             }
-            Text(style = MaterialTheme.typography.headlineMedium, text = "Результаты поиска")
+            Text(
+                style = MaterialTheme.typography.headlineMedium, text = "Результаты поиска",
+                color = MaterialTheme.colorScheme.onBackground
+            )
             FlowRow(
                 verticalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.padding(vertical = 15.dp)
@@ -155,7 +162,7 @@ fun SearchScreen(
                         modifier = Modifier
                             .clickable(onClick = {
                                 navController.navigate(
-                                    TourPageScreenClass(0)
+                                    TourPageScreenClass(tourId = 0)
                                 )
                             })
                             .fillMaxWidth(0.5f)
@@ -197,17 +204,20 @@ fun SightTourSearchResult(modifier: Modifier, sightTourThumbnail: SightTourThumb
             Text(
                 modifier = Modifier.fillMaxWidth(0.75f),
                 text = sightTourThumbnail.name,
-                style = MaterialTheme.typography.titleSmall
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onBackground
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = Icons.Filled.Star,
                     contentDescription = null,
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(20.dp),
+                    tint = MaterialTheme.colorScheme.onBackground
                 )
                 Text(
                     style = MaterialTheme.typography.labelSmall,
-                    text = sightTourThumbnail.rating.toString()
+                    text = sightTourThumbnail.rating.toString(),
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             }
         }
