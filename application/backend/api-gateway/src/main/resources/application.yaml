@@ -1,0 +1,41 @@
+server:
+  port: 8080
+jwt:
+  secret: 984hg493gh0439rthr0429uruj2309yh937gc763fe87t3f89723gf
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: auth-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/auth/**
+
+        - id: tour-sight-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/tour-sight/**
+
+        - id: user-service
+          uri: http://localhost:8084
+          predicates:
+            - Path=/api/user/**
+
+        - id: guide-service
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/guide/**
+
+        - id: map-service
+          uri: http://localhost:8086
+          predicates:
+            - Path=/api/map/**
+
+        - id: reviews-service
+          uri: http://localhost:8085
+          predicates:
+            - Path=/api/reviews/**
+
+
