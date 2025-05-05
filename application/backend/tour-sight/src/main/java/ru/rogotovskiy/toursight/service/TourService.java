@@ -72,26 +72,26 @@ public class TourService {
 
     public List<TourDto> filterTours(String category, Integer minDuration, Integer maxDuration, Double minDistance, Double maxDistance) {
         return tourRepository.findAll((root, query, cb) -> {
-                    List<Predicate> predicates = new ArrayList<>();
+            List<Predicate> predicates = new ArrayList<>();
 
-                    if (category != null && !category.isBlank()) {
-                        predicates.add(cb.equal(cb.lower(root.get("category")), category.toLowerCase()));
-                    }
-                    if (minDuration != null) {
-                        predicates.add(cb.greaterThanOrEqualTo(root.get("duration"), minDuration));
-                    }
-                    if (maxDuration != null) {
-                        predicates.add(cb.lessThanOrEqualTo(root.get("duration"), maxDuration));
-                    }
-                    if (minDistance != null) {
-                        predicates.add(cb.greaterThanOrEqualTo(root.get("distance"), minDistance));
-                    }
-                    if (maxDistance != null) {
-                        predicates.add(cb.lessThanOrEqualTo(root.get("distance"), maxDistance));
-                    }
+            if (category != null && !category.isBlank()) {
+                predicates.add(cb.equal(cb.lower(root.get("category")), category.toLowerCase()));
+            }
+            if (minDuration != null) {
+                predicates.add(cb.greaterThanOrEqualTo(root.get("duration"), minDuration));
+            }
+            if (maxDuration != null) {
+                predicates.add(cb.lessThanOrEqualTo(root.get("duration"), maxDuration));
+            }
+            if (minDistance != null) {
+                predicates.add(cb.greaterThanOrEqualTo(root.get("distance"), minDistance));
+            }
+            if (maxDistance != null) {
+                predicates.add(cb.lessThanOrEqualTo(root.get("distance"), maxDistance));
+            }
 
-                    return cb.and(predicates.toArray(new Predicate[0]));
-                }).stream()
+            return cb.and(predicates.toArray(new Predicate[0]));
+        }).stream()
                 .map(tourMapper::toDto)
                 .toList();
     }

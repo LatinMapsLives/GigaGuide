@@ -16,16 +16,6 @@ import java.time.LocalDateTime;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handlePasswordMismatchException(PasswordMismatchException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(toErrorResponse(e));
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleUserAlreadyExistsException(UserAlreadyExistsException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(toErrorResponse(e));
-    }
-
-    @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleUsernameNotFoundException(UsernameNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(toErrorResponse(e));
     }
@@ -33,6 +23,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(toErrorResponse(e));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handlePasswordMismatchException(PasswordMismatchException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(toErrorResponse(e));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleUserAlreadyExistsException(UserAlreadyExistsException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(toErrorResponse(e));
     }
 
     private ErrorResponse toErrorResponse(Exception e) {

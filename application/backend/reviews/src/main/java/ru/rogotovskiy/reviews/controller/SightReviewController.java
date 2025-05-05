@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.rogotovskiy.reviews.dto.CreateSightReviewDto;
 import ru.rogotovskiy.reviews.service.SightReviewService;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping("/api/reviews/sights")
 @RequiredArgsConstructor

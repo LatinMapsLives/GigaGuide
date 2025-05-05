@@ -41,4 +41,3 @@ public class Sight {
     @OneToMany(mappedBy = "sight", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Moment> moments = new ArrayList<>();
 }
-

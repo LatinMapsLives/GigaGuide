@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TtsService {
 
-    private static final String API_KEY = System.getenv("YANDEX_API_KEY");
+    private static final String API_KEY = "AQVN20Utjb5nsGqyiVAGHnlbY3_IxkSs5ixgIieR";
     private static final String FOLDER_ID = "b1g4as782c4bh4ppmk1m";
     private static final String URL = "https://tts.api.cloud.yandex.net/speech/v1/tts:synthesize";
 

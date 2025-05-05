@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import ru.rogotovskiy.auth.entity.Role;
 import ru.rogotovskiy.auth.entity.User;
@@ -45,6 +46,10 @@ public class JwtService {
                 .compact();
     }
 
+    public Integer getId(String token) {
+        return Integer.parseInt(getAllClaimsFromToken(token).getSubject());
+    }
+
     public List<String> getRoles(String token) {
         return getAllClaimsFromToken(token).get("roles", List.class);
     }
@@ -53,7 +58,7 @@ public class JwtService {
         return getAllClaimsFromToken(token).get("username", String.class);
     }
 
-    private Claims getAllClaimsFromToken(String token) {
+    public Claims getAllClaimsFromToken(String token) {
         return Jwts.parser()
                 .verifyWith(getSigningKey())
                 .build()
@@ -61,7 +66,7 @@ public class JwtService {
                 .getPayload();
     }
 
-    private SecretKey getSigningKey() {
+    public SecretKey getSigningKey() {
         return new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), SignatureAlgorithm.HS256.getJcaName());
     }
 }

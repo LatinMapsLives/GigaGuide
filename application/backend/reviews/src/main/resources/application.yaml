@@ -1,6 +1,4 @@
 spring:
-  application:
-    name: reviews
   datasource:
     url: jdbc:postgresql://localhost:5432/giga-guide-db
     username: postgres

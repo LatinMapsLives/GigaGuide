@@ -39,7 +39,7 @@ public class ImageService {
         return Files.readAllBytes(filePath);
     }
 
-    private String getFileExtension(String filename) {
+    public String getFileExtension(String filename) {
         int dotIndex = filename.lastIndexOf('.');
         return (dotIndex == -1) ? "" : filename.substring(dotIndex);
     }

@@ -2,8 +2,12 @@ package ru.rogotovskiy.userservice.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import ru.rogotovskiy.userservice.jwt.JwtAuthentication;
 import ru.rogotovskiy.userservice.service.FavoritesService;
+
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/user/favorites")

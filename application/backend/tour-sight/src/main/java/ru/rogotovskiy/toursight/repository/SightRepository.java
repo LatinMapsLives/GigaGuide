@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface SightRepository extends CrudRepository<Sight, Integer> {
+
     List<Sight> findByNameContainingIgnoreCase(String name);
 }

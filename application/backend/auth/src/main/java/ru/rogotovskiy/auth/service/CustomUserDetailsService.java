@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.rogotovskiy.auth.entity.Role;
-import ru.rogotovskiy.auth.repositoy.UserRepository;
+import ru.rogotovskiy.auth.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor

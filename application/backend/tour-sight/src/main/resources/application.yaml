@@ -1,6 +1,4 @@
 spring:
-  application:
-    name: tour-sight
   datasource:
     url: jdbc:postgresql://localhost:5432/giga-guide-db
     username: postgres

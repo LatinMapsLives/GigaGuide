@@ -9,19 +9,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.rogotovskiy.auth.dto.JwtResponse;
 import ru.rogotovskiy.auth.dto.LoginRequest;
-import ru.rogotovskiy.auth.dto.RegistrationUserDto;
+import ru.rogotovskiy.auth.dto.RegistrationUserDTO;
 import ru.rogotovskiy.auth.service.AuthService;
 
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
-
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegistrationUserDto registrationUserDto) {
-        authService.register(registrationUserDto);
+    public ResponseEntity<?> register(@RequestBody RegistrationUserDTO registrationUserDTO) {
+        authService.register(registrationUserDTO);
         return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body("Пользователь успешно создан");
     }
 

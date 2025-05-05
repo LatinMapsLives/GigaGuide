@@ -14,8 +14,8 @@
         <module>tour-sight</module>
         <module>guide</module>
         <module>user-service</module>
-        <module>map</module>
         <module>reviews</module>
+        <module>map</module>
         <module>api-gateway</module>
     </modules>
 
@@ -34,6 +34,12 @@
                 <version>${spring-boot.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <scope>test</scope>
+                <version>${spring-boot.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -19,6 +19,16 @@ public class UserService {
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    public UserDto getByUsername(String username) {
+        return userMapper.toDto(getUserByUsername(username));
+    }
+
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(
+                () -> new NoSuchElementException("Пользователь с именем %s не найден".formatted(username))
+        );
+    }
+
     public User getUserById(Integer id) {
         return userRepository.findById(id).orElseThrow(
                 () -> new NoSuchElementException("Пользователь с id %d не найден".formatted(id))
@@ -49,6 +59,10 @@ public class UserService {
         }
         userRepository.save(user);
 
+    }
+
+    public Integer getUserIdByUsername(String username) {
+        return getUserByUsername(username).getId();
     }
 
     public UserDto getById(Integer userId) {
