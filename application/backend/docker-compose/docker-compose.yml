@@ -43,7 +43,7 @@ services:
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: 1234
     depends_on:
-      - postgres
+      - auth
     networks:
       - app-network
 
@@ -107,7 +107,7 @@ services:
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: 1234
     depends_on:
-      - postgres
+      - tour-sight
     networks:
       - app-network
 
@@ -123,7 +123,7 @@ services:
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: 1234
     depends_on:
-      - postgres
+      - tour-sight
     networks:
       - app-network
 
