@@ -1,10 +1,12 @@
 package ru.rogotovskiy.auth.controller;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
 
+@Hidden
 @RestController
 public class MainController {
 

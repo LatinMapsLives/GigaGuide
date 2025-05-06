@@ -13,29 +13,86 @@ spring:
           predicates:
             - Path=/api/auth/**
 
+        - id: auth-service-docs
+          uri: http://109.106.139.133:8081
+          predicates:
+            - Path=/api-docs/auth
+          filters:
+            - SetPath=/v3/api-docs
+
         - id: tour-sight-service
           uri: http://109.106.139.133:8082
           predicates:
             - Path=/api/tour-sight/**
 
+        - id: tour-sight-service-docs
+          uri: http://109.106.139.133:8082
+          predicates:
+            - Path=/api-docs/tour
+          filters:
+            - SetPath=/v3/api-docs
+
         - id: user-service
-          uri: http://109.106.139.133:8084
           predicates:
             - Path=/api/user/**
+          uri: http://109.106.139.133:8084
+
+        - id: user-service-docs
+          uri: http://109.106.139.133:8084
+          predicates:
+            - Path=/api-docs/user
+          filters:
+            - SetPath=/v3/api-docs
 
         - id: guide-service
           uri: http://109.106.139.133:8083
           predicates:
             - Path=/api/guide/**
 
+        - id: guide-service-docs
+          uri: http://109.106.139.133:8083
+          predicates:
+            - Path=/api-docs/guide
+          filters:
+            - SetPath=/v3/api-docs
+
         - id: map-service
           uri: http://109.106.139.133:8086
           predicates:
             - Path=/api/map/**
 
+        - id: map-service-docs
+          uri: http://109.106.139.133:8086
+          predicates:
+            - Path=/api-docs/map
+          filters:
+            - SetPath=/v3/api-docs
+
         - id: reviews-service
           uri: http://109.106.139.133:8085
           predicates:
             - Path=/api/reviews/**
+
+        - id: reviews-service-docs
+          uri: http://109.106.139.133:8085
+          predicates:
+            - Path=/api-docs/reviews
+          filters:
+            - SetPath=/v3/api-docs
+springdoc:
+  swagger-ui:
+    urls:
+      - name: Auth Service
+        url: /api-docs/auth
+      - name: Tour-Sight Service
+        url: /api-docs/tour
+      - name: User Service
+        url: /api-docs/user
+      - name: Guide Service
+        url: /api-docs/guide
+      - name: Map Service
+        url: /api-docs/map
+      - name: Reviews Service
+        url: /api-docs/reviews
 
 
