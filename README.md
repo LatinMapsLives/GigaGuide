@@ -26,7 +26,8 @@
   - Swagger [Swagger UI](http://109.106.139.133:8080/webjars/swagger-ui/index.html)
 
 ### Презентация
-  - Презентация [PPTX](https://github.com/LatinMapsLives/GigaGuide/blob/main/presentation/GigaGuide%20%D0%9F%D1%80%D0%B5%D0%B7%D0%B5%D0%BD%D1%82%D0%B0%D1%86%D0%B8%D1%8F.pptx) [PDF](https://github.com/LatinMapsLives/GigaGuide/blob/main/presentation/GigaGuide%20%D0%9F%D1%80%D0%B5%D0%B7%D0%B5%D0%BD%D1%82%D0%B0%D1%86%D0%B8%D1%8F.pdf)
+  - Презентация 1 аттестация [PPTX](https://github.com/LatinMapsLives/GigaGuide/blob/main/presentation/GigaGuide%20%D0%9F%D1%80%D0%B5%D0%B7%D0%B5%D0%BD%D1%82%D0%B0%D1%86%D0%B8%D1%8F.pptx) [PDF](https://github.com/LatinMapsLives/GigaGuide/blob/main/presentation/GigaGuide%20%D0%9F%D1%80%D0%B5%D0%B7%D0%B5%D0%BD%D1%82%D0%B0%D1%86%D0%B8%D1%8F.pdf)
+  - Презентация 2 аттестация [PDF](https://github.com/LatinMapsLives/GigaGuide/blob/main/presentation/%D0%9F%D1%80%D0%B5%D0%B7%D0%B0%D0%BD%D1%82%D0%B0%D1%86%D0%B8%D1%8F%202%20%D0%B0%D1%82%D1%82%D0%B5%D1%81%D1%82%D0%B0%D1%86%D0%B8%D1%8F.pdf)
   - Видео выступления к 1 аттестации [Google drive](https://drive.google.com/file/d/1a5Djmm-MIyd6UD06F7tifHbb_PvEhg7m/view?usp=sharing)
   - Видко выступления к 2 аттестации [Google drive](https://drive.google.com/file/d/13TxfadW8J7Pzk_-13ACKs_jv72IvYAaR/view?usp=sharing)
     
