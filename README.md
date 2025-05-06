@@ -38,6 +38,9 @@
 
 ### ПМ-отчёт
   - Вторая аттестация [XLSX](https://github.com/LatinMapsLives/GigaGuide/blob/main/documentation/%D0%9E%D1%82%D1%87%D0%B5%D1%82%20%D0%9F%D0%9C.xlsx)
+
+### Тестирование
+  - Вторая аттестация [XLSX](https://github.com/LatinMapsLives/GigaGuide/blob/main/documentation/%D0%9E%D1%82%D1%87%D0%B5%D1%82%20UNIT-TESTS.xlsx)
     
 ### Предпроектное исследование
   - SWOT-анализ [Google таблицы](https://docs.google.com/spreadsheets/d/1jxUEAsRuFycXZ_KhZAxvzojmkwrpYNN-9BWg3r2WFRo/edit?usp=sharing)
