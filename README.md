@@ -14,6 +14,11 @@
 #### Описание сервиса
   Сервис "GigaGuide" предоставляет возможность найти и прослушать конкретные аудиогиды. Пользователи также могут просматривать доступные достопримечательности и информацию о них, выбирать туры, соединяющие несколько таких достопримечательностей.
 
+### Данные для доступа к сервису:
+  - Мобильное приложение:
+      Почта: user@gmail.com
+      Пароль: user
+
 ### Сервисы командной разработки
   - [Jira - доска с задачами](https://melgrebannyusith.atlassian.net/jira/software/projects/GUARD/boards/3?atlOrigin=eyJpIjoiN2JkMWNmZDE1OTdlNGZiODkzOTIxZmMwNjg1Y2EzMTciLCJwIjoiaiJ9)
   - [Figma - доска](https://www.figma.com/board/7V8hfokyhVc5VN5UFa2SD0/%D0%90%D1%83%D0%B4%D0%B8%D0%BE%D0%B3%D0%B8%D0%B4%D1%8B?node-id=0-1&t=zjI9NQ4nZwteQB15-1)
@@ -39,8 +44,9 @@
   - Анализ рынка SAM/SOM [DOCX](https://github.com/LatinMapsLives/GigaGuide/blob/main/documentation/%D0%90%D0%BD%D0%B0%D0%BB%D0%B8%D0%B7%20%D1%80%D1%8B%D0%BD%D0%BA%D0%B0.docx) [PDF](https://github.com/LatinMapsLives/GigaGuide/blob/main/documentation/%D0%90%D0%BD%D0%B0%D0%BB%D0%B8%D0%B7%20%D1%80%D1%8B%D0%BD%D0%BA%D0%B0.pdf)
     
 ### Кросс-проверка
-  - Наш чеклист [PDF](https://github.com/LatinMapsLives/GigaGuide/blob/main/documentation/%D0%A7%D0%B5%D0%BA%D0%BB%D0%B8%D1%81%D1%82%209.2.pdf) [XLSX](https://github.com/LatinMapsLives/GigaGuide/blob/main/documentation/%D0%A7%D0%B5%D0%BA%D0%BB%D0%B8%D1%81%D1%82%209.2.xlsx)
-#### Нас проверяли
+  - Наш чеклист по 1 аттестации [PDF](https://github.com/LatinMapsLives/GigaGuide/blob/main/documentation/%D0%A7%D0%B5%D0%BA%D0%BB%D0%B8%D1%81%D1%82%209.2.pdf) [XLSX](https://github.com/LatinMapsLives/GigaGuide/blob/main/documentation/%D0%A7%D0%B5%D0%BA%D0%BB%D0%B8%D1%81%D1%82%209.2.xlsx)
+  - Наш чеклист по 2 аттестации [PDF](https://github.com/LatinMapsLives/GigaGuide/blob/main/documentation/%D0%A7%D0%B5%D0%BA%D0%BB%D0%B8%D1%81%D1%82%209.2%202%20%D0%B0%D1%82%D1%82%D0%B5%D1%81%D1%82%D0%B0%D1%86%D0%B8%D1%8F.pdf) [XLSX](https://github.com/LatinMapsLives/GigaGuide/blob/main/documentation/%D0%A7%D0%B5%D0%BA%D0%BB%D0%B8%D1%81%D1%82%209.2%202%20%D0%B0%D1%82%D1%82%D0%B5%D1%81%D1%82%D0%B0%D1%86%D0%B8%D1%8F.xlsx)
+#### Нас проверяли на 1 и 2 аттестации
   - Команда 9.4 [GitHub](https://github.com/MaksimStrelnikov/tp-9.4)
   - Команда 9.5 [GitHub](https://github.com/kotovro/TP-9-5)
   - Команда 10.1 [GitHub](https://github.com/Storix2025/Storix)
