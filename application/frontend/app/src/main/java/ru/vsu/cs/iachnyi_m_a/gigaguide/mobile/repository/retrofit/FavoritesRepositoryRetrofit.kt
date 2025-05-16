@@ -1,6 +1,5 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.retrofit
 
-import android.util.Log
 import retrofit2.Response
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.api.FavoritesAPI
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.favorites.FavoritesDTO

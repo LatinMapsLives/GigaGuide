@@ -1,6 +1,7 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,6 +17,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -23,24 +25,30 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.LoginScreenObject
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SightPageScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.FavoriteScreenViewModel
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.FavoritesScreenViewModel
 
 
 @Composable
-fun FavoriteScreen(
-    favoriteScreenViewModel: FavoriteScreenViewModel,
+fun FavoritesScreen(
+    favoritesScreenViewModel: FavoritesScreenViewModel = hiltViewModel<FavoritesScreenViewModel>(),
     navController: NavController
 ) {
-    GigaGuideMobileTheme {
-        if (!favoriteScreenViewModel.isAuthorized.value) {
 
+    LaunchedEffect(Unit) {
+        favoritesScreenViewModel.loadFavorites()
+    }
+
+    GigaGuideMobileTheme {
+        if (!favoritesScreenViewModel.isAuthorized.value) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.background(
                     MaterialTheme.colorScheme.background
@@ -100,20 +108,18 @@ fun FavoriteScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                var favoriteSights = favoriteScreenViewModel.favoriteSightTourThumbnails
-                if (favoriteScreenViewModel.needToLoad.value && !(favoriteScreenViewModel.loading.value)) favoriteScreenViewModel.loadFavorites()
-
                 Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                    if (favoriteScreenViewModel.loading.value) {
+                    if (favoritesScreenViewModel.loading.value) {
                         for (i in 0..2) {
                             Spacer(modifier = Modifier.height(30.dp))
                             LoadingThumbnailBox(modifier = Modifier.fillMaxWidth())
                         }
-                    } else if (!favoriteSights.isEmpty()) {
-                        for (thumbnail in favoriteScreenViewModel.favoriteSightTourThumbnails) {
+                    } else if (!favoritesScreenViewModel.favoriteSightTourThumbnails.isEmpty()) {
+                        for (thumbnail in favoritesScreenViewModel.favoriteSightTourThumbnails) {
                             Spacer(modifier = Modifier.height(30.dp))
                             SightTourThumbnailBox(
-                                modifier = Modifier.fillMaxWidth(),
+                                modifier = Modifier.clickable(onClick = {navController.navigate(
+                                    SightPageScreenClass(thumbnail.sightId))}).fillMaxWidth(),
                                 value = thumbnail
                             )
                         }

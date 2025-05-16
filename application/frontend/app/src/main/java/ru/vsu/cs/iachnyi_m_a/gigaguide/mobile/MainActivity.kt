@@ -48,7 +48,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumGrey
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.ExploreSightScreen
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.FavoriteScreen
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.FavoritesScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.HomeScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.LoginScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.MapScreen
@@ -60,7 +60,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.SightPageScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.TourPageScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.ExploreSightScreenViewModel
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.FavoriteScreenViewModel
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.FavoritesScreenViewModel
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.HomeScreenViewModel
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.MapScreenViewModel
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.SettingsScreenViewModel
@@ -90,7 +90,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             GigaGuideMobileTheme {
                 val homeScreenViewModel: HomeScreenViewModel = hiltViewModel<HomeScreenViewModel>()
-                val favoriteScreenViewModel: FavoriteScreenViewModel = hiltViewModel<FavoriteScreenViewModel>()
+                val favoritesScreenViewModel: FavoritesScreenViewModel = hiltViewModel<FavoritesScreenViewModel>()
                 val mapScreenViewModel: MapScreenViewModel = hiltViewModel<MapScreenViewModel>()
 
                 val navController = rememberNavController();
@@ -123,8 +123,7 @@ class MainActivity : ComponentActivity() {
                             showNavigationBar.value = true;
                         }
                         composable<FavoriteScreenObject> {
-                            FavoriteScreen(
-                                favoriteScreenViewModel = favoriteScreenViewModel,
+                            FavoritesScreen(
                                 navController = navController
                             )
                             showNavigationBar.value = true;
