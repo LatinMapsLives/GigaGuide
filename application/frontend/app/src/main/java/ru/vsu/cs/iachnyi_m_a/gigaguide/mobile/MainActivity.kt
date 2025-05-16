@@ -150,7 +150,7 @@ class MainActivity : ComponentActivity() {
                             showNavigationBar.value = false
                             SightPageScreen(
                                 sightId = args.sightId,
-                                navController = navController
+                                navController = navController,
                             )
                         }
                         composable<ExploreSightScreenClass>{

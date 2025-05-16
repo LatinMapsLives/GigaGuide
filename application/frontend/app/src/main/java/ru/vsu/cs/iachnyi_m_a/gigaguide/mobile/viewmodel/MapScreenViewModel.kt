@@ -46,10 +46,10 @@ class MapScreenViewModel @Inject constructor(
             }
             sights.clear()
             if (loadedSights != null) {
-                for (sightDTO in loadedSights) {
+                for (sightInfo in loadedSights) {
                     var coords = try {
                         withContext(Dispatchers.IO) {
-                            mapRepository.getCoordinatedOfSight(sightDTO.id)
+                            mapRepository.getCoordinatedOfSight(sightInfo.id)
                         }
                     } catch (e: SocketTimeoutException) {
                         null
@@ -59,10 +59,11 @@ class MapScreenViewModel @Inject constructor(
                     if (coords != null)
                         sights.add(
                             SightOnMapInfo(
-                                id = sightDTO.id,
-                                name = sightDTO.name,
+                                id = sightInfo.id,
+                                name = sightInfo.name,
                                 latitude = coords.latitude,
-                                longitude = coords.longitude
+                                longitude = coords.longitude,
+                                sightInfo.imageLink
                             )
                         )
                 }

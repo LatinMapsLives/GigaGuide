@@ -9,24 +9,23 @@ import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ServerUtils
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.api.AuthAPI
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.api.FavoritesAPI
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.api.MapAPI
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.api.MomentAPI
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.api.SightAPI
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.api.UserAPI
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.datastore.DataStoreManager
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.Sight
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.AuthRepository
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.FavoriteSightRepository
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.FavoritesRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.MapRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.MomentRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.SightRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.UserRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.mock.FavoriteSightsRepositoryMock
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.mock.MapRepositoryMock
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.mock.MomentRepositoryMock
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.mock.SightRepositoryMock
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.retrofit.AuthRepositoryRetrofit
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.retrofit.FavoritesRepositoryRetrofit
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.retrofit.MapRepositoryRetrofit
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.retrofit.MomentRepositoryRetrofit
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.retrofit.SightRepositoryRetrofit
@@ -38,7 +37,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    private val RETROFIT_BASE_URL = "http://192.168.1.84:8080"
+    private val RETROFIT_BASE_URL = ServerUtils.SERVER_ADDRESS
     //<--------------REPOSITORIES------------->
     @Provides
     @Singleton
@@ -48,8 +47,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideFavoriteSightRepository(): FavoriteSightRepository {
-        return FavoriteSightsRepositoryMock()
+    fun provideFavoriteSightRepository(): FavoritesRepository {
+        return FavoritesRepositoryRetrofit(provideFavoritesAPI())
     }
 
 
@@ -120,6 +119,15 @@ object AppModule {
         var retrofit = Retrofit.Builder().baseUrl("$RETROFIT_BASE_URL/api/map/")
             .addConverterFactory(GsonConverterFactory.create()).build()
         return retrofit.create(MapAPI::class.java)    }
+
+    @Singleton
+    @Provides
+    fun provideFavoritesAPI(): FavoritesAPI{
+        var retrofit = Retrofit.Builder().baseUrl("$RETROFIT_BASE_URL/api/user/")
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create()).build()
+        return retrofit.create(FavoritesAPI::class.java)
+    }
 
     //<------------------OTHER--------------->
     @Provides

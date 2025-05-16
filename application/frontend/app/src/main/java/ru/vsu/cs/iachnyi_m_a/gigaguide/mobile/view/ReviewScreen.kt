@@ -218,7 +218,7 @@ fun ReviewBox(
                     color = MediumGrey,
                     style = MaterialTheme.typography.bodyMedium,
                     text = SimpleDateFormat(
-                        "dd-MM-yyyy",
+                        "yyyy-mm-dd",
                         Locale.ROOT
                     ).format(review.date)
                 )

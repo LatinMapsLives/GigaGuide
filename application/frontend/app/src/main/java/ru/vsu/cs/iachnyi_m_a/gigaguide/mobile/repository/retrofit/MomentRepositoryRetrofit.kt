@@ -1,6 +1,7 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.retrofit
 
 import retrofit2.Response
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ServerUtils
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.api.MomentAPI
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.MomentDTO
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.moment.MomentInfo
@@ -11,7 +12,7 @@ class MomentRepositoryRetrofit(private val momentAPI: MomentAPI) : MomentReposit
         var response: Response<List<MomentDTO>> = momentAPI.getAllMoments(sightId = sightId).execute()
         if (response.isSuccessful) {
             return response.body()!!//.sortedBy { dto -> dto.orderNumber }
-                .map { dto -> MomentInfo(id = dto.id, name = dto.name, imagePath = "http://192.168.1.84:8080/api/tour-sight/image?fileName=${dto.imagePath}") }
+                .map { dto -> MomentInfo(id = dto.id, name = dto.name, imagePath = ServerUtils.imageLink(dto.imagePath)) }
         } else {
             return null
         }

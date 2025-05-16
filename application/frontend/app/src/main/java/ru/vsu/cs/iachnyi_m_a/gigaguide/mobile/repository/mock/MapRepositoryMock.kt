@@ -1,7 +1,7 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.mock
 
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.MapPoint
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.MomentOnMap
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.moment.MomentOnMap
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.Sight
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.MapRepository
 
