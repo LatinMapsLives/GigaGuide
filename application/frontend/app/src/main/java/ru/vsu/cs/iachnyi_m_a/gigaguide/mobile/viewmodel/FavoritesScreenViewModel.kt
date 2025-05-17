@@ -9,11 +9,11 @@ import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ServerUtils
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.datastore.DataStoreManager
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.SightTourThumbnail
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.FavoritesRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.SightRepository
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.TourRepository
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 
@@ -21,11 +21,13 @@ import java.net.SocketTimeoutException
 class FavoritesScreenViewModel @Inject constructor(
     private val favoritesRepository: FavoritesRepository,
     private val sightRepository: SightRepository,
+    private val tourRepository: TourRepository,
     private val dataStoreManager: DataStoreManager
 ) : ViewModel() {
 
     var isAuthorized = mutableStateOf(false)
-    var favoriteSightTourThumbnails = mutableStateListOf<SightTourThumbnail>()
+    var favoriteSightThumbnails = mutableStateListOf<SightTourThumbnail>()
+    var favoriteTourThumbnails = mutableStateListOf<SightTourThumbnail>()
     var loading = mutableStateOf(false)
     var needToLoad = mutableStateOf(true)
 
@@ -39,10 +41,13 @@ class FavoritesScreenViewModel @Inject constructor(
             } else {
                 isAuthorized.value = true;
                 var sights: MutableList<SightTourThumbnail> = mutableListOf<SightTourThumbnail>()
-                favoriteSightTourThumbnails.clear()
+                var tours: MutableList<SightTourThumbnail> = mutableListOf<SightTourThumbnail>()
+
+                favoriteSightThumbnails.clear()
+                favoriteTourThumbnails.clear()
                 var favorites = try {
                     withContext(Dispatchers.IO) {
-                        favoritesRepository.getFavoriteSights(token)
+                        favoritesRepository.getFavorites(token)
                     }
                 } catch (e: ConnectException) {
                     null
@@ -53,7 +58,7 @@ class FavoritesScreenViewModel @Inject constructor(
                     for (id in favorites.sightIds) {
                         var sight = try {
                             withContext(Dispatchers.IO) {
-                                sightRepository.getSightPageInfoById(id.toLong())
+                                sightRepository.getSightInfoById(id.toLong())
                             }
                         } catch (e: ConnectException) {
                             null
@@ -72,8 +77,31 @@ class FavoritesScreenViewModel @Inject constructor(
                             )
                         }
                     }
+                    for (id in favorites.tourIds) {
+                        var tour = try {
+                            withContext(Dispatchers.IO) {
+                                tourRepository.getTourInfoById(id.toLong())
+                            }
+                        } catch (e: ConnectException) {
+                            null
+                        } catch (e: SocketTimeoutException) {
+                            null
+                        }
+                        tour?.let {
+                            tours.add(
+                                SightTourThumbnail(
+                                    sightId = tour.id,
+                                    name = tour.name,
+                                    rating = 4.5f,
+                                    proximity = 4.5f,
+                                    imageLink = tour.imageLink
+                                )
+                            )
+                        }
+                    }
                 }
-                favoriteSightTourThumbnails.addAll(sights);
+                favoriteSightThumbnails.addAll(sights);
+                favoriteTourThumbnails.addAll(tours);
                 loading.value = false;
                 needToLoad.value = false;
             }

@@ -8,21 +8,35 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.FavoritesRepository
 
 class FavoriteSightsRepositoryMock: FavoritesRepository{
 
-    override suspend fun getFavoriteSights(token: String): FavoritesList {
+    override suspend fun getFavorites(token: String): FavoritesList {
         TODO("Not yet implemented")
     }
 
-    override suspend fun addToFavorites(
+    override suspend fun addSightToFavorites(
         token: String,
         sightId: Long
     ): Boolean {
         TODO("Not yet implemented")
     }
 
-    override suspend fun deleteFromFavorites(
+    override suspend fun deleteSightFromFavorites(
         token: String,
         sightId: Long
     ): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun addTourToFavorites(
+        token: String,
+        sightId: Long
+    ): Boolean? {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun deleteTourFromFavorites(
+        token: String,
+        sightId: Long
+    ): Boolean? {
         TODO("Not yet implemented")
     }
 }

@@ -31,7 +31,7 @@ class SightRepositoryMock: SightRepository {
         )
     )
 
-    override suspend fun getSightPageInfoById(id: Long): SightInfo? {
+    override suspend fun getSightInfoById(id: Long): SightInfo? {
         Log.e("dasas", "ID: $id")
         delay(1000)
         return SightInfo(sights.find { sight -> sight.id == id }!!).let { return@let SightInfo(id = it.id, name = it.name, description = it.description, time = 30, imageLink = "") }

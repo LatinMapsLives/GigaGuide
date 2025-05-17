@@ -30,6 +30,7 @@ import androidx.navigation.NavController
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.LoginScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SightPageScreenClass
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.TourPageScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
@@ -114,18 +115,36 @@ fun FavoritesScreen(
                             Spacer(modifier = Modifier.height(30.dp))
                             LoadingThumbnailBox(modifier = Modifier.fillMaxWidth())
                         }
-                    } else if (!favoritesScreenViewModel.favoriteSightTourThumbnails.isEmpty()) {
-                        for (thumbnail in favoritesScreenViewModel.favoriteSightTourThumbnails) {
+                    } else if (!(favoritesScreenViewModel.favoriteSightThumbnails.isEmpty() && favoritesScreenViewModel.favoriteTourThumbnails.isEmpty())) {
+                        for (thumbnail in favoritesScreenViewModel.favoriteSightThumbnails) {
                             Spacer(modifier = Modifier.height(30.dp))
                             SightTourThumbnailBox(
-                                modifier = Modifier.clickable(onClick = {navController.navigate(
-                                    SightPageScreenClass(thumbnail.sightId))}).fillMaxWidth(),
+                                modifier = Modifier
+                                    .clickable(onClick = {
+                                        navController.navigate(
+                                            SightPageScreenClass(thumbnail.sightId)
+                                        )
+                                    })
+                                    .fillMaxWidth(),
+                                value = thumbnail
+                            )
+                        }
+                        for (thumbnail in favoritesScreenViewModel.favoriteTourThumbnails) {
+                            Spacer(modifier = Modifier.height(30.dp))
+                            SightTourThumbnailBox(
+                                modifier = Modifier
+                                    .clickable(onClick = {
+                                        navController.navigate(
+                                            TourPageScreenClass(thumbnail.sightId)
+                                        )
+                                    })
+                                    .fillMaxWidth(),
                                 value = thumbnail
                             )
                         }
                     } else {
                         Text(
-                            text=stringResource(R.string.favorite_screen_header_empty),
+                            text = stringResource(R.string.favorite_screen_header_empty),
                             modifier = Modifier.padding(top = 20.dp),
                             style = MaterialTheme.typography.headlineSmall,
                             textAlign = TextAlign.Center,

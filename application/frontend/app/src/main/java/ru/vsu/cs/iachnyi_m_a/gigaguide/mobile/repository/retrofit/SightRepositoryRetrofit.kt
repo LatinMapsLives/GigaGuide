@@ -9,7 +9,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.SightRepository
 
 class SightRepositoryRetrofit(private val sightAPI: SightAPI) : SightRepository {
 
-    override suspend fun getSightPageInfoById(id: Long): SightInfo? {
+    override suspend fun getSightInfoById(id: Long): SightInfo? {
         var call = sightAPI.getSightById(id)
         var response: Response<SightDTO> = call.execute()
         return if (response.isSuccessful) {

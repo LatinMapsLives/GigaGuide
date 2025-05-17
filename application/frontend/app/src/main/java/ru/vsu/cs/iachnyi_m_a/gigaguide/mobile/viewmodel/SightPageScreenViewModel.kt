@@ -1,7 +1,6 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel
 
 import android.util.Log
-import androidx.compose.animation.scaleOut
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -42,7 +41,7 @@ class SightPageScreenViewModel @Inject constructor(
             loading.value = true
             var loadedSight: SightInfo? = try {
                 withContext(Dispatchers.IO) {
-                    sightRepository.getSightPageInfoById(sightId)
+                    sightRepository.getSightInfoById(sightId)
                 }
             } catch (e: ConnectException) {
                 null
@@ -74,7 +73,7 @@ class SightPageScreenViewModel @Inject constructor(
             loadingFavorite = true;
             var favorites: FavoritesList? = try {
                 withContext(Dispatchers.IO) {
-                    token?.let { favoritesRepository.getFavoriteSights(it) }
+                    token?.let { favoritesRepository.getFavorites(it) }
                 }
             } catch (e: ConnectException) {
                 null
@@ -93,7 +92,7 @@ class SightPageScreenViewModel @Inject constructor(
             loadingFavorite = true;
             var added: Boolean? = try {
                 withContext(Dispatchers.IO) {
-                    token?.let { favoritesRepository.addToFavorites(it, sightId) }
+                    token?.let { favoritesRepository.addSightToFavorites(it, sightId) }
                 }
             } catch (e: ConnectException) {
                 null
@@ -111,7 +110,7 @@ class SightPageScreenViewModel @Inject constructor(
             loadingFavorite = true;
             var deleted: Boolean? = try {
                 withContext(Dispatchers.IO) {
-                    token?.let {favoritesRepository.deleteFromFavorites(it, sightId)  }
+                    token?.let {favoritesRepository.deleteSightFromFavorites(it, sightId)  }
                 }
             } catch (e: ConnectException) {
                 null

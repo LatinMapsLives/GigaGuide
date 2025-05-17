@@ -19,4 +19,10 @@ interface FavoritesAPI {
     @DELETE("favorites/sights")
     fun deleteSightFromFavorites(@Header("Authorization") token: String, @Query("sightId") sightId: Long): Call<String>
 
+    @POST("favorites/tours")
+    fun addTourToFavorites(@Header("Authorization") token: String, @Query("tourId") tourId: Long): Call<String>
+
+    @DELETE("favorites/tours")
+    fun deleteTourFromFavorites(@Header("Authorization") token: String, @Query("tourId") tourId: Long): Call<String>
+
 }

@@ -9,12 +9,12 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.FavoritesRepository
 
 class FavoritesRepositoryRetrofit(private val favoritesAPI: FavoritesAPI): FavoritesRepository{
 
-    override suspend fun getFavoriteSights(token: String): FavoritesList? {
+    override suspend fun getFavorites(token: String): FavoritesList? {
         var response: Response<FavoritesDTO> = favoritesAPI.getAllFavoriteSights("Bearer " + token).execute();
         return if (response.isSuccessful) FavoritesDTOtoFavoritesListMapper().map(response.body()!!) else null
     }
 
-    override suspend fun addToFavorites(
+    override suspend fun addSightToFavorites(
         token: String,
         sightId: Long
     ): Boolean {
@@ -22,11 +22,27 @@ class FavoritesRepositoryRetrofit(private val favoritesAPI: FavoritesAPI): Favor
         return response.isSuccessful;
     }
 
-    override suspend fun deleteFromFavorites(
+    override suspend fun deleteSightFromFavorites(
         token: String,
         sightId: Long
     ): Boolean {
         var response: Response<String> = favoritesAPI.deleteSightFromFavorites("Bearer $token", sightId).execute();
+        return response.isSuccessful;
+    }
+
+    override suspend fun addTourToFavorites(
+        token: String,
+        sightId: Long
+    ): Boolean? {
+        var response: Response<String> = favoritesAPI.addTourToFavorites("Bearer $token", sightId).execute();
+        return response.isSuccessful;
+    }
+
+    override suspend fun deleteTourFromFavorites(
+        token: String,
+        sightId: Long
+    ): Boolean? {
+        var response: Response<String> = favoritesAPI.deleteTourFromFavorites("Bearer $token", sightId).execute();
         return response.isSuccessful;
     }
 }
