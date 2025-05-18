@@ -3,7 +3,7 @@ package ru.rogotovskiy.auth.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.rogotovskiy.auth.entity.Role;
-import ru.rogotovskiy.auth.repositoy.RoleRepository;
+import ru.rogotovskiy.auth.repository.RoleRepository;
 
 @Service
 @RequiredArgsConstructor

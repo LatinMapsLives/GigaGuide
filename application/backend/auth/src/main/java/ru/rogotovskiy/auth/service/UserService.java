@@ -3,9 +3,9 @@ package ru.rogotovskiy.auth.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.rogotovskiy.auth.dto.RegistrationUserDto;
+import ru.rogotovskiy.auth.dto.RegistrationUserDTO;
 import ru.rogotovskiy.auth.entity.User;
-import ru.rogotovskiy.auth.repositoy.UserRepository;
+import ru.rogotovskiy.auth.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,12 +26,12 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
-    public void createUser(RegistrationUserDto registrationUserDto) {
+    public void createUser(RegistrationUserDTO registrationUserDTO) {
         userRepository.save(new User(
                 null,
-                registrationUserDto.username(),
-                registrationUserDto.email(),
-                passwordEncoder.encode(registrationUserDto.password()),
+                registrationUserDTO.username(),
+                registrationUserDTO.email(),
+                passwordEncoder.encode(registrationUserDTO.password()),
                 List.of(roleService.findByName("ROLE_USER"))
         ));
     }

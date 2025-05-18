@@ -1,4 +1,4 @@
-package ru.rogotovskiy.auth.repositoy;
+package ru.rogotovskiy.auth.repository;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

@@ -16,6 +16,8 @@ class MomentDTOtoMomentInfoMapperTest {
                 imagePath = "f7f830-jdfakj-hkadas.jpg"
             )
         )
+        
         assert(MomentInfo(id=1, name = "moment1", imagePath = "${ServerUtils.SERVER_ADDRESS}/api/tour-sight/image?fileName=f7f830-jdfakj-hkadas.jpg") == result)
+
     }
 }
