@@ -1,0 +1,36 @@
+name: Deploy to Yandex Cloud
+
+on:
+  push:
+    branches: [main]
+
+env:
+  SSH_HOST: ${{ secrets.YC_SSH_HOST }}
+  SSH_USER: ${{ secrets.YC_SSH_USER }}
+  COMPOSE_PROJECT_NAME: gigaguide
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install SSH key
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.YC_SSH_PRIVATE_KEY }}
+
+      - name: Copy files to server
+        run: |
+          scp -o StrictHostKeyChecking=no -r ./ ${{ secrets.YC_SSH_USER }}@${{ secrets.YC_SSH_HOST }}:/home/${{ secrets.YC_SSH_USER }}/gigaguide
+
+      - name: Build and deploy on server
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.YC_SSH_USER }}@${{ secrets.YC_SSH_HOST }} << 'EOF'
+            cd /home/${{ secrets.YC_SSH_USER }}/gigaguide
+            docker-compose build --pull
+            docker-compose down
+            docker-compose up -d --remove-orphans
+          EOF
