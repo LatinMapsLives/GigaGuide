@@ -14,23 +14,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: 📥 Checkout code
         uses: actions/checkout@v3
 
-      - name: Install SSH key
+      - name: 🔐 Install SSH key
         uses: webfactory/ssh-agent@v0.7.0
         with:
           ssh-private-key: ${{ secrets.YC_SSH_PRIVATE_KEY }}
 
-      - name: Copy files to server
+      - name: 📤 Copy files to server
         run: |
-          scp -o StrictHostKeyChecking=no -r ./ ${{ secrets.YC_SSH_USER }}@${{ secrets.YC_SSH_HOST }}:/home/${{ secrets.YC_SSH_USER }}/gigaguide
+          scp -o StrictHostKeyChecking=no -r ./ $SSH_USER@$SSH_HOST:/home/$SSH_USER/gigaguide
 
-      - name: Build and deploy on server
+      - name: 🚀 Build and deploy on server
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.YC_SSH_USER }}@${{ secrets.YC_SSH_HOST }} << 'EOF'
-            cd /home/${{ secrets.YC_SSH_USER }}/gigaguide
-            docker-compose build --pull
-            docker-compose down
-            docker-compose up -d --remove-orphans
+          ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << 'EOF'
+            set -e
+
+            cd /home/$USER/gigaguide
+
+            # Проверка и установка docker compose plugin
+            if ! docker compose version &>/dev/null; then
+              echo "🔧 Installing Docker Compose plugin..."
+              DOCKER_COMPOSE_VERSION="v2.24.6"
+              sudo mkdir -p /usr/local/lib/docker/cli-plugins
+              curl -SL https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-linux-x86_64 -o docker-compose
+              sudo mv docker-compose /usr/local/lib/docker/cli-plugins/docker-compose
+              sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
+            fi
+
+            docker compose build --pull
+            docker compose down
+            docker compose up -d --remove-orphans
           EOF
