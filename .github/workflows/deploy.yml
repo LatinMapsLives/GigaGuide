@@ -24,7 +24,7 @@ jobs:
 
       - name: 📤 Copy files to server
         run: |
-          rsync -az --exclude='.git' ./ $SSH_USER@$SSH_HOST:/home/$SSH_USER/gigaguide
+          rsync -az -e "ssh -o StrictHostKeyChecking=no" --exclude='.git' ./ $SSH_USER@$SSH_HOST:/home/$SSH_USER/gigaguide
 
       - name: 🚀 Build and deploy on server
         run: |
