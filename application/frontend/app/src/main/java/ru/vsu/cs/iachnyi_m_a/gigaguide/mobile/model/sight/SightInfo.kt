@@ -1,6 +1,5 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight
 
-import okio.Path
 
 data class SightInfo (
     var id: Long,

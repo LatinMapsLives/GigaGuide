@@ -191,7 +191,7 @@ fun SightBox(
                         )
                         .aspectRatio(180f / 100),
                     contentDescription = "image",
-                    model = "https://vestivrn.ru/media/archive/image/2024/05/LT7zhWmmZ-tD6ilZ4nQcUPkF1S4SIdph.jpg"
+                    model = sightOnMapInfo.imageLink
                 )
                 Column(
                     modifier = Modifier

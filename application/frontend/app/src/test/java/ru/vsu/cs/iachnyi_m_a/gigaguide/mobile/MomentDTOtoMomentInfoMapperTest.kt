@@ -3,7 +3,6 @@ package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile
 import org.junit.Test
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.MomentDTO
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.mapper.MomentDTOtoMomentInfoMapper
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.MapPoint
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.moment.MomentInfo
 
 class MomentDTOtoMomentInfoMapperTest {
@@ -17,6 +16,8 @@ class MomentDTOtoMomentInfoMapperTest {
                 imagePath = "f7f830-jdfakj-hkadas.jpg"
             )
         )
-        assert(MomentInfo(id=1, name = "moment1", imagePath = "${GlobalConstants.SERVER_ADDRESS}/api/tour-sight/image?fileName=f7f830-jdfakj-hkadas.jpg") == result)
+        
+        assert(MomentInfo(id=1, name = "moment1", imagePath = "${ServerUtils.SERVER_ADDRESS}/api/tour-sight/image?fileName=f7f830-jdfakj-hkadas.jpg") == result)
+
     }
 }

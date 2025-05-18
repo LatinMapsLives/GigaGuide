@@ -23,7 +23,9 @@ class SightDTOtoSightInfoMapperTest {
                 description = "desc",
                 name = "sight1",
                 time = 30,
-                imageLink = "${GlobalConstants.SERVER_ADDRESS}/api/tour-sight/image?fileName=nbdkas-41289312-das.jpg"
+
+                imageLink = "${ServerUtils.SERVER_ADDRESS}/api/tour-sight/image?fileName=nbdkas-41289312-das.jpg"
+
             )
         )
     }

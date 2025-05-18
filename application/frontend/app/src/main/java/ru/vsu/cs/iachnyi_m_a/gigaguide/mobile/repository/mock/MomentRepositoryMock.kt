@@ -1,7 +1,7 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.mock
 
 import kotlinx.coroutines.delay
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.MomentOnMap
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.moment.MomentOnMap
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.moment.MomentInfo
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.MomentRepository
 

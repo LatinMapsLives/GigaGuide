@@ -14,8 +14,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.osmdroid.util.GeoPoint
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ServerUtils
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.MapPoint
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.MomentOnMap
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.moment.MomentOnMap
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.MapRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.MomentRepository
 import java.net.ConnectException
@@ -79,7 +80,7 @@ class ExploreSightScreenViewModel @Inject constructor(
                             name = momentInfo.name,
                             latitude = mapPoint.latitude,
                             longitude = mapPoint.longitude,
-                            audioLink = "http://192.168.1.84:8080/api/guide?id=${momentInfo.id}",
+                            audioLink = ServerUtils.audioGuideLink(momentInfo.id),
                             imageLink = momentInfo.imagePath
                         )
                     )

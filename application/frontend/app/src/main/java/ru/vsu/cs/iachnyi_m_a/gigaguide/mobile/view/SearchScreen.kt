@@ -144,8 +144,8 @@ fun SearchScreen(
                 verticalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.padding(vertical = 15.dp)
             ) {
-                if (searchScreenViewModel.result.isNotEmpty()) {
-                    for (thumbnail in searchScreenViewModel.result) {
+                if (searchScreenViewModel.sightResult.isNotEmpty()) {
+                    for (thumbnail in searchScreenViewModel.sightResult) {
                         SightTourSearchResult(
                             modifier = Modifier
                                 .clickable(onClick = {
@@ -158,23 +158,19 @@ fun SearchScreen(
                             sightTourThumbnail = thumbnail
                         )
                     }
-                    SightTourSearchResult(
-                        modifier = Modifier
-                            .clickable(onClick = {
-                                navController.navigate(
-                                    TourPageScreenClass(tourId = 0)
-                                )
-                            })
-                            .fillMaxWidth(0.5f)
-                            .padding(start = 5.dp, end = 5.dp, bottom = 10.dp),
-                        sightTourThumbnail = SightTourThumbnail(
-                            sightId = 0,
-                            name = "Тур по Воронежу",
-                            rating = 4.5f,
-                            proximity = 0f,
-                            imageLink = "https://vestivrn.ru/media/archive/image/2024/05/LT7zhWmmZ-tD6ilZ4nQcUPkF1S4SIdph.jpg"
+                    for (thumbnail in searchScreenViewModel.tourResult) {
+                        SightTourSearchResult(
+                            modifier = Modifier
+                                .clickable(onClick = {
+                                    navController.navigate(
+                                        TourPageScreenClass(thumbnail.sightId)
+                                    )
+                                })
+                                .fillMaxWidth(0.5f)
+                                .padding(start = 5.dp, end = 5.dp, bottom = 10.dp),
+                            sightTourThumbnail = thumbnail
                         )
-                    )
+                    }
                 }
             }
         }

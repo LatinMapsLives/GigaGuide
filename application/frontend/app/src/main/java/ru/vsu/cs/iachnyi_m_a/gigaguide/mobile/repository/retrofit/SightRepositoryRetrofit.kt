@@ -1,7 +1,7 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.retrofit
 
-import kotlinx.coroutines.delay
 import retrofit2.Response
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ServerUtils
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.api.SightAPI
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.SightDTO
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.SightInfo
@@ -9,8 +9,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.SightRepository
 
 class SightRepositoryRetrofit(private val sightAPI: SightAPI) : SightRepository {
 
-    override suspend fun getSightPageInfoById(id: Long): SightInfo? {
-        delay(500)
+    override suspend fun getSightInfoById(id: Long): SightInfo? {
         var call = sightAPI.getSightById(id)
         var response: Response<SightDTO> = call.execute()
         return if (response.isSuccessful) {
@@ -20,7 +19,7 @@ class SightRepositoryRetrofit(private val sightAPI: SightAPI) : SightRepository 
                     name = it.name,
                     description = it.description,
                     time = 30,
-                    imageLink = "http://192.168.1.84:8080/api/tour-sight/image?fileName=${it.imagePath}"
+                    imageLink = ServerUtils.imageLink(it.imagePath)
                 )
             }
         } else {
@@ -29,7 +28,6 @@ class SightRepositoryRetrofit(private val sightAPI: SightAPI) : SightRepository 
     }
 
     override suspend fun getAllSightInfos(): List<SightInfo>? {
-        delay(500)
         var response: Response<List<SightDTO>> = sightAPI.getAllSights().execute()
         return if (response.isSuccessful) {
             response.body()!!.map { dto ->
@@ -38,7 +36,7 @@ class SightRepositoryRetrofit(private val sightAPI: SightAPI) : SightRepository 
                     name = dto.name,
                     description = dto.description,
                     time = 30,
-                    imageLink = "http://192.168.1.84:8080/api/tour-sight/image?fileName=${dto.imagePath}"
+                    imageLink = ServerUtils.imageLink(dto.imagePath)
                 )
             }
         } else {

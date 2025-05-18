@@ -20,6 +20,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -37,13 +39,18 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.datastore.dataStore
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.datastore.DataStoreManager
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ExploreSightScreenClass
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.LoginScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ReviewScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.Black
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.FavoritePink
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumGrey
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.Yellow
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.SightPageScreenViewModel
@@ -53,11 +60,12 @@ fun SightPageScreen(
     modifier: Modifier = Modifier,
     sightId: Long = 0,
     sightPageScreenViewModel: SightPageScreenViewModel = hiltViewModel<SightPageScreenViewModel>(),
-    navController: NavController
+    navController: NavController,
 ) {
     LaunchedEffect(Unit) {
         sightPageScreenViewModel.sightId = sightId
         sightPageScreenViewModel.loadSight()
+        sightPageScreenViewModel.loadFavoriteData()
     }
     val loadingColor = MaterialTheme.colorScheme.tertiary
     if (sightPageScreenViewModel.loading.value || sightPageScreenViewModel.sight.value == null) {
@@ -257,6 +265,28 @@ fun SightPageScreen(
                 )
             }
 
+            RoundedCornerSquareButton(
+                modifier = Modifier
+                    .padding(20.dp)
+                    .align(Alignment.TopEnd)
+                    .size(50.dp),
+                onClick = {
+                    if (!sightPageScreenViewModel.loadingFavorite) {
+                        if(sightPageScreenViewModel.token == null){
+                            navController.navigate(LoginScreenObject)
+                        } else {
+                            if (sightPageScreenViewModel.inFavorite.value) {
+                                sightPageScreenViewModel.deleteFromFavorite()
+                            } else{
+                                sightPageScreenViewModel.addToFavorite()
+                            }
+                        }
+                    }
+                },
+                imageVector = if (sightPageScreenViewModel.inFavorite.value) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                contentColor = if (sightPageScreenViewModel.inFavorite.value) FavoritePink else MediumGrey
+            )
+
             Button(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
@@ -452,5 +482,15 @@ fun LoadingScreen(navController: NavController) {
                 modifier = Modifier.fillMaxSize()
             )
         }
+
+        RoundedCornerSquareButton(
+            modifier = Modifier
+                .padding(20.dp)
+                .align(Alignment.TopEnd)
+                .size(50.dp),
+            onClick = {},
+            Icons.Filled.FavoriteBorder,
+            contentColor = MediumGrey
+        )
     }
 }
