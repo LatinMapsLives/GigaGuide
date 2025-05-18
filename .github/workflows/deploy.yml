@@ -2,40 +2,44 @@ name: Deploy to Yandex Cloud
 
 on:
   push:
-    branches: [main]
+    branches: [main]  # Только push в main
 
 env:
   SSH_HOST: ${{ secrets.YC_SSH_HOST }}
   SSH_USER: ${{ secrets.YC_SSH_USER }}
-  COMPOSE_PROJECT_NAME: gigaguide
+  REPO: github.com/LatinMapsLives/GigaGuide
+  APP_DIR: gigaguide
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📥 Checkout code
-        uses: actions/checkout@v3
-
-      - name: 🔐 Install SSH key
+      - name: 🔐 Setup SSH
         uses: webfactory/ssh-agent@v0.7.0
         with:
           ssh-private-key: ${{ secrets.YC_SSH_PRIVATE_KEY }}
 
-      - name: 📤 Copy files to server
-        run: |
-          rsync -az -e "ssh -o StrictHostKeyChecking=no" --exclude='.git' ./ $SSH_USER@$SSH_HOST:/home/$SSH_USER/gigaguide
-
-      - name: 🚀 Build and deploy on server
+      - name: 🚀 Deploy via SSH
         run: |
           ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << 'EOF'
             set -e
 
-            cd /home/$USER/gigaguide
+            echo "📁 Переключаемся в домашнюю директорию"
+            cd /home/$USER
 
-            # Проверка и установка docker compose plugin
+            echo "🧹 Удаляем старый проект (если есть)"
+            rm -rf $APP_DIR
+
+            echo "⬇️ Клонируем репозиторий"
+            git clone https://${REPO} $APP_DIR
+
+            echo "📂 Переход в папку с docker-compose.yml"
+            cd $APP_DIR/application/backend/docker-compose
+
+            echo "🔧 Проверка docker compose"
             if ! docker compose version &>/dev/null; then
-              echo "🔧 Installing Docker Compose plugin..."
+              echo "🛠 Установка Docker Compose plugin"
               DOCKER_COMPOSE_VERSION="v2.24.6"
               sudo mkdir -p /usr/local/lib/docker/cli-plugins
               curl -SL https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-linux-x86_64 -o docker-compose
@@ -43,7 +47,9 @@ jobs:
               sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
             fi
 
-            docker compose build --pull
+            echo "⚙️ Сборка и запуск"
             docker compose down
-            docker compose up -d --remove-orphans
+            docker compose up -d --build --remove-orphans
+
+            echo "✅ Деплой завершён"
           EOF
