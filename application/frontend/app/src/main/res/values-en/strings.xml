@@ -42,4 +42,7 @@
     <string name="login_screen_success">Login successful</string>
     <string name="settings_screen_logged_in_as">Logged in under the name</string>
     <string name="tour_screen_button_explore_tour">Launch tour</string>
+    <string name="error_no_internet">No Internet connection</string>
+    <string name="error_server_unavailable">Server unavailable. Try again later</string>
+    <string name="error_server_error">Server error</string>
 </resources>

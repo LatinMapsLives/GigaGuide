@@ -9,7 +9,7 @@ import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ServerUtils
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.api.AuthAPI
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.api.FavoritesAPI
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.api.MapAPI

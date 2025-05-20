@@ -24,7 +24,6 @@ private val LightColorScheme = lightColorScheme(
     onPrimaryContainer = MediumGrey,
 
     error = Red
-
     )
 
 private val DarkColorScheme = darkColorScheme(
@@ -40,8 +39,7 @@ private val DarkColorScheme = darkColorScheme(
     onPrimaryContainer = LightGrey,
 
     error = Red
-
-    )
+)
 
 @Composable
 fun GigaGuideMobileTheme(

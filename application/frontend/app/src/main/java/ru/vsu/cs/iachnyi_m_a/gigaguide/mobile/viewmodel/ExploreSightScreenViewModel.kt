@@ -9,16 +9,14 @@ import androidx.lifecycle.viewModelScope
 import androidx.media3.exoplayer.ExoPlayer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.osmdroid.util.GeoPoint
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ServerUtils
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.MapPoint
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.moment.MomentOnMap
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.MapRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.MomentRepository
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 
@@ -53,26 +51,10 @@ class ExploreSightScreenViewModel @Inject constructor(
         loadingRoute.value = true
 
         momentOnMaps.clear()
-        var loadedMoments = try {
-            withContext(Dispatchers.IO) {
-                momentRepository.getSightMoments(sightId)
-            }
-        } catch (e: ConnectException) {
-            null
-        } catch (e: SocketTimeoutException) {
-            null
-        }
+        var loadedMoments = ServerUtils.executeNetworkCall { momentRepository.getSightMoments(sightId) }
         if (loadedMoments != null) {
             for (momentInfo in loadedMoments) {
-                var mapPoint = try {
-                    withContext(Dispatchers.IO) {
-                        mapRepository.getCoordinatesOfMoment(momentInfo.id)
-                    }
-                } catch (e: ConnectException) {
-                    null
-                } catch (e: SocketTimeoutException) {
-                    null
-                }
+                var mapPoint = ServerUtils.executeNetworkCall { mapRepository.getCoordinatesOfMoment(momentInfo.id) }
                 if (mapPoint != null) {
                     momentOnMaps.add(
                         MomentOnMap(

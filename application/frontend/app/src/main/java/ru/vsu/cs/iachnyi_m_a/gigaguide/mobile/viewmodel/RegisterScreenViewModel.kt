@@ -1,21 +1,16 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel
 
-import android.util.Log
-import android.util.Patterns
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.RegisterUserDTO
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.AuthRepository
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.validator.EmailValidator
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.RegisterScreenError
-import java.net.ConnectException
-import java.net.SocketTimeoutException
 
 
 @HiltViewModel
@@ -45,25 +40,16 @@ class RegisterScreenViewModel @Inject constructor(private val authRepository: Au
             registerScreenError.value = RegisterScreenError.NONE
             viewModelScope.launch {
                 registerButtonActive.value = false
-                var success = false
-                withContext(Dispatchers.IO) {
-                    success = try {
-                        authRepository.register(
-                            RegisterUserDTO(
-                                email = emailInput.value.trim(),
-                                username = userNameInput.value.trim(),
-                                password = passwordInput.value,
-                                confirmPassword = passwordConfirmInput.value
-                            )
-                        )
-                    } catch (e: SocketTimeoutException) {
-                        false
-                    } catch (e: ConnectException) {
-                        false
-                    }
-                }
-                registerSuccess.value = success
-                if (success) {
+                var success: Boolean? = ServerUtils.executeNetworkCall { authRepository.register(
+                    RegisterUserDTO(
+                        email = emailInput.value.trim(),
+                        username = userNameInput.value.trim(),
+                        password = passwordInput.value,
+                        confirmPassword = passwordConfirmInput.value
+                    )
+                ) }
+                registerSuccess.value = success == true
+                if (registerSuccess.value) {
                     emailInput.value = ""
                     userNameInput.value = ""
                     passwordInput.value = ""

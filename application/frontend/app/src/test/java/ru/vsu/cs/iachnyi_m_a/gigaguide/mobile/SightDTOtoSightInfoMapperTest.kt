@@ -4,6 +4,7 @@ import org.junit.Test
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.SightDTO
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.mapper.SightDTOtoSightInfoMapper
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.SightInfo
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
 
 class SightDTOtoSightInfoMapperTest {
     @Test

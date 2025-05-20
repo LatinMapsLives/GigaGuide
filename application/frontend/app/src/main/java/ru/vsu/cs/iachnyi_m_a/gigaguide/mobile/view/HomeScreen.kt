@@ -28,6 +28,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -55,6 +56,10 @@ fun HomeScreen(
         Modifier
             .fillMaxWidth()
     ) {
+
+        LaunchedEffect(Unit) {
+            homeScreenViewModel.loadClosestTours()
+        }
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
@@ -126,7 +131,6 @@ fun HomeScreen(
         }
 
         var sights = homeScreenViewModel.closestTours
-        if (sights.isEmpty()) homeScreenViewModel.loadClosestTours()
 
         Row(
             modifier = Modifier
