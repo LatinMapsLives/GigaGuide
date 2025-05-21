@@ -4,16 +4,13 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.TourInfo
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.SightInfo
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.SightTourThumbnail
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.SightRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.TourRepository
-import java.net.ConnectException
-import java.net.SocketTimeoutException
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -29,16 +26,7 @@ class SearchScreenViewModel @Inject constructor(private val sightRepository: Sig
             sightResult.clear()
             tourResult.clear()
 
-            var sightInfos: List<SightInfo>? = try {
-                withContext(Dispatchers.IO) {
-                    sightRepository.getAllSightInfos()
-                }
-            } catch (e: SocketTimeoutException) {
-                null
-            } catch (e: ConnectException) {
-                null
-            }
-
+            var sightInfos: List<SightInfo>? = ServerUtils.executeNetworkCall { sightRepository.getAllSightInfos() }
             if (sightInfos != null) {
                 sightResult.addAll(sightInfos.map { si ->
                     SightTourThumbnail(
@@ -51,16 +39,7 @@ class SearchScreenViewModel @Inject constructor(private val sightRepository: Sig
                 });
             }
 
-            var tourInfos: List<TourInfo>? = try {
-                withContext(Dispatchers.IO) {
-                    tourRepository.getAllTourInfos()
-                }
-            } catch (e: SocketTimeoutException) {
-                null
-            } catch (e: ConnectException) {
-                null
-            }
-
+            var tourInfos: List<TourInfo>? = ServerUtils.executeNetworkCall { tourRepository.getAllTourInfos() }
             if (tourInfos != null) {
                 tourResult.addAll(tourInfos.map { ti ->
                     SightTourThumbnail(

@@ -41,4 +41,7 @@
     <string name="login_screen_success">Успешный вход</string>
     <string name="settings_screen_logged_in_as">Выполнен вход под именем</string>
     <string name="tour_screen_button_explore_tour">Пройти тур</string>
+    <string name="error_no_internet">Отсутствует подключение к Интернету</string>
+    <string name="error_server_unavailable">Сервер недоступен. Повторите попытку позже</string>
+    <string name="error_server_error">Ошибка сервера</string>
 </resources>

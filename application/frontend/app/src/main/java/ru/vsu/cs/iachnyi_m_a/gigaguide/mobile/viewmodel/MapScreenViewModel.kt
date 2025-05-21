@@ -7,15 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.osmdroid.util.GeoPoint
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.SightOnMapInfo
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.MapRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.SightRepository
-import java.net.ConnectException
-import java.net.SocketTimeoutException
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
 
 @HiltViewModel
 class MapScreenViewModel @Inject constructor(
@@ -35,27 +32,11 @@ class MapScreenViewModel @Inject constructor(
         needToLoad = false
         viewModelScope.launch {
             loading.value = true
-            var loadedSights = try {
-                withContext(Dispatchers.IO) {
-                    sightRepository.getAllSightInfos()
-                }
-            } catch (e: SocketTimeoutException) {
-                null
-            } catch (e: ConnectException) {
-                null
-            }
+            var loadedSights = ServerUtils.executeNetworkCall { sightRepository.getAllSightInfos() }
             sights.clear()
             if (loadedSights != null) {
                 for (sightInfo in loadedSights) {
-                    var coords = try {
-                        withContext(Dispatchers.IO) {
-                            mapRepository.getCoordinatedOfSight(sightInfo.id)
-                        }
-                    } catch (e: SocketTimeoutException) {
-                        null
-                    } catch (e: ConnectException) {
-                        null
-                    }
+                    var coords = ServerUtils.executeNetworkCall {  mapRepository.getCoordinatedOfSight(sightInfo.id)}
                     if (coords != null)
                         sights.add(
                             SightOnMapInfo(

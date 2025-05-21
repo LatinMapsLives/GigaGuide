@@ -5,15 +5,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.datastore.DataStoreManager
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.LoginRequestDTO
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.AuthRepository
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.LoginScreenError
-import java.net.ConnectException
-import java.net.SocketTimeoutException
 
 @HiltViewModel
 class LoginScreenViewModel @Inject constructor(private val dataStoreManager: DataStoreManager, private val authRepository: AuthRepository) : ViewModel() {
@@ -35,21 +32,12 @@ class LoginScreenViewModel @Inject constructor(private val dataStoreManager: Dat
             error.value = LoginScreenError.NONE
             viewModelScope.launch {
                 loginButtonActive.value = false
-                var token: String? = null
-                withContext(Dispatchers.IO) {
-                    token = try {
-                        authRepository.login(
-                            LoginRequestDTO(
-                                email = emailInput.value.trim(),
-                                password = passwordInput.value
-                            )
-                        )
-                    } catch (e: SocketTimeoutException) {
-                        null
-                    } catch (e: ConnectException) {
-                        null
-                    }
-                }
+                var token = ServerUtils.executeNetworkCall { authRepository.login(
+                    LoginRequestDTO(
+                        email = emailInput.value.trim(),
+                        password = passwordInput.value
+                    )
+                ) }
                 loginSuccess.value = token != null
                 if (loginSuccess.value) {
                     emailInput.value = ""

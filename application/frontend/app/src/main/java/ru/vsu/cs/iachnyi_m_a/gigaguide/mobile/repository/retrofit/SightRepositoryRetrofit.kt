@@ -1,7 +1,7 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.retrofit
 
 import retrofit2.Response
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ServerUtils
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.api.SightAPI
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.SightDTO
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.SightInfo

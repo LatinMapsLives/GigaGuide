@@ -4,6 +4,7 @@ import org.junit.Test
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.MomentDTO
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.mapper.MomentDTOtoMomentInfoMapper
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.moment.MomentInfo
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
 
 class MomentDTOtoMomentInfoMapperTest {
     @Test

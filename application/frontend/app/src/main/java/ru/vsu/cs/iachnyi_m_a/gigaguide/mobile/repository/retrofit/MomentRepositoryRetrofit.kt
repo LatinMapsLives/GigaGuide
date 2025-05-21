@@ -1,7 +1,7 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.retrofit
 
 import retrofit2.Response
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ServerUtils
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.api.MomentAPI
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.MomentDTO
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.moment.MomentInfo

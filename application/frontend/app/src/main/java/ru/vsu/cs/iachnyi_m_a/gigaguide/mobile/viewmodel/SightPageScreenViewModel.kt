@@ -7,17 +7,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.datastore.DataStoreManager
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.FavoritesList
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.SightInfo
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.FavoritesRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.MomentRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.SightRepository
-import java.net.ConnectException
-import java.net.SocketTimeoutException
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
 
 @HiltViewModel
 class SightPageScreenViewModel @Inject constructor(
@@ -39,26 +36,10 @@ class SightPageScreenViewModel @Inject constructor(
     fun loadSight() {
         viewModelScope.launch {
             loading.value = true
-            var loadedSight: SightInfo? = try {
-                withContext(Dispatchers.IO) {
-                    sightRepository.getSightInfoById(sightId)
-                }
-            } catch (e: ConnectException) {
-                null
-            } catch (e: SocketTimeoutException) {
-                null
-            }
+            var loadedSight: SightInfo? = ServerUtils.executeNetworkCall { sightRepository.getSightInfoById(sightId) }
             sight.value = loadedSight
             momentNames.clear()
-            var loadedMoments = try {
-                withContext(Dispatchers.IO) {
-                    momentRepository.getSightMoments(sightId)
-                }
-            } catch (e: ConnectException) {
-                null
-            } catch (e: SocketTimeoutException) {
-                null
-            }
+            var loadedMoments = ServerUtils.executeNetworkCall { momentRepository.getSightMoments(sightId) }
             if (loadedMoments != null) {
                 momentNames.addAll(loadedMoments.map { m -> m.name })
             }
@@ -71,15 +52,7 @@ class SightPageScreenViewModel @Inject constructor(
         viewModelScope.launch {
             token = dataStoreManager.getJWT()
             loadingFavorite = true;
-            var favorites: FavoritesList? = try {
-                withContext(Dispatchers.IO) {
-                    token?.let { favoritesRepository.getFavorites(it) }
-                }
-            } catch (e: ConnectException) {
-                null
-            } catch (e: SocketTimeoutException) {
-                null
-            }
+            var favorites: FavoritesList? = ServerUtils.executeNetworkCall { token?.let { favoritesRepository.getFavorites(it) } }
             Log.e("FAV", favorites.toString())
             inFavorite.value = favorites != null && favorites.sightIds.contains(sightId.toInt())
             loadingFavorite = false
@@ -90,15 +63,7 @@ class SightPageScreenViewModel @Inject constructor(
         loadingFavorite = true
         viewModelScope.launch {
             loadingFavorite = true;
-            var added: Boolean? = try {
-                withContext(Dispatchers.IO) {
-                    token?.let { favoritesRepository.addSightToFavorites(it, sightId) }
-                }
-            } catch (e: ConnectException) {
-                null
-            } catch (e: SocketTimeoutException) {
-                null
-            }
+            var added: Boolean? = ServerUtils.executeNetworkCall { token?.let { favoritesRepository.addSightToFavorites(it, sightId) } }
             inFavorite.value = added != null && added
             loadingFavorite = false
         }
@@ -108,15 +73,7 @@ class SightPageScreenViewModel @Inject constructor(
         loadingFavorite = true
         viewModelScope.launch {
             loadingFavorite = true;
-            var deleted: Boolean? = try {
-                withContext(Dispatchers.IO) {
-                    token?.let {favoritesRepository.deleteSightFromFavorites(it, sightId)  }
-                }
-            } catch (e: ConnectException) {
-                null
-            } catch (e: SocketTimeoutException) {
-                null
-            }
+            var deleted: Boolean? = ServerUtils.executeNetworkCall { token?.let {favoritesRepository.deleteSightFromFavorites(it, sightId)  } }
             if(deleted == null){
                 inFavorite.value = false
             } else {
