@@ -17,8 +17,6 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.moment.MomentOnMap
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.MapRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.MomentRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
-import java.net.ConnectException
-import java.net.SocketTimeoutException
 
 @HiltViewModel
 class ExploreSightScreenViewModel @Inject constructor(
@@ -35,7 +33,6 @@ class ExploreSightScreenViewModel @Inject constructor(
     var momentOnMaps = mutableStateListOf<MomentOnMap>()
     var selected = mutableStateOf(false)
     var selectedMomentIndex = mutableIntStateOf(-1)
-    var needToSelectFirst = false
     var needToAnimateTo: GeoPoint? = null
 
     var playerIsLoading = mutableStateOf(true)
@@ -70,23 +67,11 @@ class ExploreSightScreenViewModel @Inject constructor(
             }
         }
 
-        var loadedRoute = try {
-//            withContext(Dispatchers.IO) {
-//                mapRepository.getRouteOfSight(sightId)
-//            }
-            momentOnMaps.map { m -> MapPoint(m.latitude, m.longitude) }
-        } catch (e: ConnectException) {
-            null
-        } catch (e: SocketTimeoutException) {
-            null
-        }
-        route.clear()
-        if (loadedRoute != null) {
-            route.addAll(loadedRoute)
-        }
+        var loadedRoute = momentOnMaps.map { m -> MapPoint(m.latitude, m.longitude) }
 
+        route.clear()
+        route.addAll(loadedRoute)
         loadingRoute.value = false
-        needToSelectFirst = true
 
     }
 

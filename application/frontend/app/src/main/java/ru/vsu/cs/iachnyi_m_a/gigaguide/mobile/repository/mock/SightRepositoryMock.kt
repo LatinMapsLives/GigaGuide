@@ -40,4 +40,8 @@ class SightRepositoryMock: SightRepository {
     override suspend fun getAllSightInfos(): List<SightInfo>? {
         return sights.map { si -> SightInfo(id = si.id, name = si.name, description = si.description, time = si.time, imageLink = "") }
     }
+
+    override suspend fun getAllSightInfosByTourId(tourId: Long): List<SightInfo>? {
+        TODO("Not yet implemented")
+    }
 }

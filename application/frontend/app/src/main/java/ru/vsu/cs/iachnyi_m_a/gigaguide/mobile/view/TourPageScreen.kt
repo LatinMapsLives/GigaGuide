@@ -46,6 +46,7 @@ import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.SightTourThumbnail
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ExploreTourScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.LoginScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ReviewScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.Black
@@ -320,7 +321,7 @@ fun TourPageScreen(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.secondary, contentColor = White
                 ),
-                onClick = {}
+                onClick = {navController.navigate(ExploreTourScreenClass(tourId))}
             ) {
                 Text(
                     text = stringResource(R.string.tour_screen_button_explore_tour),

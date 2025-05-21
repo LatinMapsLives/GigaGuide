@@ -51,6 +51,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import dagger.hilt.android.AndroidEntryPoint
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ExploreSightScreenClass
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ExploreTourScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.FavoriteScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.HomeScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.LoginScreenObject
@@ -69,6 +70,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.SuccessContainer
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.Pancake
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.ExploreSightScreen
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.ExploreTourScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.FavoritesScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.HomeScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.LoginScreen
@@ -237,6 +239,11 @@ class MainActivity : ComponentActivity() {
                             val args = it.toRoute<TourPageScreenClass>()
                             showNavigationBarMutableState = false
                             TourPageScreen(tourId = args.tourId, navController = navController)
+                        }
+                        composable<ExploreTourScreenClass> {
+                            val args = it.toRoute<ExploreTourScreenClass>()
+                            showNavigationBarMutableState = false
+                            ExploreTourScreen(context = this@MainActivity, tourId = args.tourId, navController = navController)
                         }
                     }
                     AnimatedVisibility(

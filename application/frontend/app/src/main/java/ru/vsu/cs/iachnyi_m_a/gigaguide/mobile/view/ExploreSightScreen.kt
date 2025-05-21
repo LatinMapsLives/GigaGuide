@@ -206,7 +206,8 @@ fun ExploreSightScreen(
                                     GeoPoint(m.latitude, m.longitude)
                                 exploreSightScreenViewModel.player.seekTo(i, 0)
                                 exploreSightScreenViewModel.player.playWhenReady = true
-                            }
+                            },
+                            alpha = 1f
                         )
                     )
                 }
@@ -297,10 +298,12 @@ fun numberedMarker(
     point: GeoPoint,
     selected: Boolean,
     mapView: MapView,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    alpha: Float
 ): Marker {
     var marker = Marker(mapView)
     marker.position = point
+    marker.alpha = alpha
     marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
     var drawableId = if (selected) {
         R.drawable.moment_marker_selected

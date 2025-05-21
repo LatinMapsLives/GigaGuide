@@ -44,4 +44,8 @@ class SightRepositoryRetrofit(private val sightAPI: SightAPI) : SightRepository 
         }
     }
 
+    override suspend fun getAllSightInfosByTourId(tourId: Long): List<SightInfo>? {
+        return getAllSightInfos()
+    }
+
 }
