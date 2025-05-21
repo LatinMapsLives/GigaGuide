@@ -34,3 +34,7 @@ object SearchScreenObject
 data class TourPageScreenClass(
     val tourId: Long,
 )
+@Serializable
+data class ExploreTourScreenClass(
+    var tourId: Long
+)

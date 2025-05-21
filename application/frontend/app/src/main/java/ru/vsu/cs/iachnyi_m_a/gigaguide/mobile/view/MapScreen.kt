@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.res.ResourcesCompat
@@ -135,10 +136,14 @@ fun MapScreen(mapScreenViewModel: MapScreenViewModel, navController: NavControll
             var sightOnMapInfo: SightOnMapInfo =
                 mapScreenViewModel.sights.find { s -> s.id == mapScreenViewModel.selectedIndex.longValue }!!
             SightBox(
-                navController = navController,
-                mapScreenViewModel = mapScreenViewModel,
+                onButtonClick = {navController.navigate(SightPageScreenClass(sightId = sightOnMapInfo.id))},
                 sightOnMapInfo = sightOnMapInfo,
-                modifier = Modifier.align(Alignment.BottomCenter)
+                modifier = Modifier.align(Alignment.BottomCenter),
+                buttonText = stringResource(R.string.map_screen_open_sight_button_label),
+                closeCallBack = {
+                    mapScreenViewModel.selected.value = false
+                },
+                spacerHeight = 85.dp
             )
         }
     }
@@ -147,10 +152,11 @@ fun MapScreen(mapScreenViewModel: MapScreenViewModel, navController: NavControll
 @Composable
 fun SightBox(
     modifier: Modifier,
-    navController: NavController,
-    mapScreenViewModel: MapScreenViewModel,
-    sightOnMapInfo: SightOnMapInfo
-
+    buttonText: String,
+    onButtonClick: () -> Unit,
+    closeCallBack: () -> Unit,
+    sightOnMapInfo: SightOnMapInfo,
+    spacerHeight: Dp
 ) {
     GigaGuideMobileTheme {
         Column(
@@ -163,9 +169,7 @@ fun SightBox(
         ) {
             Icon(
                 modifier = Modifier
-                    .clickable(onClick = {
-                        mapScreenViewModel.selected.value = false
-                    })
+                    .clickable(onClick = closeCallBack)
                     .background(color = MaterialTheme.colorScheme.tertiary)
                     .padding(vertical = 10.dp)
                     .fillMaxWidth()
@@ -212,11 +216,9 @@ fun SightBox(
                                 MediumBlue
                         ),
                         modifier = Modifier
-                            .fillMaxWidth(), onClick = {
-                            navController.navigate(SightPageScreenClass(sightId = sightOnMapInfo.id))
-                        }) {
+                            .fillMaxWidth(), onClick = onButtonClick) {
                         Text(
-                            text = stringResource(R.string.map_screen_open_sight_button_label),
+                            text = buttonText,
                             color = White
                         )
                     }
@@ -226,7 +228,7 @@ fun SightBox(
                 modifier = Modifier
                     .background(color = MaterialTheme.colorScheme.background)
                     .fillMaxWidth()
-                    .height(85.dp)
+                    .height(spacerHeight)
             )
         }
     }

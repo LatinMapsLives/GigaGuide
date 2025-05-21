@@ -39,18 +39,6 @@ class TourPageScreenViewModel @Inject constructor(
             var loadedSight: TourInfo? = ServerUtils.executeNetworkCall { tourRepository.getTourInfoById(tourId) }
             tour.value = loadedSight
             sightThumbnails.clear()
-//            var loadedMoments = try {
-//                withContext(Dispatchers.IO) {
-//                    momentRepository.getSightMoments(sightId)
-//                }
-//            } catch (e: ConnectException) {
-//                null
-//            } catch (e: SocketTimeoutException) {
-//                null
-//            }
-//            if (loadedMoments != null) {
-//                momentNames.addAll(loadedMoments.map { m -> m.name })
-//            }
             loading.value = false
         }
     }
