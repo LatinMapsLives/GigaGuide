@@ -7,8 +7,10 @@ import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
@@ -52,8 +54,7 @@ class ExploreTourScreenViewModel @Inject constructor(
     var sightIsSelected by mutableStateOf(false)
     var exploringSight = mutableStateOf(false)
 
-
-    var needToSelectFirst = false
+    var indexesMap = mutableListOf<List<Int>>()
 
     var playerIsLoading = mutableStateOf(true)
     lateinit var player: ExoPlayer
@@ -66,6 +67,7 @@ class ExploreTourScreenViewModel @Inject constructor(
 
     fun loadTour(){
         viewModelScope.launch {
+            var i = 0
             loadingTour.value = true
             var loadedSights = ServerUtils.executeNetworkCall { sightRepository.getAllSightInfosByTourId(tourId) }
             Log.e("TOUR", loadedSights.toString())
@@ -73,6 +75,7 @@ class ExploreTourScreenViewModel @Inject constructor(
             sightRoutes.clear()
             tourRoute.clear()
             momentOnMaps.clear()
+            indexesMap.clear()
             if (loadedSights != null) {
                 for (sightInfo in loadedSights) {
                     var sightMapPoint = ServerUtils.executeNetworkCall {  mapRepository.getCoordinatedOfSight(sightInfo.id)}
@@ -93,9 +96,12 @@ class ExploreTourScreenViewModel @Inject constructor(
                     }
                     var loadedMoments = ServerUtils.executeNetworkCall { momentRepository.getSightMoments(sightInfo.id) }
                     if (loadedMoments != null) {
+                        var indices = mutableListOf<Int>()
                         var momentOnMapsForThisSight = mutableListOf<MomentOnMap>()
                         var thisSightRoute = mutableListOf<MapPoint>()
                         for (momentInfo in loadedMoments) {
+                            indices.add(i)
+                            i++
                             var momentMapPoint = ServerUtils.executeNetworkCall { mapRepository.getCoordinatesOfMoment(momentInfo.id) }
                             if (momentMapPoint != null) {
                                 thisSightRoute.add(momentMapPoint)
@@ -109,11 +115,13 @@ class ExploreTourScreenViewModel @Inject constructor(
                                         imageLink = momentInfo.imagePath
                                     )
                                 )
+                                player.addMediaItem(MediaItem.fromUri(ServerUtils.audioGuideLink(momentInfo.id).toUri()))
                             } else {
                                 Pancake.serverError()
                                 return@launch
                             }
                         }
+                        indexesMap.add(indices)
                         sightRoutes.add(thisSightRoute)
                         momentOnMaps.add(momentOnMapsForThisSight)
                     } else {
@@ -125,6 +133,9 @@ class ExploreTourScreenViewModel @Inject constructor(
                 Pancake.serverError()
                 return@launch
             }
+            player.playWhenReady = false
+            player.prepare()
+            launchPositionUpdateLoop()
             loadingTour.value = false
         }
     }

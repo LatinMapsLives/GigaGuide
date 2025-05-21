@@ -89,11 +89,6 @@ fun ExploreTourScreen(
         exploreTourScreenViewModel.loadTour()
     }
     var dark = isSystemInDarkTheme()
-//    var deselectCallback: () -> Unit = {
-//        exploreTourScreenViewModel.selected.value = false
-//        exploreTourScreenViewModel.player.playWhenReady = false
-//        if (exploreTourScreenViewModel.player.isPlaying) exploreTourScreenViewModel.player.pause()
-//    }
     var deselectMomentCallback: () -> Unit = {
         exploreTourScreenViewModel.momentIsSelected = false
         exploreTourScreenViewModel.player.playWhenReady = false
@@ -140,6 +135,7 @@ fun ExploreTourScreen(
                         } else if (exploreTourScreenViewModel.sightIsSelected) {
                             exploreTourScreenViewModel.sightIsSelected = false
                         }
+                        exploreTourScreenViewModel.player.pause()
                         return false
                     }
 
@@ -207,6 +203,12 @@ fun ExploreTourScreen(
                                             momentOnMapInfo.latitude,
                                             momentOnMapInfo.longitude
                                         )
+
+                                    exploreTourScreenViewModel.player.seekTo(
+                                        exploreTourScreenViewModel.indexesMap[exploreTourScreenViewModel.selectedSightIndex.intValue][i],
+                                        0
+                                    )
+                                    exploreTourScreenViewModel.player.playWhenReady = true
                                 },
                                 alpha = 1f
                             )
@@ -255,11 +257,18 @@ fun ExploreTourScreen(
             SightBox(
                 modifier = Modifier.fillMaxWidth(),
                 onButtonClick = {
-                    if(exploreTourScreenViewModel.momentOnMaps[exploreTourScreenViewModel.selectedSightIndex.intValue].isNotEmpty()){
+                    if (exploreTourScreenViewModel.momentOnMaps[exploreTourScreenViewModel.selectedSightIndex.intValue].isNotEmpty()) {
                         exploreTourScreenViewModel.selectedMomentIndex.intValue = 0
                         exploreTourScreenViewModel.momentIsSelected = true
-                        var m = exploreTourScreenViewModel.momentOnMaps[exploreTourScreenViewModel.selectedSightIndex.intValue][0]
-                        exploreTourScreenViewModel.needToAnimateTo = GeoPoint(m.latitude, m.longitude)
+                        var m =
+                            exploreTourScreenViewModel.momentOnMaps[exploreTourScreenViewModel.selectedSightIndex.intValue][0]
+                        exploreTourScreenViewModel.needToAnimateTo =
+                            GeoPoint(m.latitude, m.longitude)
+                        exploreTourScreenViewModel.player.seekTo(
+                            exploreTourScreenViewModel.indexesMap[exploreTourScreenViewModel.selectedSightIndex.intValue][0],
+                            0
+                        )
+                        exploreTourScreenViewModel.player.playWhenReady = false
                     }
                     exploreTourScreenViewModel.sightIsSelected = false
                     exploreTourScreenViewModel.exploringSight.value = true
