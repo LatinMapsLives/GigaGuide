@@ -48,7 +48,7 @@ jobs:
             --exclude='.git' \
             --exclude='.github' \
             --exclude='target/' \
-            ./ ${{ secrets.YC_SSH_USER }}@${{ secrets.YC_SSH_HOST }}:/home/ubuntu/gigaguide
+            ./ ${{ secrets.YC_SSH_USER }}@${{ secrets.YC_SSH_HOST }}:/gigaguide
 
       - name: Run deploy script
         run: |
