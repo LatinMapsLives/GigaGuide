@@ -9,11 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.rogotovskiy.reviews.dto.CreateTourReviewDto;
-import ru.rogotovskiy.reviews.dto.SightReviewDto;
 import ru.rogotovskiy.reviews.dto.TourReviewDto;
 import ru.rogotovskiy.reviews.service.TourReviewService;
-
-import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/reviews/tours")

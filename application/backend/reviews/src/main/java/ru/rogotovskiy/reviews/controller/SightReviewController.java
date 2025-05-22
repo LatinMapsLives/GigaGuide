@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.rogotovskiy.reviews.dto.CreateSightReviewDto;
 import ru.rogotovskiy.reviews.dto.SightReviewDto;
 import ru.rogotovskiy.reviews.service.SightReviewService;
-
-import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/reviews/sights")

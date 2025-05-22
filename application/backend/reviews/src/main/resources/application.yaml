@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: reviews
   datasource:
     url: jdbc:postgresql://localhost:5432/giga-guide-db
     username: postgres
@@ -10,5 +12,3 @@ spring:
       ddl-auto: validate
 server:
   port: 8085
-jwt:
-  secret: 984hg493gh0439rthr0429uruj2309yh937gc763fe87t3f89723gf
