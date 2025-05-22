@@ -53,13 +53,17 @@ class ProfileScreenViewModel @Inject constructor(private var userRepository: Use
     }
 
     fun updatePassword(){
+        if(oldPassword.trim().isEmpty() || newPassword.trim().isEmpty()){
+            passwordChangeError = "Заполните оба поля"
+            return
+        }
         viewModelScope.launch {
-            loading = true
             if(dataStoreManager.getJWT() == null) {
                 loading = false
                 return@launch
             }
-            var success  = ServerUtils.executeNetworkCall { userRepository.updatePassword(dataStoreManager.getJWT()!!, oldPassword, newPassword) }
+            loading = true
+            var success  = ServerUtils.executeNetworkCall { userRepository.updatePassword(dataStoreManager.getJWT()!!, oldPassword.trim(), newPassword.trim()) }
             if(success != null && success){
                 Pancake.success("Пароль успешно обновлён")
                 passwordChangeError = ""
@@ -74,6 +78,14 @@ class ProfileScreenViewModel @Inject constructor(private var userRepository: Use
     }
 
     fun updateUsername(){
+        if(newUsername.trim().isEmpty()){
+            usernameChangeError = "Заполните поле имени"
+            return
+        }
+        if(newUsername.trim() == currentUsername){
+            usernameChangeError = "Новое имя должно отличаться от старого"
+            return
+        }
         if(!UsernameValidator().validate(newUsername)){
             usernameChangeError = "Неверный формат имени"
             return
@@ -84,7 +96,7 @@ class ProfileScreenViewModel @Inject constructor(private var userRepository: Use
                 loading = false
                 return@launch
             }
-            var success  = ServerUtils.executeNetworkCall { userRepository.updateUsername(dataStoreManager.getJWT()!!, newUsername) }
+            var success  = ServerUtils.executeNetworkCall { userRepository.updateUsername(dataStoreManager.getJWT()!!, newUsername.trim()) }
             if(success != null && success){
                 Pancake.success("Имя успешно обновлено")
                 usernameChangeError = ""
@@ -98,6 +110,14 @@ class ProfileScreenViewModel @Inject constructor(private var userRepository: Use
     }
 
     fun updateEmail(){
+        if(newEmail.trim().isEmpty()){
+            emailChangeError = "Заполните поле почты"
+            return
+        }
+        if(newEmail.trim() == currentEmail){
+            emailChangeError = "Новая почта должна отличаться от старой"
+            return
+        }
         if(!EmailValidator().validate(newEmail)){
             emailChangeError = "Неверный формат почты"
             return
@@ -108,7 +128,7 @@ class ProfileScreenViewModel @Inject constructor(private var userRepository: Use
                 loading = false
                 return@launch
             }
-            var success  = ServerUtils.executeNetworkCall { userRepository.updateEmail(dataStoreManager.getJWT()!!, newEmail) }
+            var success  = ServerUtils.executeNetworkCall { userRepository.updateEmail(dataStoreManager.getJWT()!!, newEmail.trim()) }
             if(success != null && success){
                 Pancake.success("Почта успешно обновлена")
                 emailChangeError = ""
