@@ -45,4 +45,7 @@
     <string name="error_no_internet">No Internet connection</string>
     <string name="error_server_unavailable">Server unavailable. Try again later</string>
     <string name="error_server_error">Server error</string>
+    <string name="profile_screen_button_change_active">Change</string>
+    <string name="profile_screen_button_change_inactive">Cancel</string>
+    <string name="profile_screen_button_confirm_change">Confirm</string>
 </resources>

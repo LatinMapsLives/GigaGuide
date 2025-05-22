@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.datastore.DataStoreManager
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.UserDataDTO
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.user.UserDataDTO
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.UserRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
 import javax.inject.Inject
@@ -24,7 +24,6 @@ class SettingsScreenViewModel @Inject constructor(
     fun discoverJWT() {
         viewModelScope.launch {
             var discoveredToken: String? = dataStoreManager.getJWT()
-            Log.d("JWT", discoveredToken.toString())
             if (userData.value != null) {
                 Log.d("JWT", "DATA NOT NULL")
                 if (discoveredToken == null) {

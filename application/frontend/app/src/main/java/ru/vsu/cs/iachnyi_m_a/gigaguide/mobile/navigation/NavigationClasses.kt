@@ -38,3 +38,5 @@ data class TourPageScreenClass(
 data class ExploreTourScreenClass(
     var tourId: Long
 )
+@Serializable
+object ProfileScreenObject

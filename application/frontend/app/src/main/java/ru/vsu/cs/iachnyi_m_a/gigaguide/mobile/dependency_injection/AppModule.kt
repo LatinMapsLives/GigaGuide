@@ -102,6 +102,7 @@ object AppModule {
     @Provides
     fun provideUserAPI(): UserAPI {
         var retrofit = Retrofit.Builder().baseUrl("$RETROFIT_BASE_URL/api/")
+            .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create()).build()
         return retrofit.create(UserAPI::class.java)
     }
