@@ -7,14 +7,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import ru.rogotovskiy.userservice.dto.UpdateUserDto;
 import ru.rogotovskiy.userservice.dto.UserDto;
-import ru.rogotovskiy.userservice.jwt.JwtAuthentication;
 import ru.rogotovskiy.userservice.service.UserService;
-
-import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/user")
