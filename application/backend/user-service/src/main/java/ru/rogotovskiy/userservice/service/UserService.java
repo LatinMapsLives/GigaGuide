@@ -3,13 +3,14 @@ package ru.rogotovskiy.userservice.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.rogotovskiy.userservice.dto.UpdateUserDto;
-import ru.rogotovskiy.userservice.dto.UserDto;
+import ru.rogotovskiy.userservice.dto.user.UpdateUserDto;
+import ru.rogotovskiy.userservice.dto.user.UserDto;
 import ru.rogotovskiy.userservice.entity.User;
+import ru.rogotovskiy.userservice.exception.EmailAlreadyExistsException;
+import ru.rogotovskiy.userservice.exception.InvalidPasswordException;
+import ru.rogotovskiy.userservice.exception.UserNotFoundException;
 import ru.rogotovskiy.userservice.mapper.UserMapper;
 import ru.rogotovskiy.userservice.repository.UserRepository;
-
-import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -19,19 +20,9 @@ public class UserService {
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserDto getByUsername(String username) {
-        return userMapper.toDto(getUserByUsername(username));
-    }
-
-    public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow(
-                () -> new NoSuchElementException("Пользователь с именем %s не найден".formatted(username))
-        );
-    }
-
     public User getUserById(Integer id) {
         return userRepository.findById(id).orElseThrow(
-                () -> new NoSuchElementException("Пользователь с id %d не найден".formatted(id))
+                () -> new UserNotFoundException("USER_NOT_FOUND", "user_service.errors.user.not_found")
         );
     }
 
@@ -44,25 +35,21 @@ public class UserService {
 
         if (dto.email() != null && !dto.email().isEmpty()) {
             if (userRepository.existsByEmail(dto.email())) {
-                throw new IllegalArgumentException("Пользователь с таким адресом электронной почты уже существует");
+                throw new EmailAlreadyExistsException("EMAIL_EXISTS", "user_service.errors.email.exists");
             }
             user.setEmail(dto.email());
         }
 
         if (dto.oldPassword() != null && dto.newPassword() != null && !dto.newPassword().isEmpty()) {
 
-            if (!bCryptPasswordEncoder.encode(dto.oldPassword()).equals(user.getPassword())) {
-                throw new IllegalArgumentException("Пароль неверный");
+            if (!bCryptPasswordEncoder.matches(dto.oldPassword(), user.getPassword())) {
+                throw new InvalidPasswordException("INVALID_PASSWORD", "user_service.errors.password.invalid");
             }
 
             user.setPassword(bCryptPasswordEncoder.encode(dto.newPassword()));
         }
         userRepository.save(user);
 
-    }
-
-    public Integer getUserIdByUsername(String username) {
-        return getUserByUsername(username).getId();
     }
 
     public UserDto getById(Integer userId) {

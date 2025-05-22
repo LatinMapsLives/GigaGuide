@@ -2,9 +2,9 @@ package ru.rogotovskiy.userservice.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.rogotovskiy.userservice.dto.FavoriteSightDto;
-import ru.rogotovskiy.userservice.dto.FavoriteTourDto;
-import ru.rogotovskiy.userservice.dto.FavoritesDto;
+import ru.rogotovskiy.userservice.dto.favorites.FavoriteSightDto;
+import ru.rogotovskiy.userservice.dto.favorites.FavoriteTourDto;
+import ru.rogotovskiy.userservice.dto.favorites.FavoritesDto;
 import ru.rogotovskiy.userservice.entity.FavoriteSight;
 import ru.rogotovskiy.userservice.entity.FavoriteTour;
 import ru.rogotovskiy.userservice.mapper.FavoriteSightMapper;

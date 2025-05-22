@@ -8,8 +8,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.rogotovskiy.userservice.dto.UpdateUserDto;
-import ru.rogotovskiy.userservice.dto.UserDto;
+import ru.rogotovskiy.userservice.dto.user.UpdateUserDto;
+import ru.rogotovskiy.userservice.dto.user.UserDto;
 import ru.rogotovskiy.userservice.service.UserService;
 
 @RestController
