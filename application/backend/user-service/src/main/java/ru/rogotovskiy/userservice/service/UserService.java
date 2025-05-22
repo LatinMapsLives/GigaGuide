@@ -42,7 +42,7 @@ public class UserService {
 
         if (dto.oldPassword() != null && dto.newPassword() != null && !dto.newPassword().isEmpty()) {
 
-            if (!bCryptPasswordEncoder.encode(dto.oldPassword()).equals(user.getPassword())) {
+            if (!bCryptPasswordEncoder.matches(dto.oldPassword(), user.getPassword())) {
                 throw new InvalidPasswordException("INVALID_PASSWORD", "user_service.errors.password.invalid");
             }
 
