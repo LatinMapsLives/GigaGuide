@@ -29,13 +29,13 @@ jobs:
 
       - name: Build all microservices
         run: |
-          cd api-gateway && mvn clean package -DskipTests
-          cd ../application/backend/auth && mvn clean package -DskipTests
-          cd ../application/backend/guide && mvn clean package -DskipTests
-          cd ../application/backend/map && mvn clean package -DskipTests
-          cd ../application/backend/reviews && mvn clean package -DskipTests
-          cd ../application/backend/tour-sight && mvn clean package -DskipTests
-          cd ../application/backend/user-service && mvn clean package -DskipTests
+          cd application/backend/api-gateway && mvn clean package -DskipTests
+          cd ../auth && mvn clean package -DskipTests
+          cd ../guide && mvn clean package -DskipTests
+          cd ../map && mvn clean package -DskipTests
+          cd ../reviews && mvn clean package -DskipTests
+          cd ../tour-sight && mvn clean package -DskipTests
+          cd ../user-service && mvn clean package -DskipTests
 
       - name: Install SSH key
         uses: webfactory/ssh-agent@v0.7.0
