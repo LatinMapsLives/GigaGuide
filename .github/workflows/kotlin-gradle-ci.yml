@@ -1,0 +1,38 @@
+name: Kotlin CI with Gradle
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'frontend/**'
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - 'frontend/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Grant execute permission for Gradle Wrapper
+        run: chmod +x gradlew
+
+      - name: Build and test with Gradle
+        run: ./gradlew build
+
+      - name: Run tests (опционально, если нужно отдельно)
+        run: ./gradlew test
+
+      - name: Check code style with ktlint (если используется)
+        run: ./gradlew ktlintCheck

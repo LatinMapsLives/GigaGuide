@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: map
+  datasource:
+    url: jdbc:postgresql://localhost:5432/giga-guide-db
+    username: postgres
+    password: 1234
+  jpa:
+    hibernate:
+      ddl-auto: validate
+server:
+  port: 8086

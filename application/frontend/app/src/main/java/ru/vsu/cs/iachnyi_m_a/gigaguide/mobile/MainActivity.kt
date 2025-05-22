@@ -1,0 +1,353 @@
+package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile
+
+import android.os.Bundle
+import android.util.Log
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
+import dagger.hilt.android.AndroidEntryPoint
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ExploreSightScreenClass
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ExploreTourScreenClass
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.FavoriteScreenObject
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.HomeScreenObject
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.LoginScreenObject
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.MapScreenObject
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.NavBarItem
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ProfileScreenObject
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.RegisterScreenObject
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ReviewScreenClass
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SearchScreenObject
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SettingsScreenObject
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SightPageScreenClass
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.TourPageScreenClass
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumGrey
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.SuccessContainer
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.Pancake
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.ExploreSightScreen
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.ExploreTourScreen
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.FavoritesScreen
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.HomeScreen
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.LoginScreen
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.MapScreen
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.ProfileScreen
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.RegisterScreen
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.ReviewScreen
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.SearchScreen
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.SettingsScreen
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.SightPageScreen
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.TourPageScreen
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.ExploreSightScreenViewModel
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.HomeScreenViewModel
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.MapScreenViewModel
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.SettingsScreenViewModel
+
+@AndroidEntryPoint
+class MainActivity : ComponentActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+
+        val startScreenObject = HomeScreenObject;
+
+        var navItems = listOf(
+            NavBarItem(R.drawable.home, HomeScreenObject, R.string.nav_label_home), NavBarItem(
+                R.drawable.map, MapScreenObject, R.string.nav_label_map
+            ), NavBarItem(
+                R.drawable.bookmark, FavoriteScreenObject, R.string.nav_label_favorite
+            ), NavBarItem(
+                R.drawable.person_navbar, SettingsScreenObject, R.string.nav_label_settings
+            )
+        )
+
+
+        var selectedNavItemIndex = mutableIntStateOf(0);
+        var infoMessage = mutableStateOf("Интернет недоступен, приди пж попозже")
+        var infoColor = mutableStateOf<Color>(Color(0))
+
+
+
+        setContent {
+            GigaGuideMobileTheme {
+
+                var showNavigationBarMutableState by remember { mutableStateOf(false) };
+                var infoVisibleMutableState by remember { mutableStateOf(false) }
+                var errorContainerColor = Color(0xffff6666)
+                var successContainerColor = SuccessContainer
+                var noInternetMessage = stringResource(R.string.error_no_internet)
+                var serverUnavailableMessage = stringResource(R.string.error_server_unavailable)
+                var serverErrorMessage = stringResource(R.string.error_server_error)
+
+                LaunchedEffect(Unit)  {
+                    Pancake.setMessageHandler(
+                        onError = {
+                                infoMessage.value = it
+                                infoColor.value = errorContainerColor
+                                infoVisibleMutableState = true
+                                Log.e("ERR", "ERROR")
+                        },
+                        onInfo = {
+
+                                infoMessage.value = it
+                                infoColor.value = successContainerColor
+                                infoVisibleMutableState = true
+                        },
+                        onSuccess = {
+
+                                infoMessage.value = it
+                                infoColor.value = successContainerColor
+                                infoVisibleMutableState = true
+
+                        },
+                        noInternetMessage = noInternetMessage,
+                        serverUnavailableMessage = serverUnavailableMessage,
+                        serverErrorMessage = serverErrorMessage
+                    )
+                }
+
+                val homeScreenViewModel: HomeScreenViewModel = hiltViewModel<HomeScreenViewModel>()
+                val mapScreenViewModel: MapScreenViewModel = hiltViewModel<MapScreenViewModel>()
+
+                val navController = rememberNavController();
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color = MaterialTheme.colorScheme.background),
+                    contentAlignment = Alignment.TopCenter
+                ) {
+                    NavHost(
+                        navController = navController, startDestination = startScreenObject,
+                        enterTransition = { EnterTransition.None },
+                        exitTransition = { ExitTransition.None },
+                        popEnterTransition = { EnterTransition.None },
+                        popExitTransition = { ExitTransition.None },
+                    ) {
+                        composable<HomeScreenObject> {
+                            HomeScreen(
+                                homeScreenViewModel = homeScreenViewModel,
+                                navController = navController
+                            );
+                            showNavigationBarMutableState = true;
+                        }
+                        composable<MapScreenObject> {
+                            MapScreen(
+                                navController = navController,
+                                mapScreenViewModel = mapScreenViewModel
+                            )
+                            showNavigationBarMutableState = true;
+                        }
+                        composable<FavoriteScreenObject> {
+                            FavoritesScreen(
+                                navController = navController
+                            )
+                            showNavigationBarMutableState = true;
+                        }
+                        composable<SettingsScreenObject> {
+                            showNavigationBarMutableState = true;
+                            SettingsScreen(
+                                navController = navController,
+                                settingsScreenViewModel = hiltViewModel<SettingsScreenViewModel>()
+                            )
+                        }
+                        composable<LoginScreenObject> {
+                            showNavigationBarMutableState = false
+                            LoginScreen(
+                                navController = navController
+                            )
+                        }
+                        composable<RegisterScreenObject> {
+                            showNavigationBarMutableState = false
+                            RegisterScreen(
+                                navController = navController
+                            )
+                        }
+                        composable<SightPageScreenClass> {
+                            val args = it.toRoute<SightPageScreenClass>()
+                            showNavigationBarMutableState = false
+                            SightPageScreen(
+                                sightId = args.sightId,
+                                navController = navController,
+                            )
+                        }
+                        composable<ExploreSightScreenClass> {
+                            val args = it.toRoute<ExploreSightScreenClass>()
+                            showNavigationBarMutableState = false;
+                            ExploreSightScreen(
+                                exploreSightScreenViewModel = hiltViewModel<ExploreSightScreenViewModel>(),
+                                navController = navController,
+                                sightId = args.sightId,
+                                context = this@MainActivity
+                            )
+                        }
+                        composable<ReviewScreenClass> {
+                            val args = it.toRoute<ReviewScreenClass>()
+                            showNavigationBarMutableState = false
+                            ReviewScreen(sightId = args.sightId, navController = navController)
+                        }
+                        composable<SearchScreenObject> {
+                            showNavigationBarMutableState = false
+                            SearchScreen(navController = navController)
+                        }
+                        composable<TourPageScreenClass> {
+                            val args = it.toRoute<TourPageScreenClass>()
+                            showNavigationBarMutableState = false
+                            TourPageScreen(tourId = args.tourId, navController = navController)
+                        }
+                        composable<ExploreTourScreenClass> {
+                            val args = it.toRoute<ExploreTourScreenClass>()
+                            showNavigationBarMutableState = false
+                            ExploreTourScreen(context = this@MainActivity, tourId = args.tourId, navController = navController)
+                        }
+                        composable<ProfileScreenObject> {
+                            showNavigationBarMutableState = false
+                            ProfileScreen(navController = navController)
+                        }
+                    }
+                    AnimatedVisibility(
+                        modifier = Modifier.align(Alignment.BottomCenter),
+                        visible = showNavigationBarMutableState,
+                        enter = slideInVertically(initialOffsetY = { h -> h + 60 }),
+                        exit = slideOutVertically(targetOffsetY = { h -> h + 60 })
+                    ) {
+                        BottomNavigationBar(
+                            modifier = Modifier,
+                            navItems = navItems,
+                            selectedIndex = selectedNavItemIndex,
+                            navController = navController
+                        )
+                    }
+                    AnimatedVisibility(
+                        modifier = Modifier.align(Alignment.TopCenter),
+                        visible = infoVisibleMutableState,
+                        enter = slideInVertically(initialOffsetY = { h -> -h }),
+                        exit = slideOutVertically(targetOffsetY = { h -> -h })
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(10.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(infoColor.value)
+                                .padding(15.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                modifier = Modifier.weight(1f),
+                                text = infoMessage.value,
+                                style = MaterialTheme.typography.titleMedium,
+                                color = White
+                            )
+                            Icon(
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .clickable(onClick = {infoVisibleMutableState = false})
+                                    .background(White)
+                                    .padding(5.dp)
+                                    .size(20.dp),
+                                imageVector = Icons.Filled.Close,
+                                contentDescription = null,
+                                tint = MediumGrey,
+                            )
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+}
+
+
+@Composable
+fun BottomNavigationBar(
+    modifier: Modifier,
+    navController: NavController,
+    navItems: List<NavBarItem>,
+    selectedIndex: MutableState<Int>
+) {
+
+    NavigationBar(
+        modifier = modifier
+            .background(MaterialTheme.colorScheme.background)
+            .dropShadow(offsetX = 0.dp, offsetY = 0.dp, blur = 16.dp),
+        containerColor = MaterialTheme.colorScheme.background
+    ) {
+        navItems.forEachIndexed { i, navItem ->
+            NavigationBarItem(
+                onClick = {
+                    if (selectedIndex.value != i) {
+                        selectedIndex.value = i
+                        navController.navigate(navItem.screenObject)
+                    }
+                },
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = MediumBlue,
+                    unselectedIconColor = MediumGrey,
+                    selectedTextColor = MaterialTheme.colorScheme.onBackground,
+                    indicatorColor = Color(0x00000000)
+                ),
+                icon = {
+                    Icon(
+                        imageVector = ImageVector.vectorResource(navItem.iconId),
+                        contentDescription = "das",
+                    )
+                },
+                selected = selectedIndex.value == i,
+                label = {
+                    Text(text = stringResource(navItem.iconLabelId));
+                },
+                alwaysShowLabel = false,
+            )
+
+        }
+    }
+}

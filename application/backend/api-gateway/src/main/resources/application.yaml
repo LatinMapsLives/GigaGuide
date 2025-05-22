@@ -1,0 +1,98 @@
+server:
+  port: 8080
+jwt:
+  secret: 984hg493gh0439rthr0429uruj2309yh937gc763fe87t3f89723gf
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: auth-service
+          uri: http://158.160.179.56:8081
+          predicates:
+            - Path=/api/auth/**
+
+        - id: auth-service-docs
+          uri: http://auth:8081
+          predicates:
+            - Path=/api-docs/auth
+          filters:
+            - SetPath=/v3/api-docs
+
+        - id: tour-sight-service
+          uri: http://158.160.179.56:8082
+          predicates:
+            - Path=/api/tour-sight/**
+
+        - id: tour-sight-service-docs
+          uri: http://tour-sight:8082
+          predicates:
+            - Path=/api-docs/tour
+          filters:
+            - SetPath=/v3/api-docs
+
+        - id: user-service
+          predicates:
+            - Path=/api/user/**
+          uri: http://158.160.179.56:8084
+
+        - id: user-service-docs
+          uri: http://user-service:8084
+          predicates:
+            - Path=/api-docs/user
+          filters:
+            - SetPath=/v3/api-docs
+
+        - id: guide-service
+          uri: http://158.160.179.56:8083
+          predicates:
+            - Path=/api/guide/**
+
+        - id: guide-service-docs
+          uri: http://guide:8083
+          predicates:
+            - Path=/api-docs/guide
+          filters:
+            - SetPath=/v3/api-docs
+
+        - id: map-service
+          uri: http://158.160.179.56:8086
+          predicates:
+            - Path=/api/map/**
+
+        - id: map-service-docs
+          uri: http://map:8086
+          predicates:
+            - Path=/api-docs/map
+          filters:
+            - SetPath=/v3/api-docs
+
+        - id: reviews-service
+          uri: http://158.160.179.56:8085
+          predicates:
+            - Path=/api/reviews/**
+
+        - id: reviews-service-docs
+          uri: http://reviews:8085
+          predicates:
+            - Path=/api-docs/reviews
+          filters:
+            - SetPath=/v3/api-docs
+springdoc:
+  swagger-ui:
+    urls:
+      - name: Auth Service
+        url: /api-docs/auth
+      - name: Tour-Sight Service
+        url: /api-docs/tour
+      - name: User Service
+        url: /api-docs/user
+      - name: Guide Service
+        url: /api-docs/guide
+      - name: Map Service
+        url: /api-docs/map
+      - name: Reviews Service
+        url: /api-docs/reviews
+
+
