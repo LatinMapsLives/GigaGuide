@@ -47,7 +47,6 @@ jobs:
           rsync -avz -e "ssh -o StrictHostKeyChecking=no" \
             --exclude='.git' \
             --exclude='.github' \
-            --exclude='target/' \
             ./ ${{ secrets.YC_SSH_USER }}@${{ secrets.YC_SSH_HOST }}:/home/gigaguide/gigaguide
 
       - name: Run deploy script
