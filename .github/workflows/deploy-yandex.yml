@@ -1,0 +1,53 @@
+name: Build and Deploy to Yandex Cloud
+
+on:
+  push:
+    branches: [ "main" ]  # Триггер на пуш в main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'  # Или ваша версия Java
+          distribution: 'temurin'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
+
+      - name: Build all microservices
+        run: |
+          cd api-gateway && mvn clean package -DskipTests
+          cd ../application/backend/auth && mvn clean package -DskipTests
+          cd ../application/backend/guide && mvn clean package -DskipTests
+          cd ../application/backend/map && mvn clean package -DskipTests
+          cd ../application/backend/reviews && mvn clean package -DskipTests
+          cd ../application/backend/tour-sight && mvn clean package -DskipTests
+          cd ../application/backend/user-service && mvn clean package -DskipTests
+
+      - name: Install SSH key
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.YC_SSH_PRIVATE_KEY }}
+
+      - name: Copy files to server
+        run: |
+          rsync -avz -e "ssh -o StrictHostKeyChecking=no" \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='target/' \
+            ./ ${{ secrets.YC_SSH_USER }}@${{ secrets.YC_SSH_HOST }}:/home/ubuntu/gigaguide
+
+      - name: Run deploy script
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.YC_SSH_USER }}@${{ secrets.YC_SSH_HOST }} "chmod +x /home/ubuntu/scripts/deploy.sh && /home/ubuntu/scripts/deploy.sh"
