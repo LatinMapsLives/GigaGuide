@@ -44,4 +44,7 @@
     <string name="error_no_internet">Отсутствует подключение к Интернету</string>
     <string name="error_server_unavailable">Сервер недоступен. Повторите попытку позже</string>
     <string name="error_server_error">Ошибка сервера</string>
+    <string name="profile_screen_button_change_active">Изменить</string>
+    <string name="profile_screen_button_change_inactive">Отмена</string>
+    <string name="profile_screen_button_confirm_change">Подтвердить</string>
 </resources>

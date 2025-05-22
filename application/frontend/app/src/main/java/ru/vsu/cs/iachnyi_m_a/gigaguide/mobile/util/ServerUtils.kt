@@ -1,5 +1,6 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util
 
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.net.ConnectException
@@ -26,6 +27,7 @@ class ServerUtils {
                     Pancake.noInternet()
                     null
                 } catch (e: Exception) {
+                    Log.e("ERR", e.toString())
                     Pancake.serverError()
                     null
                 }

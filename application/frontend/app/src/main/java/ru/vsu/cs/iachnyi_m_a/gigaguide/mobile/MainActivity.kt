@@ -57,6 +57,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.HomeScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.LoginScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.MapScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.NavBarItem
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ProfileScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.RegisterScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ReviewScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SearchScreenObject
@@ -75,6 +76,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.FavoritesScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.HomeScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.LoginScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.MapScreen
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.ProfileScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.RegisterScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.ReviewScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.SearchScreen
@@ -245,6 +247,10 @@ class MainActivity : ComponentActivity() {
                             showNavigationBarMutableState = false
                             ExploreTourScreen(context = this@MainActivity, tourId = args.tourId, navController = navController)
                         }
+                        composable<ProfileScreenObject> {
+                            showNavigationBarMutableState = false
+                            ProfileScreen(navController = navController)
+                        }
                     }
                     AnimatedVisibility(
                         modifier = Modifier.align(Alignment.BottomCenter),
@@ -270,7 +276,7 @@ class MainActivity : ComponentActivity() {
                                 .fillMaxWidth()
                                 .padding(10.dp)
                                 .clip(RoundedCornerShape(10.dp))
-                                .background(errorContainerColor)
+                                .background(infoColor.value)
                                 .padding(15.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {

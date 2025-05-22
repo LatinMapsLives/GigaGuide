@@ -11,7 +11,10 @@ import kotlinx.coroutines.launch
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.datastore.DataStoreManager
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.user.UserDataDTO
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.UserRepository
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.Pancake
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.validator.EmailValidator
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.validator.UsernameValidator
 
 @HiltViewModel
 class ProfileScreenViewModel @Inject constructor(private var userRepository: UserRepository, private var dataStoreManager: DataStoreManager): ViewModel() {
@@ -21,12 +24,9 @@ class ProfileScreenViewModel @Inject constructor(private var userRepository: Use
     var oldPassword by mutableStateOf("")
     var newPassword by mutableStateOf("")
 
-    var usernameChangeError by mutableStateOf(false)
-    var usernameChangeSuccess by mutableStateOf(false)
-    var emailChangeError by mutableStateOf(false)
-    var emailChangeSuccess by mutableStateOf(false)
-    var passwordChangeError by mutableStateOf(false)
-    var passwordChangeSuccess by mutableStateOf(false)
+    var usernameChangeError by mutableStateOf("")
+    var emailChangeError by mutableStateOf("")
+    var passwordChangeError by mutableStateOf("")
 
     var usernameEditorOpen by mutableStateOf(false)
     var passwordEditorOpen by mutableStateOf(false)
@@ -34,61 +34,97 @@ class ProfileScreenViewModel @Inject constructor(private var userRepository: Use
 
     var currentUsername by mutableStateOf("")
     var currentEmail by mutableStateOf("")
+    var loading by mutableStateOf(false)
 
     fun loadUserData(){
         viewModelScope.launch {
-            if(dataStoreManager.getJWT() == null) return@launch
+            loading = true
+            if(dataStoreManager.getJWT() == null) {
+                loading = false
+                return@launch
+            }
             var data: UserDataDTO? = ServerUtils.executeNetworkCall { userRepository.getUserData(dataStoreManager.getJWT()!!) }
             if(data != null){
                 currentUsername = data.username
                 currentEmail = data.email
             }
+            loading = false
         }
     }
 
     fun updatePassword(){
         viewModelScope.launch {
-            if(dataStoreManager.getJWT() == null) return@launch
+            loading = true
+            if(dataStoreManager.getJWT() == null) {
+                loading = false
+                return@launch
+            }
             var success  = ServerUtils.executeNetworkCall { userRepository.updatePassword(dataStoreManager.getJWT()!!, oldPassword, newPassword) }
             if(success != null && success){
-                passwordChangeSuccess = true
-                passwordChangeError = false
+                Pancake.success("Пароль успешно обновлён")
+                passwordChangeError = ""
                 oldPassword = ""
                 newPassword = ""
+                loadUserData()
             } else {
-                passwordChangeSuccess = false
-                passwordChangeError = true
+                passwordChangeError = "Ошибка обновления пароля"
             }
+            loading = false
         }
     }
 
     fun updateUsername(){
+        if(!UsernameValidator().validate(newUsername)){
+            usernameChangeError = "Неверный формат имени"
+            return
+        }
+        loading = true
         viewModelScope.launch {
-            if(dataStoreManager.getJWT() == null) return@launch
+            if(dataStoreManager.getJWT() == null){
+                loading = false
+                return@launch
+            }
             var success  = ServerUtils.executeNetworkCall { userRepository.updateUsername(dataStoreManager.getJWT()!!, newUsername) }
             if(success != null && success){
-                usernameChangeSuccess = true
-                usernameChangeError = false
+                Pancake.success("Имя успешно обновлено")
+                usernameChangeError = ""
                 newUsername = ""
+                loadUserData()
             } else {
-                usernameChangeSuccess = false
-                usernameChangeError = true
+                usernameChangeError = "Ошибка обновления имени"
             }
         }
+        loading = false
     }
 
     fun updateEmail(){
+        if(!EmailValidator().validate(newEmail)){
+            emailChangeError = "Неверный формат почты"
+            return
+        }
+        loading = true
         viewModelScope.launch {
-            if(dataStoreManager.getJWT() == null) return@launch
+            if(dataStoreManager.getJWT() == null) {
+                loading = false
+                return@launch
+            }
             var success  = ServerUtils.executeNetworkCall { userRepository.updateEmail(dataStoreManager.getJWT()!!, newEmail) }
             if(success != null && success){
-                emailChangeSuccess = true
-                emailChangeError = false
+                Pancake.success("Почта успешно обновлена")
+                emailChangeError = ""
                 newEmail = ""
+                loadUserData()
             } else {
-                emailChangeSuccess = false
-                emailChangeError = true
+                emailChangeError = "Ошибка обновления почты"
             }
+        }
+        loading = false
+    }
+
+    fun logout(afterErasingJWT:  () -> Unit){
+        viewModelScope.launch {
+            dataStoreManager.deleteJWT()
+            afterErasingJWT.invoke()
         }
     }
 

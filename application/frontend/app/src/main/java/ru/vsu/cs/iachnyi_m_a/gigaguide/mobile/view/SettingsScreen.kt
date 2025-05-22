@@ -1,19 +1,17 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -36,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.LoginScreenObject
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ProfileScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
@@ -64,6 +63,7 @@ fun SettingsScreen(settingsScreenViewModel: SettingsScreenViewModel, navControll
                 if (settingsScreenViewModel.userData.value != null) {
                     Row(
                         modifier = Modifier
+                            .clickable(onClick = { navController.navigate(ProfileScreenObject) })
                             .background(color = MaterialTheme.colorScheme.tertiary)
                             .padding(20.dp)
                             .fillMaxWidth(),
@@ -88,9 +88,14 @@ fun SettingsScreen(settingsScreenViewModel: SettingsScreenViewModel, navControll
                             )
                         }
                         //Text("")
-                        Text(style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onBackground, text = "${stringResource(R.string.settings_screen_logged_in_as)} ${settingsScreenViewModel.userData.value!!.username}", modifier = Modifier
-                            .weight(1f)
-                            .padding(horizontal = 20.dp))
+                        Text(
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.onBackground,
+                            text = "${stringResource(R.string.settings_screen_logged_in_as)} ${settingsScreenViewModel.userData.value!!.username}",
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(horizontal = 20.dp)
+                        )
                         Icon(
                             imageVector = ImageVector.vectorResource(R.drawable.chevron_right),
                             contentDescription = "chevron right",
@@ -99,9 +104,11 @@ fun SettingsScreen(settingsScreenViewModel: SettingsScreenViewModel, navControll
                             tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
-                    GradientSeparator(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 35.dp))
+                    GradientSeparator(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 35.dp)
+                    )
                 } else {
                     Box(
                         modifier = Modifier
