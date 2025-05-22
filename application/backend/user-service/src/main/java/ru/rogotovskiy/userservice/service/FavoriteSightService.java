@@ -7,7 +7,6 @@ import ru.rogotovskiy.userservice.entity.FavoriteSight;
 import ru.rogotovskiy.userservice.mapper.FavoriteSightMapper;
 import ru.rogotovskiy.userservice.repository.FavoriteSightRepository;
 import ru.rogotovskiy.userservice.repository.SightRepository;
-import ru.rogotovskiy.userservice.repository.TourRepository;
 
 import java.util.List;
 import java.util.NoSuchElementException;

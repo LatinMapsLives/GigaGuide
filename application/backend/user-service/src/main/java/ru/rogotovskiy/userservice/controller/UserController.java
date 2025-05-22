@@ -34,7 +34,7 @@ public class UserController {
     public ResponseEntity<?> updateUser(@RequestHeader("X-User-Id") String userId,
                                         @RequestBody UpdateUserDto dto) {
         userService.updateUser(Integer.parseInt(userId), dto);
-        return ResponseEntity.ok("Пользователь успешно обновлён");
+        return ResponseEntity.ok("user_service.success.update_user");
     }
 
 }

@@ -19,7 +19,7 @@ public class FavoriteSightController {
     @PostMapping
     public ResponseEntity<?> addSightToFavorites(@RequestHeader("X-User-Id") String userId, @RequestParam Integer sightId) {
         favoriteSightService.addSightToFavorites(Integer.parseInt(userId), sightId);
-        return ResponseEntity.ok("Достопримечательность успешно добавлена в избранное");
+        return ResponseEntity.ok("user_service.success.favorites.add_sight");
     }
 
     @Operation(summary = "Удалить достопримечательность из избранного")
@@ -27,6 +27,6 @@ public class FavoriteSightController {
     @DeleteMapping("/sights")
     public ResponseEntity<?> deleteSightFromFavorites(@RequestHeader("X-User-Id") String userId, @RequestParam Integer sightId) {
         favoriteSightService.deleteSightFromFavorites(Integer.parseInt(userId), sightId);
-        return ResponseEntity.ok("Достопримечательность успешно удалена из избранного");
+        return ResponseEntity.ok("user_service.success.favorites.delete_sight");
     }
 }

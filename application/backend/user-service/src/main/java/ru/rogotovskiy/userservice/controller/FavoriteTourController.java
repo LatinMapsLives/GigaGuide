@@ -19,7 +19,7 @@ public class FavoriteTourController {
     @PostMapping
     public ResponseEntity<?> addTourToFavorites(@RequestHeader("X-User-Id") String userId, @RequestParam Integer tourId) {
         favoriteTourService.addTourToFavorites(Integer.parseInt(userId), tourId);
-        return ResponseEntity.ok("Тур успешно добавлен в избранное");
+        return ResponseEntity.ok("user_service.success.favorites.add_tour");
     }
 
     @Operation(summary = "Удалить тур из избранного")
@@ -27,6 +27,6 @@ public class FavoriteTourController {
     @DeleteMapping
     public ResponseEntity<?> deleteTourFromFavorites(@RequestHeader("X-User-Id") String userId, @RequestParam Integer tourId) {
         favoriteTourService.deleteTourFromFavorites(Integer.parseInt(userId), tourId);
-        return ResponseEntity.ok("Тур успешно удалён из избранного");
+        return ResponseEntity.ok("user_service.success.favorites.delete_tour");
     }
 }
