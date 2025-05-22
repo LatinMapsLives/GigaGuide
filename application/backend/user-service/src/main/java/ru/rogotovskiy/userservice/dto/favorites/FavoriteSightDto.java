@@ -1,4 +1,4 @@
-package ru.rogotovskiy.userservice.dto;
+package ru.rogotovskiy.userservice.dto.favorites;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

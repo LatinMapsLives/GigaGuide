@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.rogotovskiy.userservice.dto.FavoritesDto;
+import ru.rogotovskiy.userservice.dto.favorites.FavoritesDto;
 import ru.rogotovskiy.userservice.service.FavoritesService;
 
 @RestController
