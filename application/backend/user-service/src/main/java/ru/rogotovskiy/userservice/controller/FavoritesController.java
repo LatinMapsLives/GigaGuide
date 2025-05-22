@@ -29,36 +29,4 @@ public class FavoritesController {
     public ResponseEntity<?> getFavorites(@RequestHeader("X-User-Id") String userId) {
         return ResponseEntity.ok(favoritesService.getAll(Integer.parseInt(userId)));
     }
-
-    @Operation(summary = "Добавить тур в избранное")
-    @ApiResponse(responseCode = "200", description = "Тур успешно добавлен")
-    @PostMapping("/tours")
-    public ResponseEntity<?> addTourToFavorites(@RequestHeader("X-User-Id") String userId, @RequestParam Integer tourId) {
-        favoritesService.addTourToFavorites(Integer.parseInt(userId), tourId);
-        return ResponseEntity.ok("Тур успешно добавлен в избранное");
-    }
-
-    @Operation(summary = "Добавить достопримечательность в избранное")
-    @ApiResponse(responseCode = "200", description = "Достопримечательность успешно добавлена")
-    @PostMapping("/sights")
-    public ResponseEntity<?> addSightToFavorites(@RequestHeader("X-User-Id") String userId, @RequestParam Integer sightId) {
-        favoritesService.addSightToFavorites(Integer.parseInt(userId), sightId);
-        return ResponseEntity.ok("Достопримечательность успешно добавлена в избранное");
-    }
-
-    @Operation(summary = "Удалить тур из избранного")
-    @ApiResponse(responseCode = "200", description = "Тур успешно удалён")
-    @DeleteMapping("/tours")
-    public ResponseEntity<?> deleteTourFromFavorites(@RequestHeader("X-User-Id") String userId, @RequestParam Integer tourId) {
-        favoritesService.deleteTourFromFavorites(Integer.parseInt(userId), tourId);
-        return ResponseEntity.ok("Тур успешно удалён из избранного");
-    }
-
-    @Operation(summary = "Удалить достопримечательность из избранного")
-    @ApiResponse(responseCode = "200", description = "Достопримечательность успешно удалена")
-    @DeleteMapping("/sights")
-    public ResponseEntity<?> deleteSightFromFavorites(@RequestHeader("X-User-Id") String userId, @RequestParam Integer sightId) {
-        favoritesService.deleteSightFromFavorites(Integer.parseInt(userId), sightId);
-        return ResponseEntity.ok("Достопримечательность успешно удалена из избранного");
-    }
 }
