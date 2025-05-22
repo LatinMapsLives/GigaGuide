@@ -25,6 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
@@ -100,7 +101,8 @@ fun ProfileScreen(
             } else {
                 Text(
                     text = profileScreenViewModel.currentUsername,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = MaterialTheme.colorScheme.onBackground,
+                    fontWeight = FontWeight.Bold
                 )
             }
 
@@ -176,7 +178,8 @@ fun ProfileScreen(
             } else {
                 Text(
                     text = profileScreenViewModel.currentEmail,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = MaterialTheme.colorScheme.onBackground,
+                    fontWeight = FontWeight.Bold
                 )
             }
 
