@@ -52,4 +52,4 @@ jobs:
 
       - name: Run deploy script
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.YC_SSH_USER }}@${{ secrets.YC_SSH_HOST }} "chmod +x /home/ubuntu/scripts/deploy.sh && /home/ubuntu/scripts/deploy.sh"
+          ssh -o StrictHostKeyChecking=no ${{ secrets.YC_SSH_USER }}@${{ secrets.YC_SSH_HOST }} "chmod +x /home/gigaguide/scripts/deploy.sh && /home/gigaguide/scripts/deploy.sh"
