@@ -6,10 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.rogotovskiy.userservice.dto.ErrorResponse;
-import ru.rogotovskiy.userservice.exception.CustomException;
-import ru.rogotovskiy.userservice.exception.EmailAlreadyExistsException;
-import ru.rogotovskiy.userservice.exception.InvalidPasswordException;
-import ru.rogotovskiy.userservice.exception.UserNotFoundException;
+import ru.rogotovskiy.userservice.exception.*;
 
 import java.time.LocalDateTime;
 
@@ -30,6 +27,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleInvalidPasswordException(InvalidPasswordException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(toErrorResponse(e));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleFavoriteTourNotFoundException(FavoriteTourNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(toErrorResponse(e));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleFavoriteSightNotFoundException(FavoriteSightNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(toErrorResponse(e));
     }
 
     private ErrorResponse toErrorResponse(CustomException e) {
