@@ -33,8 +33,9 @@ class MapScreenViewModel @Inject constructor(
     var loading by mutableStateOf(false)
     var selected by mutableStateOf(false)
     var selectedIndex = mutableLongStateOf(-1)
-    var userLocation = mutableStateOf(MapPoint(0.0,0.0))
+
     var animateToCurrentLocationCallback: () -> Unit = {}
+    var userLocation = mutableStateOf(MapPoint(0.0,0.0))
 
     var doLoop = false
     fun stopLoop(){

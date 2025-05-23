@@ -6,6 +6,9 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Paint.Style
 import android.graphics.Rect
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -44,6 +47,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -76,6 +80,9 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.LightGrey
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumGrey
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.GeoLocationProvider
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.Pancake
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.ExploreSightScreenViewModel
 import kotlin.math.max
@@ -87,10 +94,14 @@ fun ExploreSightScreen(
     context: Context,
     exploreSightScreenViewModel: ExploreSightScreenViewModel = hiltViewModel<ExploreSightScreenViewModel>(),
     navController: NavController,
-    sightId: Long
+    sightId: Long,
+    locationProvider: GeoLocationProvider
 ) {
     DisposableEffect(Unit) {
-        onDispose { exploreSightScreenViewModel.player.release() }
+        onDispose {
+            exploreSightScreenViewModel.stopLoop()
+            exploreSightScreenViewModel.player.release()
+        }
     }
     LaunchedEffect(Unit) {
         exploreSightScreenViewModel.sightId = sightId
@@ -127,7 +138,7 @@ fun ExploreSightScreen(
                     exploreSightScreenViewModel.momentOnMaps[i]
                 exploreSightScreenViewModel.player.addMediaItem(MediaItem.fromUri(momentOnMap.audioLink.toUri()))
             }
-            exploreSightScreenViewModel.selected.value = true
+            exploreSightScreenViewModel.selected = true
         }
         exploreSightScreenViewModel.player.prepare()
         exploreSightScreenViewModel.player.seekTo(0, 0)
@@ -135,7 +146,7 @@ fun ExploreSightScreen(
     }
     var dark = isSystemInDarkTheme()
     var deselectCallback: () -> Unit = {
-        exploreSightScreenViewModel.selected.value = false
+        exploreSightScreenViewModel.selected = false
         exploreSightScreenViewModel.player.playWhenReady = false
         if (exploreSightScreenViewModel.player.isPlaying) exploreSightScreenViewModel.player.pause()
     }
@@ -164,10 +175,21 @@ fun ExploreSightScreen(
             }
         }, update = { view ->
 
+            exploreSightScreenViewModel.animateToCurrentLocationCallback = {
+                view.controller.animateTo(
+                    GeoPoint(
+                        exploreSightScreenViewModel.userLocation.value.latitude,
+                        exploreSightScreenViewModel.userLocation.value.longitude
+                    ),
+                    17.0,
+                    400
+                )
+            }
+
             view.controller.setCenter(exploreSightScreenViewModel.center)
             view.controller.setZoom(exploreSightScreenViewModel.zoom)
 
-            if (!exploreSightScreenViewModel.route.isEmpty() && !exploreSightScreenViewModel.momentOnMaps.isEmpty() && !exploreSightScreenViewModel.loadingRoute.value) {
+            if (!exploreSightScreenViewModel.route.isEmpty() && !exploreSightScreenViewModel.momentOnMaps.isEmpty() && !exploreSightScreenViewModel.loadingRoute) {
 
 
                 view.overlays.clear()
@@ -183,6 +205,21 @@ fun ExploreSightScreen(
                     }
                 }))
 
+                if(locationProvider.hasLocationPermissions()){
+                    var userMarker = Marker(view)
+                    userMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
+                    userMarker.position = GeoPoint(
+                        exploreSightScreenViewModel.userLocation.value.latitude,
+                        exploreSightScreenViewModel.userLocation.value.longitude
+                    )
+                    userMarker.icon = ResourcesCompat.getDrawable(
+                        view.resources,
+                        R.drawable.user_location_marker,
+                        null
+                    )
+                    view.overlays.add(userMarker)
+                }
+
                 var line = Polyline()
                 line.width = 5f
                 line.color = MediumBlue.toArgb()
@@ -197,10 +234,10 @@ fun ExploreSightScreen(
                         numberedMarker(
                             number = i + 1,
                             point = GeoPoint(m.latitude, m.longitude),
-                            selected = exploreSightScreenViewModel.selected.value && exploreSightScreenViewModel.selectedMomentIndex.intValue == i,
+                            selected = exploreSightScreenViewModel.selected && exploreSightScreenViewModel.selectedMomentIndex.intValue == i,
                             mapView = view,
                             onClick = {
-                                exploreSightScreenViewModel.selected.value = true
+                                exploreSightScreenViewModel.selected = true
                                 exploreSightScreenViewModel.selectedMomentIndex.intValue = i
                                 exploreSightScreenViewModel.needToAnimateTo =
                                     GeoPoint(m.latitude, m.longitude)
@@ -242,53 +279,102 @@ fun ExploreSightScreen(
                 modifier = Modifier.fillMaxSize()
             )
         }
-        if (exploreSightScreenViewModel.selected.value) {
-            MomentBox(
-                modifier = Modifier.align(Alignment.BottomCenter),
-                isPlayerLoading = exploreSightScreenViewModel.playerIsLoading.value,
-                momentNumber = exploreSightScreenViewModel.selectedMomentIndex.intValue + 1,
-                momentDurationMs = max(
-                    exploreSightScreenViewModel.currentTrackDurationMs.longValue,
-                    1
-                ),
-                currentPositionMs = exploreSightScreenViewModel.currentTrackPositionMs.longValue,
-                momentName = exploreSightScreenViewModel.currentMoment()!!.name,
-                nextOnClick = {
-                    exploreSightScreenViewModel.player.seekToNextMediaItem()
-                    exploreSightScreenViewModel.player.playWhenReady = true
-                    exploreSightScreenViewModel.selectedMomentIndex.intValue++
-                    exploreSightScreenViewModel.needToAnimateTo = GeoPoint(
-                        exploreSightScreenViewModel.currentMoment()!!.latitude,
-                        exploreSightScreenViewModel.currentMoment()!!.longitude
-                    )
-                },
-                previousOnClick = {
-                    exploreSightScreenViewModel.player.seekToPreviousMediaItem()
-                    exploreSightScreenViewModel.player.playWhenReady = true
-                    exploreSightScreenViewModel.selectedMomentIndex.intValue--
-                    exploreSightScreenViewModel.needToAnimateTo = GeoPoint(
-                        exploreSightScreenViewModel.currentMoment()!!.latitude,
-                        exploreSightScreenViewModel.currentMoment()!!.longitude
-                    )
-                },
-                hasNext =
-                    exploreSightScreenViewModel.selectedMomentIndex.intValue < exploreSightScreenViewModel.momentOnMaps.size - 1,
-                hasPrevious = exploreSightScreenViewModel.selectedMomentIndex.intValue > 0,
-                chevronDownOnClick = deselectCallback,
-                seekCallbackSeconds = { sec ->
-                    exploreSightScreenViewModel.player.seekTo((sec * 1000).toLong())
-                },
-                isPlaying = exploreSightScreenViewModel.player.isPlaying,
-                pausePlayButtonOnClick = {
-                    if (exploreSightScreenViewModel.player.isPlaying) {
-                        exploreSightScreenViewModel.player.pause()
+
+        Column(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp)
+            ) {
+                var noPermissionsString = stringResource(R.string.warning_no_location_permissions)
+                UserLocationButton(onButtonClick = {
+                    if(!locationProvider.hasLocationPermissions()){
+                        Pancake.info(noPermissionsString)
                     } else {
-                        exploreSightScreenViewModel.player.play()
+                        exploreSightScreenViewModel.animateToCurrentLocationCallback.invoke()
                     }
-                },
-                momentImageLink = exploreSightScreenViewModel.currentMoment()!!.imageLink
-            )
-            android.util.Log.e("IMAGE", exploreSightScreenViewModel.currentMoment()!!.imageLink)
+                })
+
+            }
+
+            AnimatedVisibility(visible = exploreSightScreenViewModel.selected,
+                enter = slideInVertically(initialOffsetY = { h -> h }),
+                exit = slideOutVertically(targetOffsetY = { h -> h }),
+                modifier = Modifier.fillMaxWidth()) {
+                MomentBox(
+                    isPlayerLoading = exploreSightScreenViewModel.playerIsLoading.value,
+                    momentNumber = exploreSightScreenViewModel.selectedMomentIndex.intValue + 1,
+                    momentDurationMs = max(
+                        exploreSightScreenViewModel.currentTrackDurationMs.longValue,
+                        1
+                    ),
+                    currentPositionMs = exploreSightScreenViewModel.currentTrackPositionMs.longValue,
+                    momentName = exploreSightScreenViewModel.currentMoment()!!.name,
+                    nextOnClick = {
+                        exploreSightScreenViewModel.player.seekToNextMediaItem()
+                        exploreSightScreenViewModel.player.playWhenReady = true
+                        exploreSightScreenViewModel.selectedMomentIndex.intValue++
+                        exploreSightScreenViewModel.needToAnimateTo = GeoPoint(
+                            exploreSightScreenViewModel.currentMoment()!!.latitude,
+                            exploreSightScreenViewModel.currentMoment()!!.longitude
+                        )
+                    },
+                    previousOnClick = {
+                        exploreSightScreenViewModel.player.seekToPreviousMediaItem()
+                        exploreSightScreenViewModel.player.playWhenReady = true
+                        exploreSightScreenViewModel.selectedMomentIndex.intValue--
+                        exploreSightScreenViewModel.needToAnimateTo = GeoPoint(
+                            exploreSightScreenViewModel.currentMoment()!!.latitude,
+                            exploreSightScreenViewModel.currentMoment()!!.longitude
+                        )
+                    },
+                    hasNext =
+                        exploreSightScreenViewModel.selectedMomentIndex.intValue < exploreSightScreenViewModel.momentOnMaps.size - 1,
+                    hasPrevious = exploreSightScreenViewModel.selectedMomentIndex.intValue > 0,
+                    chevronDownOnClick = deselectCallback,
+                    seekCallbackSeconds = { sec ->
+                        exploreSightScreenViewModel.player.seekTo((sec * 1000).toLong())
+                    },
+                    isPlaying = exploreSightScreenViewModel.player.isPlaying,
+                    pausePlayButtonOnClick = {
+                        if (exploreSightScreenViewModel.player.isPlaying) {
+                            exploreSightScreenViewModel.player.pause()
+                        } else {
+                            exploreSightScreenViewModel.player.play()
+                        }
+                    },
+                    momentImageLink = exploreSightScreenViewModel.currentMoment()!!.imageLink
+                )
+            }
+        }
+        AnimatedVisibility(
+            visible = exploreSightScreenViewModel.loadingRoute, modifier = Modifier
+                .align(
+                    Alignment.TopCenter
+                )
+                .padding(10.dp),
+            enter = slideInVertically(initialOffsetY = { h -> (-1.5f * h).toInt() }),
+            exit = slideOutVertically(targetOffsetY = { h -> (-1.5f * h).toInt() })
+        ) {
+            Row(
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .background(color = MediumGrey)
+                    .padding(horizontal = 10.dp, vertical = 5.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                CircularProgressIndicator(modifier = Modifier.size(20.dp), color = White)
+                Text(
+                    modifier = Modifier.padding(start = 5.dp),
+                    text = stringResource(R.string.explore_sight_screen_loading_route),
+                    color = White
+                )
+            }
         }
     }
 }

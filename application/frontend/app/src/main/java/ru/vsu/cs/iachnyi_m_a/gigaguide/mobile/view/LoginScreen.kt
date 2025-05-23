@@ -38,6 +38,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumGrey
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.Red
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.Pancake
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.LoginScreenViewModel
 
@@ -52,7 +53,10 @@ fun LoginScreen(
     loginScreenViewModel: LoginScreenViewModel = hiltViewModel<LoginScreenViewModel>(),
     navController: NavController
 ) {
-    loginScreenViewModel.popNavigationBackStackCallback = {navController.popBackStack()}
+    var loginSuccessString = stringResource(R.string.success_login_success)
+    loginScreenViewModel.popNavigationBackStackCallback = {
+        Pancake.success(loginSuccessString)
+        navController.popBackStack()}
     GigaGuideMobileTheme {
         Box(
             modifier = Modifier

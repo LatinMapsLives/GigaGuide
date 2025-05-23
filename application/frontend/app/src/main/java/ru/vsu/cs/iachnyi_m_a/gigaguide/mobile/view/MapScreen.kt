@@ -147,18 +147,20 @@ fun MapScreen(
                         }
                     })
                     view.overlays.add(clickOverlay)
-                    var userMarker = Marker(view)
-                    userMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
-                    userMarker.position = GeoPoint(
-                        mapScreenViewModel.userLocation.value.latitude,
-                        mapScreenViewModel.userLocation.value.longitude
-                    )
-                    userMarker.icon = ResourcesCompat.getDrawable(
-                        view.resources,
-                        R.drawable.user_location_marker,
-                        null
-                    )
-                    view.overlays.add(userMarker)
+                    if(locationProvider.hasLocationPermissions()){
+                        var userMarker = Marker(view)
+                        userMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
+                        userMarker.position = GeoPoint(
+                            mapScreenViewModel.userLocation.value.latitude,
+                            mapScreenViewModel.userLocation.value.longitude
+                        )
+                        userMarker.icon = ResourcesCompat.getDrawable(
+                            view.resources,
+                            R.drawable.user_location_marker,
+                            null
+                        )
+                        view.overlays.add(userMarker)
+                    }
                     for (sight in mapScreenViewModel.sights) {
                         var marker = Marker(view)
                         var listener = Marker.OnMarkerClickListener { mk, mv ->
@@ -198,7 +200,14 @@ fun MapScreen(
                     .fillMaxWidth()
                     .padding(10.dp)
             ) {
-                UserLocationButton(onButtonClick = { mapScreenViewModel.animateToCurrentLocationCallback.invoke() })
+                var noPermissionsString = stringResource(R.string.warning_no_location_permissions)
+                UserLocationButton(onButtonClick = {
+                    if(!locationProvider.hasLocationPermissions()){
+                        Pancake.info(noPermissionsString)
+                    } else {
+                        mapScreenViewModel.animateToCurrentLocationCallback.invoke()
+                    }
+                })
             }
             AnimatedVisibility(
                 modifier = Modifier.fillMaxWidth(),

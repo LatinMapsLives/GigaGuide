@@ -66,7 +66,7 @@ class GeoLocationProvider(private val activity: Activity) {
 
     private val LOCATION_PERMISSION_REQUEST_CODE = 1
 
-    private fun checkPermissions() {
+    fun checkPermissions() {
         if (!hasLocationPermissions()) {
             requestLocationPermissions()
             return
@@ -81,7 +81,7 @@ class GeoLocationProvider(private val activity: Activity) {
         )
     }
 
-    private fun hasLocationPermissions(): Boolean {
+    fun hasLocationPermissions(): Boolean {
         return hasPermission(Manifest.permission.ACCESS_FINE_LOCATION) &&
                 hasPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
     }

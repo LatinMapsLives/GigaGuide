@@ -4,30 +4,41 @@ import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.res.ResourcesCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
@@ -44,10 +55,15 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.MapEventsOverlay
+import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polyline
 import org.osmdroid.views.overlay.TilesOverlay
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumGrey
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.GeoLocationProvider
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.Pancake
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.ExploreTourScreenViewModel
 import kotlin.math.max
 
@@ -58,10 +74,14 @@ fun ExploreTourScreen(
     context: Context,
     exploreTourScreenViewModel: ExploreTourScreenViewModel = hiltViewModel<ExploreTourScreenViewModel>(),
     navController: NavController,
-    tourId: Long
+    tourId: Long,
+    locationProvider: GeoLocationProvider
 ) {
     DisposableEffect(Unit) {
-        onDispose { exploreTourScreenViewModel.player.release() }
+        onDispose {
+            exploreTourScreenViewModel.stopLoop()
+            exploreTourScreenViewModel.player.release()
+        }
     }
     LaunchedEffect(Unit) {
         exploreTourScreenViewModel.tourId = tourId
@@ -119,11 +139,22 @@ fun ExploreTourScreen(
             }
         }, update = { view ->
 
+            exploreTourScreenViewModel.animateToCurrentLocationCallback = {
+                view.controller.animateTo(
+                    GeoPoint(
+                        exploreTourScreenViewModel.userLocation.value.latitude,
+                        exploreTourScreenViewModel.userLocation.value.longitude
+                    ),
+                    17.0,
+                    400
+                )
+            }
+
             view.controller.setCenter(exploreTourScreenViewModel.center)
             view.controller.setZoom(exploreTourScreenViewModel.zoom)
 
             if (!exploreTourScreenViewModel.tourRoute.isEmpty()
-                && !exploreTourScreenViewModel.loadingTour.value
+                && !exploreTourScreenViewModel.loadingTour
             ) {
                 view.overlays.clear()
                 view.overlays.add(MapEventsOverlay(object : MapEventsReceiver {
@@ -143,6 +174,22 @@ fun ExploreTourScreen(
                         return false
                     }
                 }))
+
+                if (locationProvider.hasLocationPermissions()) {
+                    var userMarker = Marker(view)
+                    userMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
+                    userMarker.position = GeoPoint(
+                        exploreTourScreenViewModel.userLocation.value.latitude,
+                        exploreTourScreenViewModel.userLocation.value.longitude
+                    )
+                    userMarker.icon = ResourcesCompat.getDrawable(
+                        view.resources,
+                        R.drawable.user_location_marker,
+                        null
+                    )
+                    view.overlays.add(userMarker)
+                }
+
                 var tourRouteLine = Polyline()
                 tourRouteLine.width = 5f
                 tourRouteLine.color =
@@ -246,94 +293,140 @@ fun ExploreTourScreen(
                 modifier = Modifier.fillMaxSize()
             )
         }
-        AnimatedVisibility(
-            visible = exploreTourScreenViewModel.sightIsSelected,
+
+        Column(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .fillMaxWidth(),
-            enter = slideInVertically(initialOffsetY = { h -> h }),
-            exit = slideOutVertically(targetOffsetY = { h -> h })
+                .fillMaxWidth()
         ) {
-            SightBox(
-                modifier = Modifier.fillMaxWidth(),
-                onButtonClick = {
-                    if (exploreTourScreenViewModel.momentOnMaps[exploreTourScreenViewModel.selectedSightIndex.intValue].isNotEmpty()) {
-                        exploreTourScreenViewModel.selectedMomentIndex.intValue = 0
-                        exploreTourScreenViewModel.momentIsSelected = true
-                        var m =
-                            exploreTourScreenViewModel.momentOnMaps[exploreTourScreenViewModel.selectedSightIndex.intValue][0]
-                        exploreTourScreenViewModel.needToAnimateTo =
-                            GeoPoint(m.latitude, m.longitude)
-                        exploreTourScreenViewModel.player.seekTo(
-                            exploreTourScreenViewModel.indexesMap[exploreTourScreenViewModel.selectedSightIndex.intValue][0],
-                            0
-                        )
-                        exploreTourScreenViewModel.player.playWhenReady = false
-                    }
-                    exploreTourScreenViewModel.sightIsSelected = false
-                    exploreTourScreenViewModel.exploringSight.value = true
-                },
-                buttonText = "Раскрыть место",
-                sightOnMapInfo = exploreTourScreenViewModel.sightsOnMapInfos[exploreTourScreenViewModel.selectedSightIndex.intValue],
-                closeCallBack = {
-                    exploreTourScreenViewModel.sightIsSelected = false
-                },
-                spacerHeight = 0.dp
-            )
-        }
-        AnimatedVisibility(
-            visible = exploreTourScreenViewModel.momentIsSelected,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth(),
-            enter = slideInVertically(initialOffsetY = { h -> h }),
-            exit = slideOutVertically(targetOffsetY = { h -> h })
-        ) {
-            MomentBox(
-                modifier = Modifier.align(Alignment.BottomCenter),
-                isPlayerLoading = exploreTourScreenViewModel.playerIsLoading.value,
-                momentNumber = exploreTourScreenViewModel.selectedMomentIndex.intValue + 1,
-                momentDurationMs = max(
-                    exploreTourScreenViewModel.currentTrackDurationMs.longValue,
-                    1
-                ),
-                currentPositionMs = exploreTourScreenViewModel.currentTrackPositionMs.longValue,
-                momentName = exploreTourScreenViewModel.currentMoment()!!.name,
-                nextOnClick = {
-                    exploreTourScreenViewModel.player.seekToNextMediaItem()
-                    exploreTourScreenViewModel.player.playWhenReady = true
-                    exploreTourScreenViewModel.selectedMomentIndex.intValue++
-                    exploreTourScreenViewModel.needToAnimateTo = GeoPoint(
-                        exploreTourScreenViewModel.currentMoment()!!.latitude,
-                        exploreTourScreenViewModel.currentMoment()!!.longitude
-                    )
-                },
-                previousOnClick = {
-                    exploreTourScreenViewModel.player.seekToPreviousMediaItem()
-                    exploreTourScreenViewModel.player.playWhenReady = true
-                    exploreTourScreenViewModel.selectedMomentIndex.intValue--
-                    exploreTourScreenViewModel.needToAnimateTo = GeoPoint(
-                        exploreTourScreenViewModel.currentMoment()!!.latitude,
-                        exploreTourScreenViewModel.currentMoment()!!.longitude
-                    )
-                },
-                hasNext =
-                    exploreTourScreenViewModel.selectedMomentIndex.intValue < exploreTourScreenViewModel.momentOnMaps[exploreTourScreenViewModel.selectedSightIndex.intValue].size - 1,
-                hasPrevious = exploreTourScreenViewModel.selectedMomentIndex.intValue > 0,
-                chevronDownOnClick = deselectMomentCallback,
-                seekCallbackSeconds = { sec ->
-                    exploreTourScreenViewModel.player.seekTo((sec * 1000).toLong())
-                },
-                isPlaying = exploreTourScreenViewModel.player.isPlaying,
-                pausePlayButtonOnClick = {
-                    if (exploreTourScreenViewModel.player.isPlaying) {
-                        exploreTourScreenViewModel.player.pause()
+            Row(
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp)
+            ) {
+                var noPermissionsString = stringResource(R.string.warning_no_location_permissions)
+                UserLocationButton(onButtonClick = {
+                    if (!locationProvider.hasLocationPermissions()) {
+                        Pancake.info(noPermissionsString)
                     } else {
-                        exploreTourScreenViewModel.player.play()
+                        exploreTourScreenViewModel.animateToCurrentLocationCallback.invoke()
                     }
-                },
-                momentImageLink = exploreTourScreenViewModel.currentMoment()!!.imageLink
-            )
+                })
+
+            }
+            AnimatedVisibility(
+                visible = exploreTourScreenViewModel.sightIsSelected,
+                modifier = Modifier
+                    .fillMaxWidth(),
+                enter = slideInVertically(initialOffsetY = { h -> h }),
+                exit = slideOutVertically(targetOffsetY = { h -> h })
+            ) {
+                SightBox(
+                    modifier = Modifier.fillMaxWidth(),
+                    onButtonClick = {
+                        if (exploreTourScreenViewModel.momentOnMaps[exploreTourScreenViewModel.selectedSightIndex.intValue].isNotEmpty()) {
+                            exploreTourScreenViewModel.selectedMomentIndex.intValue = 0
+                            exploreTourScreenViewModel.momentIsSelected = true
+                            var m =
+                                exploreTourScreenViewModel.momentOnMaps[exploreTourScreenViewModel.selectedSightIndex.intValue][0]
+                            exploreTourScreenViewModel.needToAnimateTo =
+                                GeoPoint(m.latitude, m.longitude)
+                            exploreTourScreenViewModel.player.seekTo(
+                                exploreTourScreenViewModel.indexesMap[exploreTourScreenViewModel.selectedSightIndex.intValue][0],
+                                0
+                            )
+                            exploreTourScreenViewModel.player.playWhenReady = false
+                        }
+                        exploreTourScreenViewModel.sightIsSelected = false
+                        exploreTourScreenViewModel.exploringSight.value = true
+                    },
+                    buttonText = "Раскрыть место",
+                    sightOnMapInfo = exploreTourScreenViewModel.sightsOnMapInfos[exploreTourScreenViewModel.selectedSightIndex.intValue],
+                    closeCallBack = {
+                        exploreTourScreenViewModel.sightIsSelected = false
+                    },
+                    spacerHeight = 0.dp
+                )
+            }
+            AnimatedVisibility(
+                visible = exploreTourScreenViewModel.momentIsSelected,
+                modifier = Modifier
+                    .fillMaxWidth(),
+                enter = slideInVertically(initialOffsetY = { h -> h }),
+                exit = slideOutVertically(targetOffsetY = { h -> h })
+            ) {
+                MomentBox(
+                    isPlayerLoading = exploreTourScreenViewModel.playerIsLoading.value,
+                    momentNumber = exploreTourScreenViewModel.selectedMomentIndex.intValue + 1,
+                    momentDurationMs = max(
+                        exploreTourScreenViewModel.currentTrackDurationMs.longValue,
+                        1
+                    ),
+                    currentPositionMs = exploreTourScreenViewModel.currentTrackPositionMs.longValue,
+                    momentName = exploreTourScreenViewModel.currentMoment()!!.name,
+                    nextOnClick = {
+                        exploreTourScreenViewModel.player.seekToNextMediaItem()
+                        exploreTourScreenViewModel.player.playWhenReady = true
+                        exploreTourScreenViewModel.selectedMomentIndex.intValue++
+                        exploreTourScreenViewModel.needToAnimateTo = GeoPoint(
+                            exploreTourScreenViewModel.currentMoment()!!.latitude,
+                            exploreTourScreenViewModel.currentMoment()!!.longitude
+                        )
+                    },
+                    previousOnClick = {
+                        exploreTourScreenViewModel.player.seekToPreviousMediaItem()
+                        exploreTourScreenViewModel.player.playWhenReady = true
+                        exploreTourScreenViewModel.selectedMomentIndex.intValue--
+                        exploreTourScreenViewModel.needToAnimateTo = GeoPoint(
+                            exploreTourScreenViewModel.currentMoment()!!.latitude,
+                            exploreTourScreenViewModel.currentMoment()!!.longitude
+                        )
+                    },
+                    hasNext =
+                        exploreTourScreenViewModel.selectedMomentIndex.intValue < exploreTourScreenViewModel.momentOnMaps[exploreTourScreenViewModel.selectedSightIndex.intValue].size - 1,
+                    hasPrevious = exploreTourScreenViewModel.selectedMomentIndex.intValue > 0,
+                    chevronDownOnClick = deselectMomentCallback,
+                    seekCallbackSeconds = { sec ->
+                        exploreTourScreenViewModel.player.seekTo((sec * 1000).toLong())
+                    },
+                    isPlaying = exploreTourScreenViewModel.player.isPlaying,
+                    pausePlayButtonOnClick = {
+                        if (exploreTourScreenViewModel.player.isPlaying) {
+                            exploreTourScreenViewModel.player.pause()
+                        } else {
+                            exploreTourScreenViewModel.player.play()
+                        }
+                    },
+                    momentImageLink = exploreTourScreenViewModel.currentMoment()!!.imageLink
+                )
+            }
+        }
+
+
+        AnimatedVisibility(
+            visible = exploreTourScreenViewModel.loadingTour, modifier = Modifier
+                .align(
+                    Alignment.TopCenter
+                )
+                .padding(10.dp),
+            enter = slideInVertically(initialOffsetY = { h -> (-1.5f * h).toInt() }),
+            exit = slideOutVertically(targetOffsetY = { h -> (-1.5f * h).toInt() })
+        ) {
+            Row(
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .background(color = MediumGrey)
+                    .padding(horizontal = 10.dp, vertical = 5.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                CircularProgressIndicator(modifier = Modifier.size(20.dp), color = White)
+                Text(
+                    modifier = Modifier.padding(start = 5.dp),
+                    text = stringResource(R.string.explore_sight_screen_loading_route),
+                    color = White
+                )
+            }
         }
     }
 }
