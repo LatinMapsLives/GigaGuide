@@ -1,4 +1,4 @@
-package ru.rogotovskiy.reviews.dto;
+package ru.rogotovskiy.reviews.dto.create;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

@@ -6,11 +6,14 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.rogotovskiy.reviews.dto.CreateTourReviewDto;
-import ru.rogotovskiy.reviews.dto.TourReviewDto;
+import ru.rogotovskiy.reviews.dto.create.CreateTourReviewDto;
+import ru.rogotovskiy.reviews.dto.read.TourReviewDto;
 import ru.rogotovskiy.reviews.service.TourReviewService;
+
+import java.util.Locale;
 
 @RestController
 @RequestMapping("/api/reviews/tours")
@@ -18,6 +21,7 @@ import ru.rogotovskiy.reviews.service.TourReviewService;
 public class TourReviewController {
 
     private final TourReviewService tourReviewService;
+    private final MessageSource messageSource;
 
     @Operation(
             summary = "Получить все отзывы о туре",
@@ -45,7 +49,7 @@ public class TourReviewController {
     public ResponseEntity<?> addReview(@RequestHeader("X-User-Id") String userId, @RequestParam Integer tourId,
                                        @RequestBody CreateTourReviewDto dto) {
         tourReviewService.addReview(Integer.parseInt(userId), tourId, dto);
-        return ResponseEntity.ok("Отзыв добавлен успешно");
+        return ResponseEntity.ok(messageSource.getMessage("reviews.success.add_review", null, Locale.ROOT));
     }
 
     @Operation(
@@ -59,6 +63,6 @@ public class TourReviewController {
     @DeleteMapping
     public ResponseEntity<?> deleteReview(@RequestHeader("X-User-Id") String userId, @RequestParam Integer reviewId) {
         tourReviewService.deleteReview(Integer.parseInt(userId), reviewId);
-        return ResponseEntity.ok("Отзыв успешно удалён");
+        return ResponseEntity.ok(messageSource.getMessage("reviews.success.delete_review", null, Locale.ROOT));
     }
 }

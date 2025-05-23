@@ -1,4 +1,4 @@
-package ru.rogotovskiy.reviews.dto;
+package ru.rogotovskiy.reviews.dto.read;
 
 import java.util.List;
 
