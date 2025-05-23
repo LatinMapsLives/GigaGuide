@@ -3,7 +3,6 @@ package ru.rogotovskiy.reviews.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.rogotovskiy.reviews.dto.CreateTourReviewDto;
-import ru.rogotovskiy.reviews.dto.TourReviewDto;
 import ru.rogotovskiy.reviews.dto.TourReviewsDto;
 import ru.rogotovskiy.reviews.entity.TourReview;
 import ru.rogotovskiy.reviews.mapper.TourReviewMapper;

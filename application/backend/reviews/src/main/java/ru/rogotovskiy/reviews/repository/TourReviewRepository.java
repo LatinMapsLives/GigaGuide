@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 import ru.rogotovskiy.reviews.entity.TourReview;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface TourReviewRepository extends CrudRepository<TourReview, Integer> {
