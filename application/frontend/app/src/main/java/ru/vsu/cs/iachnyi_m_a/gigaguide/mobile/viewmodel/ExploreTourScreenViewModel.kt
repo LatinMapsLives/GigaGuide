@@ -17,6 +17,7 @@ import jakarta.inject.Inject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.osmdroid.util.GeoPoint
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.datastore.DataStoreManager
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.MapPoint
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.moment.MomentOnMap
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.SightOnMapInfo
@@ -30,7 +31,8 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
 class ExploreTourScreenViewModel @Inject constructor(
     private var momentRepository: MomentRepository,
     private var sightRepository: SightRepository,
-    private var mapRepository: MapRepository
+    private var mapRepository: MapRepository,
+    private val dataStoreManager: DataStoreManager
 ) :
     ViewModel() {
 
@@ -40,7 +42,7 @@ class ExploreTourScreenViewModel @Inject constructor(
 
     var tourId: Long = -1
     var tourRoute = mutableStateListOf<MapPoint>()
-    var loadingTour = mutableStateOf(false)
+    var loadingTour by mutableStateOf(false)
 
     var sightsOnMapInfos = mutableStateListOf<SightOnMapInfo>()
     var selectedSightIndex = mutableIntStateOf(-1)
@@ -61,6 +63,31 @@ class ExploreTourScreenViewModel @Inject constructor(
     var currentTrackDurationMs = mutableLongStateOf(-1)
     var currentTrackPositionMs = mutableLongStateOf(0)
 
+    var animateToCurrentLocationCallback: () -> Unit = {}
+    var userLocation = mutableStateOf(MapPoint(0.0,0.0))
+
+    var doLoop = false
+    fun stopLoop(){
+        doLoop = false
+    }
+
+    fun saveCurrentLocation(point: MapPoint){
+        viewModelScope.launch {
+            dataStoreManager.saveLastLocation(point)
+            userLocation.value = point
+        }
+    }
+
+    fun launchLoop(delayMillis: Long, callback: () -> Unit) {
+        doLoop = true
+        viewModelScope.launch () {
+            while(doLoop){
+                delay(delayMillis)
+                callback.invoke()
+            }
+        }
+    }
+
     fun currentMoment(): MomentOnMap? {
         return momentOnMaps[selectedSightIndex.intValue][selectedMomentIndex.intValue]
     }
@@ -68,7 +95,7 @@ class ExploreTourScreenViewModel @Inject constructor(
     fun loadTour(){
         viewModelScope.launch {
             var i = 0
-            loadingTour.value = true
+            loadingTour = true
             var loadedSights = ServerUtils.executeNetworkCall { sightRepository.getAllSightInfosByTourId(tourId) }
             Log.e("TOUR", loadedSights.toString())
             sightsOnMapInfos.clear()
@@ -136,7 +163,7 @@ class ExploreTourScreenViewModel @Inject constructor(
             player.playWhenReady = false
             player.prepare()
             launchPositionUpdateLoop()
-            loadingTour.value = false
+            loadingTour = false
         }
     }
 

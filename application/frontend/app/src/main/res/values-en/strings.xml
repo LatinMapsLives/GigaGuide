@@ -48,4 +48,8 @@
     <string name="profile_screen_button_change_active">Change</string>
     <string name="profile_screen_button_change_inactive">Cancel</string>
     <string name="profile_screen_button_confirm_change">Confirm</string>
+    <string name="map_screen_loading_map">Loading map</string>
+    <string name="explore_sight_screen_loading_route">Loading route</string>
+    <string name="warning_no_location_permissions">Missing location permission</string>
+    <string name="success_login_success">Login successful</string>
 </resources>

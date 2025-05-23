@@ -71,6 +71,7 @@ dependencies {
     implementation (libs.retrofit2.retrofit)
     implementation (libs.retrofit2.converter.gson)
     implementation (libs.retrofit2.converter.scalars)
+    implementation(libs.play.services.location)
 
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     implementation(libs.coil.compose)

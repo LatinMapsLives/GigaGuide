@@ -65,10 +65,12 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SettingsScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SightPageScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.TourPageScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.InfoContainer
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumGrey
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.SuccessContainer
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.GeoLocationProvider
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.Pancake
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.ExploreSightScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.ExploreTourScreen
@@ -113,7 +115,7 @@ class MainActivity : ComponentActivity() {
         var infoMessage = mutableStateOf("Интернет недоступен, приди пж попозже")
         var infoColor = mutableStateOf<Color>(Color(0))
 
-
+        var geoLocationProvider = GeoLocationProvider(this)
 
         setContent {
             GigaGuideMobileTheme {
@@ -122,29 +124,30 @@ class MainActivity : ComponentActivity() {
                 var infoVisibleMutableState by remember { mutableStateOf(false) }
                 var errorContainerColor = Color(0xffff6666)
                 var successContainerColor = SuccessContainer
+                var infoContainerColor = InfoContainer
                 var noInternetMessage = stringResource(R.string.error_no_internet)
                 var serverUnavailableMessage = stringResource(R.string.error_server_unavailable)
                 var serverErrorMessage = stringResource(R.string.error_server_error)
 
-                LaunchedEffect(Unit)  {
+                LaunchedEffect(Unit) {
                     Pancake.setMessageHandler(
                         onError = {
-                                infoMessage.value = it
-                                infoColor.value = errorContainerColor
-                                infoVisibleMutableState = true
-                                Log.e("ERR", "ERROR")
+                            infoMessage.value = it
+                            infoColor.value = errorContainerColor
+                            infoVisibleMutableState = true
+                            Log.e("ERR", "ERROR")
                         },
                         onInfo = {
 
-                                infoMessage.value = it
-                                infoColor.value = successContainerColor
-                                infoVisibleMutableState = true
+                            infoMessage.value = it
+                            infoColor.value = infoContainerColor
+                            infoVisibleMutableState = true
                         },
                         onSuccess = {
 
-                                infoMessage.value = it
-                                infoColor.value = successContainerColor
-                                infoVisibleMutableState = true
+                            infoMessage.value = it
+                            infoColor.value = successContainerColor
+                            infoVisibleMutableState = true
 
                         },
                         noInternetMessage = noInternetMessage,
@@ -181,7 +184,8 @@ class MainActivity : ComponentActivity() {
                         composable<MapScreenObject> {
                             MapScreen(
                                 navController = navController,
-                                mapScreenViewModel = mapScreenViewModel
+                                mapScreenViewModel = mapScreenViewModel,
+                                locationProvider = geoLocationProvider
                             )
                             showNavigationBarMutableState = true;
                         }
@@ -225,7 +229,8 @@ class MainActivity : ComponentActivity() {
                                 exploreSightScreenViewModel = hiltViewModel<ExploreSightScreenViewModel>(),
                                 navController = navController,
                                 sightId = args.sightId,
-                                context = this@MainActivity
+                                context = this@MainActivity,
+                                locationProvider = geoLocationProvider
                             )
                         }
                         composable<ReviewScreenClass> {
@@ -245,7 +250,12 @@ class MainActivity : ComponentActivity() {
                         composable<ExploreTourScreenClass> {
                             val args = it.toRoute<ExploreTourScreenClass>()
                             showNavigationBarMutableState = false
-                            ExploreTourScreen(context = this@MainActivity, tourId = args.tourId, navController = navController)
+                            ExploreTourScreen(
+                                context = this@MainActivity,
+                                tourId = args.tourId,
+                                navController = navController,
+                                locationProvider = geoLocationProvider
+                            )
                         }
                         composable<ProfileScreenObject> {
                             showNavigationBarMutableState = false
@@ -289,7 +299,7 @@ class MainActivity : ComponentActivity() {
                             Icon(
                                 modifier = Modifier
                                     .clip(CircleShape)
-                                    .clickable(onClick = {infoVisibleMutableState = false})
+                                    .clickable(onClick = { infoVisibleMutableState = false })
                                     .background(White)
                                     .padding(5.dp)
                                     .size(20.dp),
