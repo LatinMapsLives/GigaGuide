@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.rogotovskiy.reviews.dto.CreateTourReviewDto;
 import ru.rogotovskiy.reviews.dto.TourReviewDto;
+import ru.rogotovskiy.reviews.dto.TourReviewsDto;
 import ru.rogotovskiy.reviews.entity.TourReview;
 import ru.rogotovskiy.reviews.mapper.TourReviewMapper;
 import ru.rogotovskiy.reviews.repository.TourReviewRepository;
@@ -18,13 +19,28 @@ public class TourReviewService {
 
     private final TourReviewRepository reviewRepository;
     private final TourReviewMapper mapper;
-    private final UserService userService;
 
 
-    public List<TourReviewDto> getAll(Integer tourId) {
-        return reviewRepository.findAllByTourId(tourId).stream()
-                .map(mapper::toDto)
-                .toList();
+    public TourReviewsDto getAll(Integer tourId, String userId) {
+        List<TourReview> allReviews = reviewRepository.findAllByTourId(tourId);
+
+        if (userId == null) {
+            return new TourReviewsDto(
+                    null,
+                    allReviews.stream()
+                            .map(mapper::toDto)
+                            .toList()
+            );
+        }
+
+        TourReview userReview = reviewRepository.findByTourIdAndUserId(tourId, Integer.parseInt(userId));
+        allReviews.remove(userReview);
+        return new TourReviewsDto(
+                mapper.toDto(userReview),
+                allReviews.stream()
+                        .map(mapper::toDto)
+                        .toList()
+        );
     }
 
 

@@ -34,8 +34,8 @@ public class SightReviewController {
             content = @Content(array = @ArraySchema(schema = @Schema(implementation = SightReviewDto.class)))
     )
     @GetMapping
-    public ResponseEntity<?> getAll(@RequestParam Integer sightId) {
-        return ResponseEntity.ok(service.getAll(sightId));
+    public ResponseEntity<?> getAll(@RequestParam Integer sightId, @RequestHeader(value = "X-User-Id", required = false) String userId) {
+        return ResponseEntity.ok(service.getAll(sightId, userId));
     }
 
     @Operation(

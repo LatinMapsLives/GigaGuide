@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.rogotovskiy.reviews.dto.CreateSightReviewDto;
 import ru.rogotovskiy.reviews.dto.SightReviewDto;
+import ru.rogotovskiy.reviews.dto.SightReviewsDto;
 import ru.rogotovskiy.reviews.entity.SightReview;
 import ru.rogotovskiy.reviews.mapper.SightReviewMapper;
 import ru.rogotovskiy.reviews.repository.SightReviewRepository;
@@ -18,12 +19,28 @@ public class SightReviewService {
 
     private final SightReviewRepository reviewRepository;
     private final SightReviewMapper mapper;
-    private final UserService userService;
 
-    public List<SightReviewDto> getAll(Integer sightId) {
-        return reviewRepository.findAllBySightId(sightId).stream()
-                .map(mapper::toDto)
-                .toList();
+    public SightReviewsDto getAll(Integer sightId, String userId) {
+        List<SightReview> allReviews = reviewRepository.findAllBySightId(sightId);
+
+        if (userId == null) {
+            return new SightReviewsDto(
+                    null,
+                    allReviews.stream()
+                            .map(mapper::toDto)
+                            .toList()
+            );
+        }
+
+        SightReview userReview = reviewRepository.findBySightIdAndUserId(sightId, Integer.parseInt(userId));
+        allReviews.remove(userReview);
+        return new SightReviewsDto(
+                userReview != null ? mapper.toDto(userReview) : null,
+                allReviews.stream()
+                        .map(mapper::toDto)
+                        .toList()
+        );
+
     }
 
     public void addReview(Integer userId, Integer sightId, CreateSightReviewDto dto) {

@@ -29,8 +29,8 @@ public class TourReviewController {
             content = @Content(array = @ArraySchema(schema = @Schema(implementation = TourReviewDto.class)))
     )
     @GetMapping
-    public ResponseEntity<?> getAll(@RequestParam Integer tourId) {
-        return ResponseEntity.ok(tourReviewService.getAll(tourId));
+    public ResponseEntity<?> getAll(@RequestParam Integer tourId, @RequestHeader(value = "X-User-Id", required = false) String userId) {
+        return ResponseEntity.ok(tourReviewService.getAll(tourId, userId));
     }
 
     @Operation(
