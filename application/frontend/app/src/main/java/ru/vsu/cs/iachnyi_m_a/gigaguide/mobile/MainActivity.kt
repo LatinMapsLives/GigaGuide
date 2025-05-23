@@ -59,11 +59,12 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.MapScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.NavBarItem
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ProfileScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.RegisterScreenObject
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ReviewScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SearchScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SettingsScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SightPageScreenClass
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SightReviewScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.TourPageScreenClass
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.TourReviewScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.InfoContainer
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
@@ -233,10 +234,15 @@ class MainActivity : ComponentActivity() {
                                 locationProvider = geoLocationProvider
                             )
                         }
-                        composable<ReviewScreenClass> {
-                            val args = it.toRoute<ReviewScreenClass>()
+                        composable<SightReviewScreenClass> {
+                            val args = it.toRoute<SightReviewScreenClass>()
                             showNavigationBarMutableState = false
-                            ReviewScreen(sightId = args.sightId, navController = navController)
+                            ReviewScreen(objectId = args.sightId, navController = navController, isTour = false)
+                        }
+                        composable<TourReviewScreenClass> {
+                            val args = it.toRoute<TourReviewScreenClass>()
+                            showNavigationBarMutableState = false
+                            ReviewScreen(objectId = args.tourId, navController = navController, isTour = true)
                         }
                         composable<SearchScreenObject> {
                             showNavigationBarMutableState = false

@@ -1,8 +1,10 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -13,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,51 +28,58 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.Review
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.review.Review
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.LoginScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.Black
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.LightGrey
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumGrey
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.Red
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.Yellow
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.ReviewScreenViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-@Preview
 @Composable
-fun ReviewScreen(navController: NavController = rememberNavController(), sightId: Long = 0) {
-    var reviews = listOf(
-        Review(
-            "Markini",
-            5,
-            "Только что завершил тур с аудиогидом и остался в полном восторге! Очень удобный формат: можно двигаться в своём темпе, останавливаться у заинтересовавших объектов и не зависеть от группы. Информация подана чётко, увлекательно и без лишней воды.",
-            date = Date(1212121212121L)
-        ),
-        Review(
-            userName = "Турист228",
-            text = "Недавно воспользовался аудиогидом во время экскурсии, и это был потрясающий опыт! Всё было организовано очень удобно: понятный интерфейс, отличное качество звука и интересный, живой рассказ. Особенно понравилось, что можно двигаться в своём темпе.",
-            rating = 5,
-            date = Date(1210621212121L)
-        ),
-        Review(
-            userName = "Jonkler",
-            text = "Понравился гибкий формат: шёл в своём темпе, слушал чёткие и лаконичные пояснения. Иногда не хватало чуть больше деталей, но в целом – отличный вариант для самостоятельной экскурсии.",
-            rating = 4,
-            date = Date(1210021212121L)
-        )
-    )
+fun ReviewScreen(
+    navController: NavController = rememberNavController(),
+    objectId: Long,
+    isTour: Boolean,
+    reviewScreenViewModel: ReviewScreenViewModel = hiltViewModel<ReviewScreenViewModel>()
+) {
+
+    LaunchedEffect(Unit) {
+        reviewScreenViewModel.isTour = isTour
+        reviewScreenViewModel.objectId = objectId.toInt()
+        reviewScreenViewModel.loadReviews()
+    }
+
     GigaGuideMobileTheme {
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -96,10 +106,72 @@ fun ReviewScreen(navController: NavController = rememberNavController(), sightId
                     )
                 }
                 Text(
+                    color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.headlineSmall,
-                    text = "Оценки и отзывы",
+                    text = stringResource(R.string.review_screen_screen_header),
                     modifier = Modifier.padding(start = 20.dp)
                 )
+            }
+
+            if (!reviewScreenViewModel.authorized) {
+                Text(
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(horizontal = 20.dp),
+                    color = MaterialTheme.colorScheme.onBackground,
+                    style = MaterialTheme.typography.headlineSmall,
+                    text = stringResource(R.string.review_screen_login_to_leave_review)
+                )
+                Button(
+
+                    modifier = Modifier
+                        .padding(vertical = 20.dp)
+                        .dropShadow(
+                            shape = CircleShape,
+                            offsetX = 0.dp,
+                            offsetY = 0.dp,
+                            blur = 16.dp,
+                            color = MediumBlue
+                        ),
+                    colors = ButtonDefaults.buttonColors(
+                        disabledContainerColor = MediumGrey,
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                        contentColor = White
+                    ),
+                    onClick = { navController.navigate(LoginScreenObject) },
+                ) {
+                    Text(
+                        text = stringResource(R.string.login_screen_login_button_text),
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier
+                            .padding(vertical = 5.dp, horizontal = 80.dp)
+                    )
+                }
+            } else if (!reviewScreenViewModel.loadingComments && reviewScreenViewModel.myReview == null){
+                Button(
+
+                    modifier = Modifier
+                        .padding(bottom = 20.dp)
+                        .dropShadow(
+                            shape = CircleShape,
+                            offsetX = 0.dp,
+                            offsetY = 0.dp,
+                            blur = 16.dp,
+                            color = MediumBlue
+                        ),
+                    colors = ButtonDefaults.buttonColors(
+                        disabledContainerColor = MediumGrey,
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                        contentColor = White
+                    ),
+                    onClick = {},
+                ) {
+                    Text(
+                        text = stringResource(R.string.review_screen_leave_comment),
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier
+                            .padding(vertical = 5.dp, horizontal = 40.dp)
+                    )
+                }
             }
             Row(
                 modifier = Modifier
@@ -116,41 +188,70 @@ fun ReviewScreen(navController: NavController = rememberNavController(), sightId
                         modifier = Modifier.size(45.dp)
                     )
                     Text(
+                        color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.headlineSmall,
                         text = "4.8",
                         modifier = Modifier.padding(start = 10.dp)
                     )
                 }
-                Text(style = MaterialTheme.typography.headlineSmall, text = "16 оценок")
+                Text(
+                    color = MaterialTheme.colorScheme.onBackground,
+                    style = MaterialTheme.typography.headlineSmall,
+                    text = "16 оценок"
+                )
             }
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp)
+                horizontalArrangement = Arrangement.Start,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 10.dp)
             ) {
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.settings2_svgrepo_com),
                     modifier = Modifier.size(20.dp),
-                    contentDescription = null
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onBackground
                 )
                 Text(
+                    color = MaterialTheme.colorScheme.onBackground,
                     text = "Новые и полезные",
                     modifier = Modifier.padding(start = 10.dp),
                     style = MaterialTheme.typography.labelLarge
                 )
             }
-            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                for (review in reviews) {
-                    GradientSeparator(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 35.dp)
-                    )
-                    ReviewBox(review)
+            GradientSeparator(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 35.dp, vertical = 10.dp)
+            )
+            Column(modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState())) {
+                if (!reviewScreenViewModel.loadingComments) {
+                    if (reviewScreenViewModel.otherReviews.isEmpty() && reviewScreenViewModel.myReview == null) {
+                        Text(
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 20.dp),
+                            color = MaterialTheme.colorScheme.onBackground,
+                            style = MaterialTheme.typography.titleLarge,
+                            text = stringResource(R.string.review_screen_be_the_first)
+                        )
+                    } else {
+                        for (review in reviewScreenViewModel.otherReviews) {
+                            ReviewBox(review)
+                            GradientSeparator(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 35.dp)
+                            )
+                        }
+                    }
+
                 }
+
             }
-            GradientSeparator(modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 35.dp))
+
         }
     }
 
@@ -162,7 +263,8 @@ fun ReviewBox(
         userName = "Турист228",
         text = "Недавно воспользовался аудиогидом во время экскурсии, и это был потрясающий опыт! Всё было организовано очень удобно: понятный интерфейс, отличное качество звука и интересный, живой рассказ. Особенно понравилось, что можно двигаться в своём темпе.",
         rating = 4,
-        date = Date(1212121212121L)
+        date = Date(1212121212121L),
+        id = 6
     )
 ) {
     GigaGuideMobileTheme {
@@ -197,8 +299,7 @@ fun ReviewBox(
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = review.rating.toString(),
-                        style = MaterialTheme.typography.titleLarge
+                        text = review.rating.toString(), style = MaterialTheme.typography.titleLarge
                     )
                     Icon(
                         modifier = Modifier.size(35.dp),
@@ -218,11 +319,148 @@ fun ReviewBox(
                     color = MediumGrey,
                     style = MaterialTheme.typography.bodyMedium,
                     text = SimpleDateFormat(
-                        "yyyy-mm-dd",
-                        Locale.ROOT
+                        "yyyy-mm-dd", Locale.ROOT
                     ).format(review.date)
                 )
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun MyReviewBox(
+    review: Review = Review(
+        userName = "Турист228",
+        text = "Недавно воспользовался аудиогидом во время экскурсии, и это был потрясающий опыт! Всё было организовано очень удобно: понятный интерфейс, отличное качество звука и интересный, живой рассказ. Особенно понравилось, что можно двигаться в своём темпе.",
+        rating = 4,
+        date = Date(1212121212121L),
+        id = 6
+    ), deleteCallback: () -> Unit = {}
+) {
+    var optionsOpen by remember { mutableStateOf(true) }
+    GigaGuideMobileTheme {
+        Box(modifier = Modifier.fillMaxWidth()) {
+            Column(
+                modifier = Modifier
+                    .background(color = MaterialTheme.colorScheme.tertiary)
+                    .fillMaxWidth()
+                    .padding(15.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+
+                        Icon(
+                            modifier = Modifier
+                                .size(50.dp)
+                                .clip(CircleShape)
+                                .background(color = LightGrey)
+                                .padding(5.dp),
+                            imageVector = ImageVector.vectorResource(R.drawable.person_outline),
+                            tint = Black,
+                            contentDescription = "user icon"
+                        )
+
+                        Text(
+                            modifier = Modifier.padding(start = 10.dp),
+                            text = review.userName,
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = review.rating.toString(),
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                        Icon(
+                            modifier = Modifier.size(35.dp),
+                            contentDescription = null,
+                            imageVector = Icons.Filled.Star,
+                            tint = Yellow
+                        )
+                    }
+                }
+                Text(
+                    modifier = Modifier.padding(vertical = 10.dp),
+                    text = review.text,
+                    style = MaterialTheme.typography.bodySmall
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        color = MediumGrey,
+                        style = MaterialTheme.typography.bodyMedium,
+                        text = SimpleDateFormat(
+                            "d MMMM yyyy", Locale("ru", "RU")
+                        ).format(review.date)
+                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(R.drawable.pin),
+                            tint = MediumGrey,
+                            modifier = Modifier.size(20.dp),
+                            contentDescription = null
+                        )
+                        Text(
+                            color = MediumGrey,
+                            text = stringResource(R.string.review_screen_label_your_review),
+                            modifier = Modifier.padding(horizontal = 7.dp),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Icon(
+                            imageVector = ImageVector.vectorResource(R.drawable.three_dots_vertical),
+                            modifier = Modifier
+                                .clickable(onClick = { optionsOpen = true })
+                                .size(25.dp),
+                            tint = Black,
+                            contentDescription = null
+                        )
+                    }
+                }
+            }
+            AnimatedVisibility(
+                visible = optionsOpen, modifier = Modifier.align(Alignment.BottomEnd)
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
+                        .clip(
+                            RoundedCornerShape(
+                                topStart = 10.dp, topEnd = 10.dp, bottomStart = 10.dp
+                            )
+                        )
+                        .background(
+                            MaterialTheme.colorScheme.background
+                        )
+                        .padding(15.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.review_screen_button_delete_comment),
+                        color = Red,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    GradientSeparator(
+                        modifier = Modifier
+                            .padding(vertical = 15.dp)
+                            .width(100.dp)
+                    )
+                    Text(
+                        modifier = Modifier.clickable(onClick = { optionsOpen = false }),
+                        text = stringResource(R.string.review_screen_button_cancel_deletion),
+                        color = MaterialTheme.colorScheme.onBackground,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+            }
+
+
+        }
+
     }
 }
