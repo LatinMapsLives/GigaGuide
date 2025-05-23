@@ -1,7 +1,7 @@
 package ru.rogotovskiy.reviews.mapper;
 
 import org.springframework.stereotype.Component;
-import ru.rogotovskiy.reviews.dto.TourReviewDto;
+import ru.rogotovskiy.reviews.dto.read.TourReviewDto;
 import ru.rogotovskiy.reviews.entity.TourReview;
 
 @Component

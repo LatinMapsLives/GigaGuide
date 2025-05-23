@@ -1,15 +1,19 @@
 package ru.rogotovskiy.reviews.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
-import ru.rogotovskiy.reviews.dto.CreateTourReviewDto;
-import ru.rogotovskiy.reviews.dto.TourReviewDto;
+import ru.rogotovskiy.reviews.dto.create.CreateTourReviewDto;
+import ru.rogotovskiy.reviews.dto.read.TourReviewsDto;
 import ru.rogotovskiy.reviews.entity.TourReview;
+import ru.rogotovskiy.reviews.exception.ReviewNotFoundException;
+import ru.rogotovskiy.reviews.exception.ReviewPermissionException;
 import ru.rogotovskiy.reviews.mapper.TourReviewMapper;
 import ru.rogotovskiy.reviews.repository.TourReviewRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 
 @Service
@@ -18,13 +22,29 @@ public class TourReviewService {
 
     private final TourReviewRepository reviewRepository;
     private final TourReviewMapper mapper;
-    private final UserService userService;
+    private final MessageSource messageSource;
 
 
-    public List<TourReviewDto> getAll(Integer tourId) {
-        return reviewRepository.findAllByTourId(tourId).stream()
-                .map(mapper::toDto)
-                .toList();
+    public TourReviewsDto getAll(Integer tourId, String userId) {
+        List<TourReview> allReviews = reviewRepository.findAllByTourId(tourId);
+
+        if (userId == null) {
+            return new TourReviewsDto(
+                    null,
+                    allReviews.stream()
+                            .map(mapper::toDto)
+                            .toList()
+            );
+        }
+
+        TourReview userReview = reviewRepository.findByTourIdAndUserId(tourId, Integer.parseInt(userId));
+        allReviews.remove(userReview);
+        return new TourReviewsDto(
+                mapper.toDto(userReview),
+                allReviews.stream()
+                        .map(mapper::toDto)
+                        .toList()
+        );
     }
 
 
@@ -41,10 +61,16 @@ public class TourReviewService {
 
     public void deleteReview(Integer userId, Integer reviewId) {
         TourReview tourReview = reviewRepository.findById(reviewId).orElseThrow(
-                () -> new NoSuchElementException("Отзыв с id = %d не найден".formatted(reviewId))
+                () -> new ReviewNotFoundException(
+                        "REVIEW_NOT_FOUND",
+                        messageSource.getMessage("reviews.errors.review.not_found", null, Locale.ROOT)
+                )
         );
         if (!tourReview.getUserId().equals(userId)) {
-            throw new IllegalArgumentException("Пользователь не может удалить не свой отзыв");
+            throw new ReviewPermissionException(
+                    "REVIEW_DELETE_PERMISSION",
+                    messageSource.getMessage("reviews.errors.review.delete_permission", null, Locale.ROOT)
+            );
         }
 
         reviewRepository.delete(tourReview);

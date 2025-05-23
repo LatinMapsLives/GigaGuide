@@ -10,4 +10,5 @@ import java.util.List;
 public interface SightReviewRepository extends CrudRepository<SightReview, Integer> {
 
     List<SightReview> findAllBySightId(Integer sightId);
+    SightReview findBySightIdAndUserId(Integer sightId, Integer userId);
 }

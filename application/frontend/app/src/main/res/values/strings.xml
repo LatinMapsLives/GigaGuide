@@ -47,4 +47,8 @@
     <string name="profile_screen_button_change_active">Изменить</string>
     <string name="profile_screen_button_change_inactive">Отмена</string>
     <string name="profile_screen_button_confirm_change">Подтвердить</string>
+    <string name="map_screen_loading_map">Загружаем карту</string>
+    <string name="explore_sight_screen_loading_route">Загружаем маршрут</string>
+    <string name="warning_no_location_permissions">Отсутствует разрешение на геолокацию</string>
+    <string name="success_login_success">Успешный вход в аккаунт</string>
 </resources>

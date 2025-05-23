@@ -10,4 +10,5 @@ import java.util.List;
 public interface TourReviewRepository extends CrudRepository<TourReview, Integer> {
 
     List<TourReview> findAllByTourId(Integer tourId);
+    TourReview findByTourIdAndUserId(Integer tourId, Integer userId);
 }
