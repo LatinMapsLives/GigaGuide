@@ -48,4 +48,5 @@
     <string name="profile_screen_button_change_active">Change</string>
     <string name="profile_screen_button_change_inactive">Cancel</string>
     <string name="profile_screen_button_confirm_change">Confirm</string>
+    <string name="map_screen_loading_map">Loading map</string>
 </resources>

@@ -1,5 +1,6 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -69,6 +70,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumGrey
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.SuccessContainer
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.GeoLocationProvider
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.Pancake
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.ExploreSightScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.ExploreTourScreen
@@ -113,7 +115,7 @@ class MainActivity : ComponentActivity() {
         var infoMessage = mutableStateOf("Интернет недоступен, приди пж попозже")
         var infoColor = mutableStateOf<Color>(Color(0))
 
-
+        var geoLocationProvider = GeoLocationProvider(this)
 
         setContent {
             GigaGuideMobileTheme {
@@ -181,7 +183,8 @@ class MainActivity : ComponentActivity() {
                         composable<MapScreenObject> {
                             MapScreen(
                                 navController = navController,
-                                mapScreenViewModel = mapScreenViewModel
+                                mapScreenViewModel = mapScreenViewModel,
+                                locationProvider = geoLocationProvider
                             )
                             showNavigationBarMutableState = true;
                         }

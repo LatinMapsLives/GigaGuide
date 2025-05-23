@@ -2,6 +2,7 @@ package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util
 
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import java.net.ConnectException
 import java.net.SocketTimeoutException

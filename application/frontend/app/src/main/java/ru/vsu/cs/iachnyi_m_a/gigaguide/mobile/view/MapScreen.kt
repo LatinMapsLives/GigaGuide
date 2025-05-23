@@ -1,5 +1,8 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -13,13 +16,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,25 +53,50 @@ import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.TilesOverlay
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.MapPoint
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.SightOnMapInfo
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SightPageScreenClass
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.Black
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumGrey
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.GeoLocationProvider
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.Pancake
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.MapScreenViewModel
 
 
 @Composable
-fun MapScreen(mapScreenViewModel: MapScreenViewModel, navController: NavController) {
+fun MapScreen(
+    mapScreenViewModel: MapScreenViewModel,
+    navController: NavController,
+    locationProvider: GeoLocationProvider
+) {
     var dark = isSystemInDarkTheme()
-    if(mapScreenViewModel.needToLoad) {
+    if (mapScreenViewModel.needToLoad) {
         mapScreenViewModel.loadSightsOnMap()
+    }
+    DisposableEffect(Unit) {
+        onDispose {
+            mapScreenViewModel.stopLoop()
+        }
+    }
+    LaunchedEffect(Unit) {
+        mapScreenViewModel.launchLoop(10000) {
+            locationProvider.getCurrentLocation({
+                mapScreenViewModel.saveCurrentLocation(MapPoint(it.first, it.second))
+            }, {
+                mapScreenViewModel.stopLoop()
+                Pancake.info("Ошибка получения геолокации")
+            })
+        }
     }
     Box(modifier = Modifier.fillMaxSize()) {
         AndroidView(
             modifier = Modifier
-                .fillMaxSize().testTag("MAP_VIEW"),
+                .fillMaxSize()
+                .testTag("MAP_VIEW"),
             factory = { context ->
                 MapView(context).apply {
                     setMultiTouchControls(true)
@@ -89,13 +122,23 @@ fun MapScreen(mapScreenViewModel: MapScreenViewModel, navController: NavControll
                 }
             },
             update = { view ->
+                mapScreenViewModel.animateToCurrentLocationCallback = {
+                    view.controller.animateTo(
+                        GeoPoint(
+                            mapScreenViewModel.userLocation.value.latitude,
+                            mapScreenViewModel.userLocation.value.longitude
+                        ),
+                        17.0,
+                        400
+                    )
+                }
                 view.controller.setCenter(mapScreenViewModel.center)
                 view.controller.setZoom(mapScreenViewModel.zoom)
-                if (!mapScreenViewModel.loading.value) {
+                if (!mapScreenViewModel.loading) {
                     view.overlays.clear()
                     var clickOverlay = MapEventsOverlay(object : MapEventsReceiver {
                         override fun singleTapConfirmedHelper(p: GeoPoint): Boolean {
-                            mapScreenViewModel.selected.value = false
+                            mapScreenViewModel.selected = false
                             return false
                         }
 
@@ -104,20 +147,32 @@ fun MapScreen(mapScreenViewModel: MapScreenViewModel, navController: NavControll
                         }
                     })
                     view.overlays.add(clickOverlay)
+                    var userMarker = Marker(view)
+                    userMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
+                    userMarker.position = GeoPoint(
+                        mapScreenViewModel.userLocation.value.latitude,
+                        mapScreenViewModel.userLocation.value.longitude
+                    )
+                    userMarker.icon = ResourcesCompat.getDrawable(
+                        view.resources,
+                        R.drawable.user_location_marker,
+                        null
+                    )
+                    view.overlays.add(userMarker)
                     for (sight in mapScreenViewModel.sights) {
                         var marker = Marker(view)
                         var listener = Marker.OnMarkerClickListener { mk, mv ->
                             var point = GeoPoint(sight.latitude, sight.longitude)
                             view.controller.animateTo(point, 18.0, 400)
                             mapScreenViewModel.selectedIndex.longValue = sight.id
-                            mapScreenViewModel.selected.value = true
+                            mapScreenViewModel.selected = true
                             true
                         }
                         marker.setOnMarkerClickListener(listener)
                         marker.position = GeoPoint(sight.latitude, sight.longitude)
                         marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
                         var drawableId =
-                            if (mapScreenViewModel.selected.value && mapScreenViewModel.selectedIndex.longValue == sight.id) {
+                            if (mapScreenViewModel.selected && mapScreenViewModel.selectedIndex.longValue == sight.id) {
                                 R.drawable.map_marker_selected
                             } else {
                                 R.drawable.map_marker_unselected
@@ -132,26 +187,74 @@ fun MapScreen(mapScreenViewModel: MapScreenViewModel, navController: NavControll
                 }
             }
         )
-        if (mapScreenViewModel.selected.value) {
-            var sightOnMapInfo: SightOnMapInfo =
-                mapScreenViewModel.sights.find { s -> s.id == mapScreenViewModel.selectedIndex.longValue }!!
-            SightBox(
-                onButtonClick = {navController.navigate(SightPageScreenClass(sightId = sightOnMapInfo.id))},
-                sightOnMapInfo = sightOnMapInfo,
-                modifier = Modifier.align(Alignment.BottomCenter),
-                buttonText = stringResource(R.string.map_screen_open_sight_button_label),
-                closeCallBack = {
-                    mapScreenViewModel.selected.value = false
-                },
-                spacerHeight = 85.dp
+        Column(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp)
+            ) {
+                UserLocationButton(onButtonClick = { mapScreenViewModel.animateToCurrentLocationCallback.invoke() })
+            }
+            AnimatedVisibility(
+                modifier = Modifier.fillMaxWidth(),
+                visible = mapScreenViewModel.selected,
+                enter = slideInVertically(initialOffsetY = { h -> h }),
+                exit = slideOutVertically(targetOffsetY = { h -> h })
+            ) {
+                var sightOnMapInfo: SightOnMapInfo =
+                    mapScreenViewModel.sights.find { s -> s.id == mapScreenViewModel.selectedIndex.longValue }!!
+                SightBox(
+                    onButtonClick = { navController.navigate(SightPageScreenClass(sightId = sightOnMapInfo.id)) },
+                    sightOnMapInfo = sightOnMapInfo,
+                    buttonText = stringResource(R.string.map_screen_open_sight_button_label),
+                    closeCallBack = {
+                        mapScreenViewModel.selected = false
+                    },
+                    spacerHeight = 0.dp,
+                )
+            }
+            Spacer(
+                modifier = Modifier
+                    .background(color = MaterialTheme.colorScheme.background)
+                    .fillMaxWidth()
+                    .height(80.dp)
             )
+        }
+        AnimatedVisibility(
+            visible = mapScreenViewModel.loading, modifier = Modifier
+                .align(
+                    Alignment.TopCenter
+                )
+                .padding(10.dp),
+            enter = slideInVertically(initialOffsetY = { h -> (-1.5f * h).toInt() }),
+            exit = slideOutVertically(targetOffsetY = { h -> (-1.5f * h).toInt() })
+        ) {
+            Row(
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .background(color = MediumGrey)
+                    .padding(horizontal = 10.dp, vertical = 5.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                CircularProgressIndicator(modifier = Modifier.size(20.dp), color = White)
+                Text(
+                    modifier = Modifier.padding(start = 5.dp),
+                    text = stringResource(R.string.map_screen_loading_map),
+                    color = White
+                )
+            }
         }
     }
 }
 
 @Composable
 fun SightBox(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     buttonText: String,
     onButtonClick: () -> Unit,
     closeCallBack: () -> Unit,
@@ -216,7 +319,8 @@ fun SightBox(
                                 MediumBlue
                         ),
                         modifier = Modifier
-                            .fillMaxWidth(), onClick = onButtonClick) {
+                            .fillMaxWidth(), onClick = onButtonClick
+                    ) {
                         Text(
                             text = buttonText,
                             color = White
@@ -233,4 +337,21 @@ fun SightBox(
         }
     }
 
+}
+
+@Composable
+fun UserLocationButton(modifier: Modifier = Modifier, onButtonClick: () -> Unit){
+    Icon(
+        imageVector = ImageVector.vectorResource(R.drawable.location_button_icon),
+        tint = White,
+        modifier = Modifier
+            .clip(
+                CircleShape
+            )
+            .clickable(onClick = onButtonClick)
+            .background(color = Black.copy(0.5f))
+            .padding(10.dp)
+            .size(25.dp),
+        contentDescription = null
+    )
 }

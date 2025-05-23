@@ -47,4 +47,5 @@
     <string name="profile_screen_button_change_active">Изменить</string>
     <string name="profile_screen_button_change_inactive">Отмена</string>
     <string name="profile_screen_button_confirm_change">Подтвердить</string>
+    <string name="map_screen_loading_map">Загружаем карту</string>
 </resources>

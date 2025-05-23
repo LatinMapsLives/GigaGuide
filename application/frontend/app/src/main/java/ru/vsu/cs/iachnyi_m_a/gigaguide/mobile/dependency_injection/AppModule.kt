@@ -1,9 +1,11 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dependency_injection
 
+import android.app.Activity
 import android.content.Context
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
@@ -33,6 +35,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.retrofit.MomentReposito
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.retrofit.SightRepositoryRetrofit
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.retrofit.TourRepositoryRetrofit
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.retrofit.UserRepositoryRetrofit
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.GeoLocationProvider
 import javax.inject.Singleton
 
 
@@ -128,7 +131,8 @@ object AppModule {
     fun provideMapAPI(): MapAPI {
         var retrofit = Retrofit.Builder().baseUrl("$RETROFIT_BASE_URL/api/map/")
             .addConverterFactory(GsonConverterFactory.create()).build()
-        return retrofit.create(MapAPI::class.java)    }
+        return retrofit.create(MapAPI::class.java)
+    }
 
     @Singleton
     @Provides
@@ -148,6 +152,7 @@ object AppModule {
     }
 
     //<------------------OTHER--------------->
+
     @Provides
     @Singleton
     fun provideDatastoreManager(@ApplicationContext context: Context): DataStoreManager {
