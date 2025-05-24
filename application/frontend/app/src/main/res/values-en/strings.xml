@@ -59,4 +59,8 @@
     <string name="review_screen_screen_header">Reviews</string>
     <string name="review_screen_be_the_first">No one has left a review yet. Be the first to do so!</string>
     <string name="review_screen_leave_comment">Post a review</string>
+    <string name="review_screen_tell_your_impressions">Tell everyone your imprressions</string>
+    <string name="review_screen_confirm_leave_comment">Post</string>
+    <string name="review_screen_cancel_leave_comment">Cancel</string>
+    <string name="review_screen_empty_comment_error">Fill in the text field</string>
 </resources>

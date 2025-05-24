@@ -58,4 +58,8 @@
     <string name="review_screen_screen_header">Оценки и отзывы</string>
     <string name="review_screen_be_the_first">Пока никто не оставил отзыв. Будьте первым, кто это сделает!</string>
     <string name="review_screen_leave_comment">Добавить отзыв</string>
+    <string name="review_screen_tell_your_impressions">Поделитесь своими впечатлениями</string>
+    <string name="review_screen_confirm_leave_comment">Отправить</string>
+    <string name="review_screen_cancel_leave_comment">Отмена</string>
+    <string name="review_screen_empty_comment_error">Заполните поле текста</string>
 </resources>

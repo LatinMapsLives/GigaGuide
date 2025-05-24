@@ -28,7 +28,7 @@ class ServerUtils {
                     Pancake.noInternet()
                     null
                 } catch (e: Exception) {
-                    Log.e("ERR", e.toString())
+                    Log.e("ERR", e.stackTraceToString())
                     Pancake.serverError()
                     null
                 }

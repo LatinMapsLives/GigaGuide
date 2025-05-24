@@ -27,6 +27,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -50,6 +52,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.review.Review
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.LoginScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.Black
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.Invisible
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.LightGrey
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumGrey
@@ -59,6 +62,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.Yellow
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.ReviewScreenViewModel
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.Date
 import java.util.Locale
 
@@ -146,30 +150,53 @@ fun ReviewScreen(
                             .padding(vertical = 5.dp, horizontal = 80.dp)
                     )
                 }
-            } else if (!reviewScreenViewModel.loadingComments && reviewScreenViewModel.myReview == null){
-                Button(
-
-                    modifier = Modifier
-                        .padding(bottom = 20.dp)
-                        .dropShadow(
-                            shape = CircleShape,
-                            offsetX = 0.dp,
-                            offsetY = 0.dp,
-                            blur = 16.dp,
-                            color = MediumBlue
-                        ),
-                    colors = ButtonDefaults.buttonColors(
-                        disabledContainerColor = MediumGrey,
-                        containerColor = MaterialTheme.colorScheme.secondary,
-                        contentColor = White
-                    ),
-                    onClick = {},
-                ) {
-                    Text(
-                        text = stringResource(R.string.review_screen_leave_comment),
-                        style = MaterialTheme.typography.titleLarge,
+            } else if (!reviewScreenViewModel.loadingComments && reviewScreenViewModel.myReview == null) {
+                AnimatedVisibility(visible = !reviewScreenViewModel.editorIsOpen) {
+                    Button(
                         modifier = Modifier
-                            .padding(vertical = 5.dp, horizontal = 40.dp)
+                            .padding(bottom = 20.dp)
+                            .dropShadow(
+                                shape = CircleShape,
+                                offsetX = 0.dp,
+                                offsetY = 0.dp,
+                                blur = 16.dp,
+                                color = MediumBlue
+                            ),
+                        colors = ButtonDefaults.buttonColors(
+                            disabledContainerColor = MediumGrey,
+                            containerColor = MaterialTheme.colorScheme.secondary,
+                            contentColor = White
+                        ),
+                        onClick = { reviewScreenViewModel.editorIsOpen = true },
+                    ) {
+                        Text(
+                            text = stringResource(R.string.review_screen_leave_comment),
+                            style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier
+                                .padding(vertical = 5.dp, horizontal = 40.dp)
+                        )
+                    }
+                }
+                AnimatedVisibility(visible = reviewScreenViewModel.editorIsOpen) {
+                    ReviewEditor(
+                        text = reviewScreenViewModel.newCommentText,
+                        rating = reviewScreenViewModel.newCommentRating,
+                        textChangeCallback = {
+                            reviewScreenViewModel.emptyCommentError = false
+                            reviewScreenViewModel.newCommentText = it
+                        },
+                        postCallback = { reviewScreenViewModel.postReview() },
+                        closeEditorCallback = { reviewScreenViewModel.editorIsOpen = false },
+                        ratingChangeCallback = { reviewScreenViewModel.newCommentRating = it },
+                        postButtonActive = !reviewScreenViewModel.sendingComment
+                    )
+                }
+                AnimatedVisibility(visible = reviewScreenViewModel.emptyCommentError) {
+                    Text(
+                        color = Red,
+                        text = stringResource(R.string.review_screen_empty_comment_error),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
             }
@@ -225,7 +252,11 @@ fun ReviewScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 35.dp, vertical = 10.dp)
             )
-            Column(modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState())) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+            ) {
                 if (!reviewScreenViewModel.loadingComments) {
                     if (reviewScreenViewModel.otherReviews.isEmpty() && reviewScreenViewModel.myReview == null) {
                         Text(
@@ -238,6 +269,16 @@ fun ReviewScreen(
                             text = stringResource(R.string.review_screen_be_the_first)
                         )
                     } else {
+                        if (reviewScreenViewModel.myReview != null) {
+                            MyReviewBox(
+                                review = reviewScreenViewModel.myReview!!,
+                                deleteCallback = { reviewScreenViewModel.deleteReview() })
+                            GradientSeparator(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 35.dp)
+                            )
+                        }
                         for (review in reviewScreenViewModel.otherReviews) {
                             ReviewBox(review)
                             GradientSeparator(
@@ -258,14 +299,98 @@ fun ReviewScreen(
 }
 
 @Composable
+fun ReviewEditor(
+    modifier: Modifier = Modifier,
+    text: String,
+    rating: Int,
+    textChangeCallback: (String) -> Unit,
+    ratingChangeCallback: (Int) -> Unit,
+    postCallback: () -> Unit,
+    closeEditorCallback: () -> Unit,
+    postButtonActive: Boolean
+) {
+    Column {
+        Row(
+            horizontalArrangement = Arrangement.SpaceAround,
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            for (i in 1..5) {
+                Icon(
+                    imageVector = Icons.Filled.Star,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .clickable(onClick = { ratingChangeCallback.invoke(i) })
+                        .size(50.dp),
+                    tint = if (rating >= i) Yellow else MediumGrey
+                )
+            }
+        }
+        TextField(
+            enabled = postButtonActive,
+            value = text,
+            onValueChange = textChangeCallback,
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.primary,
+                unfocusedContainerColor = MaterialTheme.colorScheme.primary,
+                focusedIndicatorColor = Invisible,
+                unfocusedIndicatorColor = Invisible,
+                cursorColor = MaterialTheme.colorScheme.onPrimaryContainer
+            ),
+            textStyle = MaterialTheme.typography.titleSmall,
+            placeholder = {
+                Text(
+                    text = stringResource(R.string.review_screen_tell_your_impressions),
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    style = MaterialTheme.typography.titleSmall
+                )
+            },
+            singleLine = false,
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp, vertical = 20.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .background(color = Invisible),
+        )
+        Row(horizontalArrangement = Arrangement.SpaceAround, modifier = Modifier.fillMaxWidth()) {
+            Button(
+                colors = ButtonDefaults.buttonColors(
+                    disabledContainerColor = MediumGrey,
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                    contentColor = White
+                ),
+                onClick = postCallback,
+                enabled = postButtonActive
+            ) {
+                Text(
+                    text = stringResource(R.string.review_screen_confirm_leave_comment),
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier
+                        .padding(5.dp)
+                )
+            }
+            Button(
+                colors = ButtonDefaults.buttonColors(
+                    disabledContainerColor = MediumGrey,
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                    contentColor = White
+                ),
+                onClick = closeEditorCallback,
+            ) {
+                Text(
+                    text = stringResource(R.string.review_screen_cancel_leave_comment),
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier
+                        .padding(5.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
 fun ReviewBox(
-    review: Review = Review(
-        userName = "Турист228",
-        text = "Недавно воспользовался аудиогидом во время экскурсии, и это был потрясающий опыт! Всё было организовано очень удобно: понятный интерфейс, отличное качество звука и интересный, живой рассказ. Особенно понравилось, что можно двигаться в своём темпе.",
-        rating = 4,
-        date = Date(1212121212121L),
-        id = 6
-    )
+    review: Review
 ) {
     GigaGuideMobileTheme {
         Column(
@@ -318,27 +443,20 @@ fun ReviewBox(
                 Text(
                     color = MediumGrey,
                     style = MaterialTheme.typography.bodyMedium,
-                    text = SimpleDateFormat(
+                    text = /*SimpleDateFormat(
                         "yyyy-mm-dd", Locale.ROOT
-                    ).format(review.date)
+                    ).format*/(review.date.toString())
                 )
             }
         }
     }
 }
 
-@Preview
 @Composable
 fun MyReviewBox(
-    review: Review = Review(
-        userName = "Турист228",
-        text = "Недавно воспользовался аудиогидом во время экскурсии, и это был потрясающий опыт! Всё было организовано очень удобно: понятный интерфейс, отличное качество звука и интересный, живой рассказ. Особенно понравилось, что можно двигаться в своём темпе.",
-        rating = 4,
-        date = Date(1212121212121L),
-        id = 6
-    ), deleteCallback: () -> Unit = {}
+    review: Review, deleteCallback: () -> Unit = {}
 ) {
-    var optionsOpen by remember { mutableStateOf(true) }
+    var optionsOpen by remember { mutableStateOf(false) }
     GigaGuideMobileTheme {
         Box(modifier = Modifier.fillMaxWidth()) {
             Column(
@@ -397,9 +515,9 @@ fun MyReviewBox(
                     Text(
                         color = MediumGrey,
                         style = MaterialTheme.typography.bodyMedium,
-                        text = SimpleDateFormat(
+                        text = review.date.toString()/*SimpleDateFormat(
                             "d MMMM yyyy", Locale("ru", "RU")
-                        ).format(review.date)
+                        ).format(review.date)*/
                     )
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
@@ -438,20 +556,20 @@ fun MyReviewBox(
                         .background(
                             MaterialTheme.colorScheme.background
                         )
-                        .padding(15.dp)
                 ) {
                     Text(
+                        modifier = Modifier.clickable(onClick = deleteCallback).padding(15.dp),
                         text = stringResource(R.string.review_screen_button_delete_comment),
                         color = Red,
                         style = MaterialTheme.typography.titleMedium
                     )
                     GradientSeparator(
                         modifier = Modifier
-                            .padding(vertical = 15.dp)
+                            .padding(horizontal = 15.dp)
                             .width(100.dp)
                     )
                     Text(
-                        modifier = Modifier.clickable(onClick = { optionsOpen = false }),
+                        modifier = Modifier.clickable(onClick = { optionsOpen = false }).padding(15.dp),
                         text = stringResource(R.string.review_screen_button_cancel_deletion),
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.titleMedium

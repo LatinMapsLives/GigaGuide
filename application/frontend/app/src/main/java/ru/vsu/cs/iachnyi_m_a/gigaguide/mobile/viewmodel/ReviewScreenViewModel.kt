@@ -2,6 +2,7 @@ package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel
 
 import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -32,15 +33,21 @@ class ReviewScreenViewModel @Inject constructor(
     var loadingComments by mutableStateOf(false)
     var sendingComment by mutableStateOf(false)
     var authorized by mutableStateOf(false)
+    var emptyCommentError by mutableStateOf(false)
 
-    fun loadReviews(){
+    var newCommentText by mutableStateOf("")
+    var newCommentRating by mutableIntStateOf(5)
+
+    fun loadReviews() {
         loadingComments = true
-        var repository: ReviewRepository = if (isTour) tourReviewRepository else sightReviewRepository
+        var repository: ReviewRepository =
+            if (isTour) tourReviewRepository else sightReviewRepository
         viewModelScope.launch {
             var token = dataStoreManager.getJWT()
             authorized = token != null
-            var reviews = ServerUtils.executeNetworkCall { repository.getAllReviews(token ?: "", objectId) }
-            if(reviews != null){
+            var reviews =
+                ServerUtils.executeNetworkCall { repository.getAllReviews(token ?: "", objectId) }
+            if (reviews != null) {
                 otherReviews.clear()
                 myReview = reviews.myReview
                 otherReviews.addAll(reviews.otherReviews)
@@ -49,7 +56,61 @@ class ReviewScreenViewModel @Inject constructor(
         }
     }
 
-    fun deleteReview(){
+    fun deleteReview() {
+        loadingComments = true
+        viewModelScope.launch {
+            var repository: ReviewRepository =
+                if (isTour) tourReviewRepository else sightReviewRepository
+            if (dataStoreManager.getJWT() == null) return@launch
+            var success =
+                ServerUtils.executeNetworkCall {
+                    repository.deleteReview(
+                        token = dataStoreManager.getJWT()!!,
+                        id = myReview!!.id
+                    )
+                }
+            if(success == null) {
+                sendingComment = false
+            } else {
+                loadReviews()
+                sendingComment = false
+            }
+        }
+    }
 
+    fun postReview() {
+        if (newCommentText.trim().isEmpty()) {
+            emptyCommentError = true
+        } else {
+            var repository: ReviewRepository =
+                if (isTour) tourReviewRepository else sightReviewRepository
+            viewModelScope.launch {
+                if (dataStoreManager.getJWT() == null) return@launch
+                sendingComment = true
+                var success =
+                    ServerUtils.executeNetworkCall {
+                        repository.addReview(
+                            token = dataStoreManager.getJWT()!!,
+                            rating = newCommentRating,
+                            comment = newCommentText,
+                            objectId = objectId.toLong()
+                        )
+                    }
+                if(success == null) {
+                     sendingComment = false
+                } else {
+                    if(success){
+                        loadReviews()
+                        editorIsOpen = false
+                        newCommentText = ""
+                        newCommentRating = 5
+                    } else {
+
+                    }
+                    sendingComment = false
+                }
+            }
+
+        }
     }
 }
