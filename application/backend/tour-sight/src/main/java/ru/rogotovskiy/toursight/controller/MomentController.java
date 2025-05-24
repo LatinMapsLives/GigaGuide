@@ -124,10 +124,18 @@ public class MomentController {
                     )
             )
     })
-    @PutMapping
-    public ResponseEntity<?> updateMoment(@RequestParam Integer id, @RequestBody UpdateMomentDto dto) {
-        momentService.updateMoment(id, dto);
-        return ResponseEntity.ok(new SuccessResponse("Момент обновлён успешно"));
+    @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateMoment(@RequestParam(value = "moment") String momentUpdateJson,
+                                          @RequestParam(value = "image", required = false) MultipartFile image) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        UpdateMomentDto dto = null;
+        try {
+            dto = objectMapper.readValue(momentUpdateJson, UpdateMomentDto.class);
+            momentService.updateMoment(dto, image);
+            return ResponseEntity.ok(new SuccessResponse("Момент обновлён успешно"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Operation(summary = "Удалить момент")

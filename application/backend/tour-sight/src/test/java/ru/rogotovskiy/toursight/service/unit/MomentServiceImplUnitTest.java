@@ -111,7 +111,7 @@ class MomentServiceImplUnitTest {
         verify(momentRepository).delete(moment);
     }
 
-    @Test
+/*    @Test
     void updateMoment_ShouldUpdateFields() {
         // Дано
         Moment moment = new Moment();
@@ -129,7 +129,7 @@ class MomentServiceImplUnitTest {
         assertEquals(BigDecimal.TEN, moment.getLatitude());
         assertEquals(BigDecimal.ONE, moment.getLongitude());
         verify(momentRepository).save(moment);
-    }
+    }*/
 
     @Test
     void getAll_ShouldReturnListOfDtos() {

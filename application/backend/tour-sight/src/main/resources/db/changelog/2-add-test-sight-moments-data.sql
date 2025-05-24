@@ -1,7 +1,7 @@
 --liquibase formatted sql
 
 --changeset hakyur:1
-insert into sights (name, description, city, latitude, longitude, image_path)
+insert into sights (name, description, city, latitude, longitude, image_url)
 values
     ('Парк Орлёнок', 'Парк "Орлёнок" — это не просто зона отдыха, а настоящая живая летопись Воронежа. ' ||
                      'Расположенный в самом центре города, он сочетает в себе культурную, историческую ' ||
@@ -15,7 +15,7 @@ values
      39.215841, '2.jpg');
 
 --changeset hakyur:2
-insert into moments (name, order_number, content, image_path, latitude, longitude, sight_id)
+insert into moments (name, order_number, content, image_url, latitude, longitude, sight_id)
 values
     ('Мемориальный некрополь', 1, 'Некрополь — одно из самых значимых и трогательных мест в парке. ' ||
                                   'Здесь покоятся герои трёх войн: бойцы Красной армии времён Гражданской, лётчики ' ||

@@ -10,3 +10,10 @@ spring:
       ddl-auto: validate
 server:
   port: 8082
+yandex:
+  s3:
+    key-id: YCAJE2OdBTh7rgYLE81Dt19ly
+    secret-key: YCP1PS8bzU6KjdcFfGHJv78maHRcKECzWsWZ79ZF
+    bucket-name: giga-guide
+    region: ru-central1
+    endpoint: https://storage.yandexcloud.net

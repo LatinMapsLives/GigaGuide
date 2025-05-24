@@ -107,10 +107,17 @@ public class TourController {
                     )
             )
     })
-    @PutMapping
-    public ResponseEntity<?> updateTour(@RequestParam Integer id, @RequestBody UpdateTourDto dto) {
-        tourService.updateTour(id, dto);
-        return ResponseEntity.ok("Тур успешно обновлён");
+    @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateTour(@RequestParam(value = "tour") String updateTourJson,
+                                        @RequestParam(value = "image", required = false) MultipartFile image) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            UpdateTourDto dto = mapper.readValue(updateTourJson, UpdateTourDto.class);
+            tourService.updateTour(dto, image);
+            return ResponseEntity.ok("Тур обновлён создан");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @Operation(summary = "Удалить тур")

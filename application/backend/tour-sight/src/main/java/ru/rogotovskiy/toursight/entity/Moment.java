@@ -27,7 +27,7 @@ public class Moment {
     @Column(name = "content")
     private String content;
 
-    @Column(name = "image_path")
+    @Column(name = "image_url")
     private String imagePath;
 
     @Column(name = "latitude")
