@@ -49,18 +49,23 @@ public class TourService {
         tourRepository.save(tour);
     }
 
-    public void updateTour(Integer id, UpdateTourDto dto) {
-        Tour tour = getTourById(id);
+    public void updateTour(UpdateTourDto dto, MultipartFile image) throws IOException {
+        Tour tour = getTourById(dto.id());
         tour.setName(dto.name());
         tour.setDescription(dto.description());
         tour.setCity(dto.city());
         tour.setCategory(dto.category());
         tour.setType(dto.type());
+        if (image != null) {
+            imageService.deleteImage(tour.getImagePath());
+            tour.setImagePath(imageService.saveImage(image, "tours"));
+        }
         tourRepository.save(tour);
     }
 
     public void deleteTour(Integer id) {
         Tour tour = getTourById(id);
+        imageService.deleteImage(tour.getImagePath());
         tourRepository.delete(tour);
     }
 

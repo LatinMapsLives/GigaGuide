@@ -45,16 +45,22 @@ public class MomentService {
     }
 
     public void deleteMoment(Integer id) {
-        momentRepository.delete(getMomentById(id));
+        Moment moment = getMomentById(id);
+        imageService.deleteImage(moment.getImagePath());
+        momentRepository.delete(moment);
     }
 
-    public void updateMoment(Integer id, UpdateMomentDto dto) {
-        Moment moment = getMomentById(id);
+    public void updateMoment(UpdateMomentDto dto, MultipartFile image) throws IOException {
+        Moment moment = getMomentById(dto.id());
         moment.setName(dto.name());
         moment.setOrderNumber(dto.orderNumber());
         moment.setContent(dto.content());
         moment.setLatitude(dto.latitude());
         moment.setLongitude(dto.longitude());
+        if (image != null) {
+            imageService.deleteImage(moment.getImagePath());
+            moment.setImagePath(imageService.saveImage(image, "moments"));
+        }
         momentRepository.save(moment);
     }
 

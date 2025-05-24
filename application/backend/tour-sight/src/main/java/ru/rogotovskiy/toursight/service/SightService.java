@@ -41,17 +41,23 @@ public class SightService {
         sightRepository.save(sight);
     }
 
-    public void updateSight(Integer id, UpdateSightDto dto) {
-        Sight sight = getSightById(id);
+    public void updateSight(UpdateSightDto dto, MultipartFile image) throws IOException {
+        Sight sight = getSightById(dto.id());
         sight.setName(dto.name());
         sight.setDescription(dto.description());
         sight.setCity(dto.city());
         sight.setLatitude(dto.latitude());
         sight.setLongitude(dto.longitude());
+        if (image != null) {
+            imageService.deleteImage(sight.getImagePath());
+            sight.setImagePath(imageService.saveImage(image, "sights"));
+        }
         sightRepository.save(sight);
     }
 
     public void deleteSight(Integer id) {
+        Sight sight = getSightById(id);
+        imageService.deleteImage(sight.getImagePath());
         sightRepository.delete(getSightById(id));
     }
 

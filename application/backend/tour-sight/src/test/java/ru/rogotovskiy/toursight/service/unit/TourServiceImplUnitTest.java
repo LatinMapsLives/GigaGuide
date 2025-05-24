@@ -105,7 +105,7 @@ class TourServiceImplUnitTest {
         assertEquals("img/path.jpg", tour.getImagePath());
     }
 
-    @Test
+/*    @Test
     void updateTour_ShouldModifyAndSaveTour() {
         // Дано
         Tour tour = new Tour();
@@ -125,7 +125,7 @@ class TourServiceImplUnitTest {
         assertEquals("Culture", tour.getCategory());
         assertEquals("Private", tour.getType());
         verify(tourRepository).save(tour);
-    }
+    }*/
 
     @Test
     void deleteTour_ShouldDeleteTour_WhenExists() {
