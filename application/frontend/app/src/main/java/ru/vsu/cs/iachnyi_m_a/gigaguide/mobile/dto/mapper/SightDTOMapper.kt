@@ -4,7 +4,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.SightDTO
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.SightInfo
 
-class SightDTOtoSightInfoMapper : Mapper<SightDTO, SightInfo> {
+class SightDTOMapper : Mapper<SightDTO, SightInfo> {
     override fun map(value: SightDTO): SightInfo {
         return SightInfo(
             id = value.id,

@@ -4,7 +4,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.TourDTO
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.TourInfo
 
-class TourDTOtoTourInfoMapper: Mapper<TourDTO, TourInfo>{
+class TourDTOMapper: Mapper<TourDTO, TourInfo>{
     override fun map(value: TourDTO): TourInfo {
         return TourInfo(
             id = value.id.toLong(),

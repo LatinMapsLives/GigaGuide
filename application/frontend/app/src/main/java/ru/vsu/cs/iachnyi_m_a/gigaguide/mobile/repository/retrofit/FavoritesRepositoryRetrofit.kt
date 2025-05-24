@@ -3,7 +3,7 @@ package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.retrofit
 import retrofit2.Response
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.api.FavoritesAPI
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.favorites.FavoritesDTO
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.mapper.FavoritesDTOtoFavoritesListMapper
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.mapper.FavoritesDTOMapper
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.FavoritesList
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.FavoritesRepository
 
@@ -11,7 +11,7 @@ class FavoritesRepositoryRetrofit(private val favoritesAPI: FavoritesAPI): Favor
 
     override suspend fun getFavorites(token: String): FavoritesList? {
         var response: Response<FavoritesDTO> = favoritesAPI.getAllFavoriteSights("Bearer " + token).execute();
-        return if (response.isSuccessful) FavoritesDTOtoFavoritesListMapper().map(response.body()!!) else null
+        return if (response.isSuccessful) FavoritesDTOMapper().map(response.body()!!) else null
     }
 
     override suspend fun addSightToFavorites(

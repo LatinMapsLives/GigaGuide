@@ -52,4 +52,15 @@
     <string name="explore_sight_screen_loading_route">Loading route</string>
     <string name="warning_no_location_permissions">Missing location permission</string>
     <string name="success_login_success">Login successful</string>
+    <string name="review_screen_label_your_review">Your review</string>
+    <string name="review_screen_button_delete_comment">Delete</string>
+    <string name="review_screen_button_cancel_deletion">Cancel</string>
+    <string name="review_screen_login_to_leave_review">Log in to post a review</string>
+    <string name="review_screen_screen_header">Reviews</string>
+    <string name="review_screen_be_the_first">No one has left a review yet. Be the first to do so!</string>
+    <string name="review_screen_leave_comment">Post a review</string>
+    <string name="review_screen_tell_your_impressions">Tell everyone your imprressions</string>
+    <string name="review_screen_confirm_leave_comment">Post</string>
+    <string name="review_screen_cancel_leave_comment">Cancel</string>
+    <string name="review_screen_empty_comment_error">Fill in the text field</string>
 </resources>

@@ -2,14 +2,14 @@ package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile
 
 import org.junit.Test
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.MomentDTO
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.mapper.MomentDTOtoMomentInfoMapper
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.mapper.MomentDTOMapper
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.moment.MomentInfo
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
 
 class MomentDTOtoMomentInfoMapperTest {
     @Test
     fun mapTest(){
-        var result = MomentDTOtoMomentInfoMapper().map(
+        var result = MomentDTOMapper().map(
             MomentDTO(
                 name = "moment1",
                 id = 1,

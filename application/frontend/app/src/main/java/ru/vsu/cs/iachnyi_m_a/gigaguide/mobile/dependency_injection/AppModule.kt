@@ -17,7 +17,9 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.api.FavoritesAPI
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.api.MapAPI
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.api.MomentAPI
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.api.SightAPI
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.api.SightReviewAPI
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.api.TourAPI
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.api.TourReviewAPI
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.api.UserAPI
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.datastore.DataStoreManager
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.AuthRepository
@@ -33,8 +35,12 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.retrofit.FavoritesRepos
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.retrofit.MapRepositoryRetrofit
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.retrofit.MomentRepositoryRetrofit
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.retrofit.SightRepositoryRetrofit
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.retrofit.SightReviewRepositoryRetrofit
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.retrofit.TourRepositoryRetrofit
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.retrofit.TourReviewRepositoryRetrofit
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.retrofit.UserRepositoryRetrofit
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.review.SightReviewRepository
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.review.TourReviewRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.GeoLocationProvider
 import javax.inject.Singleton
 
@@ -87,6 +93,19 @@ object AppModule {
     fun provideTourRepository(): TourRepository {
         return TourRepositoryRetrofit(provideTourAPI())
     }
+
+    @Provides
+    @Singleton
+    fun provideSightReviewRepository(): SightReviewRepository {
+        return SightReviewRepositoryRetrofit(provideSightReviewAPI())
+    }
+
+    @Provides
+    @Singleton
+    fun provideTourReviewRepository(): TourReviewRepository {
+        return TourReviewRepositoryRetrofit(provideTourReviewAPI())
+    }
+
     //<----------------APIs--------------->
 
     @Provides
@@ -149,6 +168,24 @@ object AppModule {
         var retrofit = Retrofit.Builder().baseUrl("$RETROFIT_BASE_URL/api/tour-sight/")
             .addConverterFactory(GsonConverterFactory.create()).build()
         return retrofit.create(TourAPI::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideSightReviewAPI(): SightReviewAPI{
+        var retrofit = Retrofit.Builder().baseUrl("$RETROFIT_BASE_URL/api/reviews/")
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create()).build()
+        return retrofit.create(SightReviewAPI::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideTourReviewAPI(): TourReviewAPI{
+        var retrofit = Retrofit.Builder().baseUrl("$RETROFIT_BASE_URL/api/reviews/")
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create()).build()
+        return retrofit.create(TourReviewAPI::class.java)
     }
 
     //<------------------OTHER--------------->

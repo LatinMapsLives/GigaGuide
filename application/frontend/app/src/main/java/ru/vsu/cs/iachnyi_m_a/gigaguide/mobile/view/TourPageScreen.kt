@@ -48,7 +48,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.SightTourThumbnail
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ExploreTourScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.LoginScreenObject
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ReviewScreenClass
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.TourReviewScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.Black
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.FavoritePink
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
@@ -200,7 +200,7 @@ fun TourPageScreen(
                             .padding(bottom = 10.dp)
                             .clickable(onClick = {
                                 navController.navigate(
-                                    ReviewScreenClass(tourId)
+                                    TourReviewScreenClass(tourId)
                                 )
                             })
                     ) {
