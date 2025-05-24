@@ -63,6 +63,8 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.ReviewScreenViewModel
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
 import java.util.Date
 import java.util.Locale
 
@@ -250,7 +252,7 @@ fun ReviewScreen(
             GradientSeparator(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 35.dp, vertical = 10.dp)
+                    .padding(start = 35.dp, end = 35.dp, top = 10.dp)
             )
             Column(
                 modifier = Modifier
@@ -437,15 +439,15 @@ fun ReviewBox(
             Text(
                 modifier = Modifier.padding(vertical = 10.dp),
                 text = review.text,
-                style = MaterialTheme.typography.bodySmall
+                style = MaterialTheme.typography.bodyMedium
             )
             Row {
                 Text(
                     color = MediumGrey,
                     style = MaterialTheme.typography.bodyMedium,
-                    text = /*SimpleDateFormat(
+                    text = review.date.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))/*SimpleDateFormat(
                         "yyyy-mm-dd", Locale.ROOT
-                    ).format*/(review.date.toString())
+                    ).format*/
                 )
             }
         }
@@ -505,7 +507,7 @@ fun MyReviewBox(
                 Text(
                     modifier = Modifier.padding(vertical = 10.dp),
                     text = review.text,
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.bodyMedium
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),

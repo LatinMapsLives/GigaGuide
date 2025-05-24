@@ -17,6 +17,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.review.ReviewRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.review.SightReviewRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.review.TourReviewRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
+import java.text.SimpleDateFormat
 
 @HiltViewModel
 class ReviewScreenViewModel @Inject constructor(
