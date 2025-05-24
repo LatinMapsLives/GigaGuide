@@ -23,17 +23,25 @@ public class TtsService {
     private static final String FOLDER_ID = "b1g4as782c4bh4ppmk1m";
     private static final String URL = "https://tts.api.cloud.yandex.net/speech/v1/tts:synthesize";
 
-    public byte[] synthesizeText(String text) throws IOException {
+    public byte[] synthesizeText(String text, String lang) throws IOException {
         HttpPost request = new HttpPost(URL);
         request.setHeader("Authorization", "Api-Key " + API_KEY);
         request.setHeader("Content-Type", "application/x-www-form-urlencoded");
 
         System.out.println(text);
 
+        String voice = "jane";
+        String apiLang = "ru-RU";
+
+        if ("en".equalsIgnoreCase(lang)) {
+            voice = "john";
+            apiLang = "en-US";
+        }
+
         List<NameValuePair> params = List.of(
                 new BasicNameValuePair("text", text),
-                new BasicNameValuePair("lang", "ru-RU"),
-                new BasicNameValuePair("voice", "jane"),
+                new BasicNameValuePair("lang", apiLang),
+                new BasicNameValuePair("voice", voice),
                 new BasicNameValuePair("folderId", FOLDER_ID),
                 new BasicNameValuePair("format", "lpcm"),
                 new BasicNameValuePair("sampleRateHertz", "48000")
