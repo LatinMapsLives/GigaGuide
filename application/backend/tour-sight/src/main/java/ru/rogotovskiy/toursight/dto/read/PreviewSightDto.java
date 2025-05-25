@@ -7,6 +7,7 @@ public record PreviewSightDto(
         String name,
         BigDecimal latitude,
         BigDecimal longitude,
-        BigDecimal rating
+        BigDecimal rating,
+        String imagePath
 ) {
 }

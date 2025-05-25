@@ -6,6 +6,7 @@ public record PreviewTourDto(
         Integer id,
         String name,
         BigDecimal distanceKm,
-        BigDecimal rating
+        BigDecimal rating,
+        String imagePath
 ) {
 }
