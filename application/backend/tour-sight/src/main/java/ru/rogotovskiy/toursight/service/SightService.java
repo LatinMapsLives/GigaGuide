@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.rogotovskiy.toursight.dto.create.CreateSightDto;
+import ru.rogotovskiy.toursight.dto.read.PreviewSightDto;
 import ru.rogotovskiy.toursight.dto.read.SightDto;
 import ru.rogotovskiy.toursight.dto.update.UpdateSightDto;
 import ru.rogotovskiy.toursight.entity.Sight;
@@ -67,9 +68,9 @@ public class SightService {
                 .toList();
     }
 
-    public List<SightDto> searchSights(String name) {
+    public List<PreviewSightDto> searchSights(String name) {
         return sightRepository.findByNameContainingIgnoreCase(name).stream()
-                .map(sightMapper::toDto)
+                .map(sightMapper::toPreviewDto)
                 .toList();
     }
 }

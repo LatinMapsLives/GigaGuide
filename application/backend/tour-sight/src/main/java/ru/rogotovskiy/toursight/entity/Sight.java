@@ -38,6 +38,9 @@ public class Sight {
     @Column(name = "longitude")
     private BigDecimal longitude;
 
+    @Column(name = "rating")
+    private BigDecimal rating;
+
     @OneToMany(mappedBy = "sight", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Moment> moments = new ArrayList<>();
 }

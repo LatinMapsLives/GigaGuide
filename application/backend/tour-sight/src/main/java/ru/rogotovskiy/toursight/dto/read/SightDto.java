@@ -2,6 +2,8 @@ package ru.rogotovskiy.toursight.dto.read;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.math.BigDecimal;
+
 @Schema(description = "Данные достопримечательности")
 public record SightDto(
         @Schema(description = "ID достопримечательности", example = "145")
@@ -13,6 +15,9 @@ public record SightDto(
         @Schema(description = "Город, в котором находится эта достопримечательность", example = "Воронеж")
         String city,
         @Schema(description = "Имя файла картинки", example = "a0d3c84b-f1d1-40e0-81ba-fabffd0d5ed4.jpg")
-        String imagePath
+        String imagePath,
+        BigDecimal latitude,
+        BigDecimal longitude,
+        BigDecimal rating
 ) {
 }
