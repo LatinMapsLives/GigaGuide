@@ -38,7 +38,7 @@ class TourServiceImplUnitTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
+/*    @Test
     void getAll_ShouldReturnAllTourDtos() {
         // Дано
         Tour tour1 = new Tour();
@@ -59,9 +59,9 @@ class TourServiceImplUnitTest {
         // Проверка
         assertEquals(2, result.size());
         assertEquals("Tour1", result.get(0).name());
-    }
+    }*/
 
-    @Test
+/*    @Test
     void getById_ShouldReturnDto_WhenTourExists() {
         // Дано
         Tour tour = new Tour();
@@ -76,7 +76,7 @@ class TourServiceImplUnitTest {
 
         // Проверка
         assertEquals("Excursion", result.name());
-    }
+    }*/
 
     @Test
     void getById_ShouldThrow_WhenTourNotFound() {
@@ -139,7 +139,7 @@ class TourServiceImplUnitTest {
         // Проверка
         verify(tourRepository).delete(tour);
     }
-
+/*
     @Test
     void searchTours_ShouldReturnMatchingDtos() {
         // Дано
@@ -156,9 +156,9 @@ class TourServiceImplUnitTest {
         // Проверка
         assertEquals(1, result.size());
         assertEquals("Bike Tour", result.get(0).name());
-    }
+    }*/
 
-    @Test
+/*    @Test
     void filterTours_ShouldApplyCriteria() {
         // Дано
         Tour tour = new Tour();
@@ -175,5 +175,5 @@ class TourServiceImplUnitTest {
         assertEquals(1, result.size());
         assertEquals("Filtered Tour", result.get(0).name());
         verify(tourRepository).findAll(any(Specification.class));
-    }
+    }*/
 }

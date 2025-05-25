@@ -24,6 +24,7 @@ CREATE TABLE sights
     city varchar(100) not null,
     latitude decimal(9,6),
     longitude decimal(9,6),
+    rating decimal(2,1) default 0.0,
     image_url text
 );
 
