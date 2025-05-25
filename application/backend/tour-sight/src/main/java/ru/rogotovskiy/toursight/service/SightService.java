@@ -13,6 +13,7 @@ import ru.rogotovskiy.toursight.mapper.SightMapper;
 import ru.rogotovskiy.toursight.repository.SightRepository;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
@@ -38,6 +39,7 @@ public class SightService {
 
     public void createSight(CreateSightDto dto, MultipartFile image) throws IOException {
         Sight sight = sightMapper.toEntity(dto);
+        sight.setRating(new BigDecimal("0.0"));
         sight.setImagePath(imageService.saveImage(image, "sights"));
         sightRepository.save(sight);
     }

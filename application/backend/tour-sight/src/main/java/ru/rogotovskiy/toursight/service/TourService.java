@@ -15,6 +15,7 @@ import ru.rogotovskiy.toursight.mapper.TourMapper;
 import ru.rogotovskiy.toursight.repository.TourRepository;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.StreamSupport;
@@ -57,6 +58,7 @@ public class TourService {
         tour.setSights(dto.getSights().stream()
                 .map(sightService::getSightById)
                 .toList());
+        tour.setRating(new BigDecimal("0.0"));
         tour.setImagePath(imageService.saveImage(image, "tours"));
         tourRepository.save(tour);
     }
