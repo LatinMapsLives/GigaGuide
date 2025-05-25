@@ -125,7 +125,7 @@ fun SightPageScreen(
                         ) {
 
                             Text(
-                                text = "${sightPageScreenViewModel.momentNames.size} моментов",
+                                text = "${sightPageScreenViewModel.momentNames.size} ${stringResource(R.string.sight_page_screen_moments_count)}",
                                 color = White
                             )
 
@@ -133,7 +133,7 @@ fun SightPageScreen(
                             Row {
 
                                 Text(
-                                    text = "${sightPageScreenViewModel.sight.value!!.time} мин",
+                                    text = "${sightPageScreenViewModel.sight.value!!.time} ${stringResource(R.string.sight_page_screen_minutes)}",
                                     color = White
                                 )
 
@@ -165,7 +165,7 @@ fun SightPageScreen(
                             })
                     ) {
                         Text(
-                            text = "16 отзывов | 4.8",
+                            text = "${sightPageScreenViewModel.reviewCount} ${stringResource(R.string.sight_page_screen_review_count)} | ${sightPageScreenViewModel.rating}",
                             style = MaterialTheme.typography.headlineSmall,
                             color = MaterialTheme.colorScheme.onBackground
                         )

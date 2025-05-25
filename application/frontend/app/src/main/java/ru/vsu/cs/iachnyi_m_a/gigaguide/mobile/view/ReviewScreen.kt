@@ -219,40 +219,20 @@ fun ReviewScreen(
                     Text(
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.headlineSmall,
-                        text = "4.8",
+                        text = reviewScreenViewModel.rating.toString(),
                         modifier = Modifier.padding(start = 10.dp)
                     )
                 }
                 Text(
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.headlineSmall,
-                    text = "16 оценок"
-                )
-            }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp, vertical = 10.dp)
-            ) {
-                Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.settings2_svgrepo_com),
-                    modifier = Modifier.size(20.dp),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onBackground
-                )
-                Text(
-                    color = MaterialTheme.colorScheme.onBackground,
-                    text = "Новые и полезные",
-                    modifier = Modifier.padding(start = 10.dp),
-                    style = MaterialTheme.typography.labelLarge
+                    text = "${reviewScreenViewModel.commentCount} ${stringResource(R.string.review_screen_comment_count)}"
                 )
             }
             GradientSeparator(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 35.dp, end = 35.dp, top = 10.dp)
+                    .padding(start = 35.dp, end = 35.dp, top = 20.dp)
             )
             Column(
                 modifier = Modifier

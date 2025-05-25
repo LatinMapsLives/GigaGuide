@@ -66,9 +66,6 @@ fun SettingsScreen(settingsScreenViewModel: SettingsScreenViewModel, navControll
     ) { LocaleManager.recomposeFlag = !LocaleManager.recomposeFlag }
 
     key(LocaleManager.recomposeFlag) {
-
-
-
         GigaGuideMobileTheme {
             Column(
                 modifier = Modifier
@@ -174,11 +171,13 @@ fun SettingsScreen(settingsScreenViewModel: SettingsScreenViewModel, navControll
                             ),
                             onClick = { navController.navigate(LoginScreenObject) }
                         ) {
-                            Text(
-                                text = stringResource(R.string.setting_screen_login_button_text),
-                                style = MaterialTheme.typography.headlineSmall,
-                                modifier = Modifier.padding(vertical = 5.dp, horizontal = 60.dp)
-                            )
+                            key(LocaleManager.recomposeFlag) {
+                                Text(
+                                    text = stringResource(R.string.setting_screen_login_button_text),
+                                    style = MaterialTheme.typography.headlineSmall,
+                                    modifier = Modifier.padding(vertical = 5.dp, horizontal = 60.dp)
+                                )
+                            }
                         }
                     }
                 }

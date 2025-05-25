@@ -67,6 +67,7 @@ class ExploreTourScreenViewModel @Inject constructor(
     var userLocation = mutableStateOf(MapPoint(0.0,0.0))
 
     var doLoop = false
+
     fun stopLoop(){
         doLoop = false
     }
@@ -93,7 +94,9 @@ class ExploreTourScreenViewModel @Inject constructor(
     }
 
     fun loadTour(){
+
         viewModelScope.launch {
+            userLocation.value = dataStoreManager.getLastLocation()
             var i = 0
             loadingTour = true
             var loadedSights = ServerUtils.executeNetworkCall { sightRepository.getAllSightInfosByTourId(tourId) }

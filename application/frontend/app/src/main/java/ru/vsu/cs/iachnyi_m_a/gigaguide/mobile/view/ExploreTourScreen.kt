@@ -59,6 +59,7 @@ import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polyline
 import org.osmdroid.views.overlay.TilesOverlay
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.MapPoint
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumGrey
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
@@ -108,6 +109,14 @@ fun ExploreTourScreen(
             }
         })
         exploreTourScreenViewModel.loadTour()
+        exploreTourScreenViewModel.launchLoop(10000) {
+            locationProvider.getCurrentLocation({
+                exploreTourScreenViewModel.saveCurrentLocation(MapPoint(it.first, it.second))
+            }, {
+                exploreTourScreenViewModel.stopLoop()
+                Pancake.info("Ошибка получения геолокации")
+            })
+        }
     }
     var dark = CurrentThemeSettings.isAppInDarkTheme()
     var deselectMomentCallback: () -> Unit = {

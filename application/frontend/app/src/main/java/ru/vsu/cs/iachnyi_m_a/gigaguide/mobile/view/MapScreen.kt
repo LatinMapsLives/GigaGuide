@@ -96,8 +96,7 @@ fun MapScreen(
     Box(modifier = Modifier.fillMaxSize()) {
         AndroidView(
             modifier = Modifier
-                .fillMaxSize()
-                .testTag("MAP_VIEW"),
+                .fillMaxSize(),
             factory = { context ->
                 MapView(context).apply {
                     setMultiTouchControls(true)
