@@ -74,4 +74,6 @@
     <string name="sight_page_screen_minutes">мин</string>
     <string name="sight_page_screen_review_count">отзывов</string>
     <string name="review_screen_comment_count">оценок</string>
+    <string name="tour_page_screen_sights_count">мест на маршруте</string>
+    <string name="tour_page_screen_sights_list">Достопримечательности</string>
 </resources>

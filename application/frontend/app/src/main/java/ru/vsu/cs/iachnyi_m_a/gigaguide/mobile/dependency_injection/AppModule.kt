@@ -29,7 +29,6 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.MomentRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.SightRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.TourRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.UserRepository
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.mock.FavoriteSightsRepositoryMock
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.retrofit.AuthRepositoryRetrofit
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.retrofit.FavoritesRepositoryRetrofit
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.retrofit.MapRepositoryRetrofit

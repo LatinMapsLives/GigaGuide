@@ -8,7 +8,8 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.review.ReviewsDTO
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.review.ReviewSet
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.review.TourReviewRepository
 
-class TourReviewRepositoryRetrofit(private val tourReviewAPI: TourReviewAPI): TourReviewRepository {
+class TourReviewRepositoryRetrofit(private val tourReviewAPI: TourReviewAPI):
+    TourReviewRepository {
     override suspend fun getAllReviews(
         token: String,
         objectId: Int

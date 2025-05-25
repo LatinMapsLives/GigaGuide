@@ -7,5 +7,6 @@ data class ReviewDTO(
     var id: Int,
     var rating: Int,
     var comment: String,
-    var createdAt: String
+    var createdAt: String,
+    var username: String
 )

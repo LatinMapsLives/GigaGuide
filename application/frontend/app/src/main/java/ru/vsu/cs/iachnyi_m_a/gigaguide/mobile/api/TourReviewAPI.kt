@@ -18,5 +18,5 @@ interface TourReviewAPI {
     fun addReview(@Header("Authorization") token: String, @Body createReviewDTO: CreateReviewDTO, @Query("tourId") tourId: Int): Call<String>
 
     @DELETE("tours")
-    fun deleteReview(@Header("Authorization") token: String, @Query("tourId") tourId: Int): Call<String>
+    fun deleteReview(@Header("Authorization") token: String, @Query("reviewId") reviewId: Int): Call<String>
 }

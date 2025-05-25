@@ -74,4 +74,6 @@
     <string name="sight_page_screen_minutes">min</string>
     <string name="sight_page_screen_review_count">reviews</string>
     <string name="review_screen_comment_count">reviews</string>
+    <string name="tour_page_screen_sights_count">sights on route</string>
+    <string name="tour_page_screen_sights_list">Sights</string>
 </resources>

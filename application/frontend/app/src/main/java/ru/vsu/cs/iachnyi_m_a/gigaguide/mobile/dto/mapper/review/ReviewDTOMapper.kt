@@ -8,6 +8,6 @@ import java.time.LocalDateTime
 
 class ReviewDTOMapper: Mapper<ReviewDTO, Review> {
     override fun map(value: ReviewDTO): Review {
-        return Review(id = value.id, rating = value.rating, text = value.comment, userName = "", date = LocalDateTime.parse(value.createdAt))
+        return Review(id = value.id, rating = value.rating, text = value.comment, userName = value.username, date = LocalDateTime.parse(value.createdAt))
     }
 }
