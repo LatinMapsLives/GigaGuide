@@ -31,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,6 +51,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import org.w3c.dom.Text
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.datastore.DataStoreManager
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ExploreSightScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ExploreTourScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.FavoriteScreenObject
@@ -72,7 +76,9 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumGrey
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.SuccessContainer
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.GeoLocationProvider
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.LocaleManager
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.Pancake
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.RememberLocale
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.ExploreSightScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.ExploreTourScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.FavoritesScreen
@@ -101,6 +107,13 @@ class MainActivity : ComponentActivity() {
 
         val startScreenObject = HomeScreenObject;
 
+        var selectedNavItemIndex = mutableIntStateOf(0);
+        var infoMessage = mutableStateOf("Интернет недоступен, приди пж попозже")
+        var infoColor = mutableStateOf<Color>(Color(0))
+
+        var geoLocationProvider = GeoLocationProvider(this)
+        var dataStoreManager = DataStoreManager(this)
+
         var navItems = listOf(
             NavBarItem(R.drawable.home, HomeScreenObject, R.string.nav_label_home), NavBarItem(
                 R.drawable.map, MapScreenObject, R.string.nav_label_map
@@ -111,16 +124,13 @@ class MainActivity : ComponentActivity() {
             )
         )
 
-
-        var selectedNavItemIndex = mutableIntStateOf(0);
-        var infoMessage = mutableStateOf("Интернет недоступен, приди пж попозже")
-        var infoColor = mutableStateOf<Color>(Color(0))
-
-        var geoLocationProvider = GeoLocationProvider(this)
-
         setContent {
 
+            RememberLocale(LocaleManager.currentLanguage, { LocaleManager.recomposeFlag = !LocaleManager.recomposeFlag})
+
             GigaGuideMobileTheme {
+
+
 
                 var showNavigationBarMutableState by remember { mutableStateOf(false) };
                 var infoVisibleMutableState by remember { mutableStateOf(false) }
@@ -132,6 +142,7 @@ class MainActivity : ComponentActivity() {
                 var serverErrorMessage = stringResource(R.string.error_server_error)
 
                 LaunchedEffect(Unit) {
+                    LocaleManager.currentLanguage = dataStoreManager.getCurrentLanguage()
                     Pancake.setMessageHandler(
                         onError = {
                             infoMessage.value = it
@@ -275,12 +286,15 @@ class MainActivity : ComponentActivity() {
                         enter = slideInVertically(initialOffsetY = { h -> h + 60 }),
                         exit = slideOutVertically(targetOffsetY = { h -> h + 60 })
                     ) {
-                        BottomNavigationBar(
-                            modifier = Modifier,
-                            navItems = navItems,
-                            selectedIndex = selectedNavItemIndex,
-                            navController = navController
-                        )
+                        //key (LocaleManager.recomposeFlag){
+                            //Log.e("LANG", "KEY " + LocaleManager.currentLanguage)
+                            BottomNavigationBar(
+                                modifier = Modifier,
+                                navItems = navItems,
+                                selectedIndex = selectedNavItemIndex,
+                                navController = navController
+                            )
+                        //}
                     }
                     AnimatedVisibility(
                         modifier = Modifier.align(Alignment.TopCenter),
@@ -318,6 +332,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                 }
+
             }
         }
     }
@@ -338,33 +353,38 @@ fun BottomNavigationBar(
             .dropShadow(offsetX = 0.dp, offsetY = 0.dp, blur = 16.dp),
         containerColor = MaterialTheme.colorScheme.background
     ) {
-        navItems.forEachIndexed { i, navItem ->
-            NavigationBarItem(
-                onClick = {
-                    if (selectedIndex.value != i) {
-                        selectedIndex.value = i
-                        navController.navigate(navItem.screenObject)
-                    }
-                },
-                colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = MediumBlue,
-                    unselectedIconColor = MediumGrey,
-                    selectedTextColor = MaterialTheme.colorScheme.onBackground,
-                    indicatorColor = Color(0x00000000)
-                ),
-                icon = {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(navItem.iconId),
-                        contentDescription = "das",
+            key(LocaleManager.recomposeFlag) {
+                navItems.forEachIndexed { i, navItem ->
+                    NavigationBarItem(
+                        onClick = {
+                            if (selectedIndex.value != i) {
+                                selectedIndex.value = i
+                                navController.navigate(navItem.screenObject)
+                            }
+                        },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = MediumBlue,
+                            unselectedIconColor = MediumGrey,
+                            selectedTextColor = MaterialTheme.colorScheme.onBackground,
+                            indicatorColor = Color(0x00000000)
+                        ),
+                        icon = {
+                            Icon(
+                                imageVector = ImageVector.vectorResource(navItem.iconId),
+                                contentDescription = "das",
+                            )
+                        },
+                        selected = selectedIndex.value == i,
+                        label = {
+                            Text(text = stringResource(navItem.iconLabel));
+                        },
+                        alwaysShowLabel = false,
                     )
-                },
-                selected = selectedIndex.value == i,
-                label = {
-                    Text(text = stringResource(navItem.iconLabelId));
-                },
-                alwaysShowLabel = false,
-            )
 
-        }
+                }
+
+            }
+
     }
+
 }

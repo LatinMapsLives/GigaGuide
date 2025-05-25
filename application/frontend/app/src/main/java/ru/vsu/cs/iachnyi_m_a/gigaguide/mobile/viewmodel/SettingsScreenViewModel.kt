@@ -12,6 +12,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.datastore.DataStoreManager
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.user.UserDataDTO
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.UserRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.CurrentThemeSettings
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.LocaleManager
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ThemeSettings
 import javax.inject.Inject
@@ -25,10 +26,19 @@ class SettingsScreenViewModel @Inject constructor(
     val userData = mutableStateOf<UserDataDTO?>(null)
     val loading = mutableStateOf(false)
     var themeSetting by mutableStateOf(ThemeSettings.AS_DEVICE)
+    var currentLanguage by mutableStateOf("en")
 
     fun loadSettings(){
         viewModelScope.launch {
             themeSetting = dataStoreManager.getThemeSettings()
+            currentLanguage = dataStoreManager.getCurrentLanguage()
+        }
+    }
+
+    fun updateAppLanguage() {
+        viewModelScope.launch {
+            dataStoreManager.setLanguage(currentLanguage)
+            LocaleManager.currentLanguage = dataStoreManager.getCurrentLanguage()
         }
     }
 

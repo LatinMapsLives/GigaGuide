@@ -38,12 +38,15 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import kotlinx.coroutines.delay
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.HomeScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SearchScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SightPageScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.CurrentThemeSettings
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.RememberLocale
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.HomeScreenViewModel
 
@@ -57,7 +60,6 @@ fun HomeScreen(
         Modifier
             .fillMaxWidth()
     ) {
-
         LaunchedEffect(Unit) {
             homeScreenViewModel.loadClosestTours()
             homeScreenViewModel.updateAppTheme()

@@ -2,6 +2,7 @@ package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel
 
 import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -36,6 +37,9 @@ class ReviewScreenViewModel @Inject constructor(
     var authorized by mutableStateOf(false)
     var emptyCommentError by mutableStateOf(false)
 
+    var commentCount by mutableIntStateOf(0)
+    var rating by mutableFloatStateOf(0f)
+
     var newCommentText by mutableStateOf("")
     var newCommentRating by mutableIntStateOf(5)
 
@@ -49,6 +53,14 @@ class ReviewScreenViewModel @Inject constructor(
             var reviews =
                 ServerUtils.executeNetworkCall { repository.getAllReviews(token ?: "", objectId) }
             if (reviews != null) {
+                commentCount = reviews.otherReviews.size + if(reviews.myReview == null) 0 else 1
+                if(commentCount == 0){
+                    rating = 0f
+                } else {
+                    var sum = reviews.otherReviews.sumOf { r -> r.rating }
+                    if(reviews.myReview!=null) sum += reviews.myReview!!.rating
+                    rating = (( sum * 1f / commentCount ) * 10).toInt() / 10f
+                }
                 otherReviews.clear()
                 myReview = reviews.myReview
                 otherReviews.addAll(reviews.otherReviews)

@@ -74,6 +74,7 @@ class ExploreSightScreenViewModel @Inject constructor(
     }
 
     suspend fun loadRoute() {
+        userLocation.value = dataStoreManager.getLastLocation()
         loadingRoute = true
 
         momentOnMaps.clear()
