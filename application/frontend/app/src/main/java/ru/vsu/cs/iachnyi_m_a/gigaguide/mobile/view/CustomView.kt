@@ -45,7 +45,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.Invisible
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
 
 @Composable
-fun LoginRegisterTextField(
+fun CustomTextField(
     modifier: Modifier,
     hint: String,
     value: String,

@@ -54,7 +54,7 @@ fun SearchScreen(
     navController: NavController = rememberNavController()
 ) {
     LaunchedEffect(Unit) {
-        searchScreenViewModel.loadSights()
+        searchScreenViewModel.loadSearchResult()
     }
     GigaGuideMobileTheme {
         Column(
@@ -64,15 +64,16 @@ fun SearchScreen(
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(modifier = Modifier.weight(1f)) {
-                    LoginRegisterTextField(
+                    CustomTextField(
                         modifier = Modifier.fillMaxWidth(),
-                        value = "",
-                        onValueChange = {},
+                        value = searchScreenViewModel.searchBarValue,
+                        onValueChange = {searchScreenViewModel.searchBarValue = it},
                         hint = "Найти тур, место",
                         isPassword = false
                     )
                     Icon(
                         modifier = Modifier
+                            .clickable(onClick = {searchScreenViewModel.loadSearchResult()}, enabled = !searchScreenViewModel.loading)
                             .align(alignment = Alignment.CenterEnd)
                             .padding(10.dp)
                             .size(30.dp),

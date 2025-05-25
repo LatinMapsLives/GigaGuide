@@ -63,4 +63,7 @@
     <string name="review_screen_confirm_leave_comment">Post</string>
     <string name="review_screen_cancel_leave_comment">Cancel</string>
     <string name="review_screen_empty_comment_error">Fill in the text field</string>
+    <string name="settings_screen_theme_as_device">As in device</string>
+    <string name="settings_screen_theme_always_light">Always light</string>
+    <string name="settings_screen_theme_always_dark">Always dark</string>
 </resources>

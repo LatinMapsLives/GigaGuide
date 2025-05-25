@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -19,9 +21,14 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,8 +36,10 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.LoginScreenObject
@@ -38,6 +47,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ProfileScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ThemeSettings
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.SettingsScreenViewModel
 
@@ -45,6 +55,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.SettingsScreenViewModel
 fun SettingsScreen(settingsScreenViewModel: SettingsScreenViewModel, navController: NavController) {
     LaunchedEffect(Unit) {
         settingsScreenViewModel.discoverJWT()
+        settingsScreenViewModel.loadSettings()
     }
     GigaGuideMobileTheme {
         Column(
@@ -161,6 +172,65 @@ fun SettingsScreen(settingsScreenViewModel: SettingsScreenViewModel, navControll
                 }
             }
 
+            var themeDialogOpen by remember { mutableStateOf(false) }
+            var languageDialogOpen by remember { mutableStateOf(false) }
+
+            when {
+                themeDialogOpen -> {
+                    Dialog(onDismissRequest = { themeDialogOpen = false }) {
+                        Column(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(20.dp))
+                                .background(color = MaterialTheme.colorScheme.background)
+                                .padding(20.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = stringResource(R.string.settings_screen_setting_name_theme),
+                                color = MaterialTheme.colorScheme.onBackground,
+                                style = MaterialTheme.typography.titleLarge
+                            )
+                            val radioOptions = listOf(
+                                ThemeSettings.AS_DEVICE, ThemeSettings.ALWAYS_LIGHT,
+                                ThemeSettings.ALWAYS_DARK
+                            )
+                            val radioLabels = listOf(
+                                stringResource(R.string.settings_screen_theme_as_device),
+                                stringResource(R.string.settings_screen_theme_always_light),
+                                stringResource(R.string.settings_screen_theme_always_dark)
+                            )
+                            Column(Modifier.selectableGroup()) {
+                                radioOptions.forEachIndexed { i, option ->
+                                    Row(
+                                        Modifier
+                                            .fillMaxWidth()
+                                            .selectable(
+                                                selected = (option == settingsScreenViewModel.themeSetting),
+                                                onClick = {
+                                                    settingsScreenViewModel.themeSetting = option
+                                                    settingsScreenViewModel.updateThemeSettings()
+                                                },
+                                                role = Role.RadioButton
+                                            ).padding(top = 10.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        RadioButton(
+                                            selected = (settingsScreenViewModel.themeSetting == option),
+                                            onClick = null
+                                        )
+                                        Text(
+                                            color = MaterialTheme.colorScheme.onBackground,
+                                            text = radioLabels[i],
+                                            style = MaterialTheme.typography.bodyLarge,
+                                            modifier = Modifier.padding(start = 16.dp)
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
             Text(
                 text = stringResource(R.string.settings_screen_settings_header),
@@ -173,11 +243,13 @@ fun SettingsScreen(settingsScreenViewModel: SettingsScreenViewModel, navControll
             var buttons = listOf<SettingsButtonContent>(
                 SettingsButtonContent(
                     icon = ImageVector.vectorResource(R.drawable.language),
-                    name = stringResource(R.string.settings_screen_setting_name_language)
+                    name = stringResource(R.string.settings_screen_setting_name_language),
+                    action = {}
                 ),
                 SettingsButtonContent(
                     icon = ImageVector.vectorResource(R.drawable.moon),
-                    name = stringResource(R.string.settings_screen_setting_name_theme)
+                    name = stringResource(R.string.settings_screen_setting_name_theme),
+                    action = {themeDialogOpen = true}
                 )
             )
             for (btn in buttons) {
@@ -191,7 +263,8 @@ fun SettingsScreen(settingsScreenViewModel: SettingsScreenViewModel, navControll
                     name = btn.name,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(15.dp)
+                        .padding(15.dp),
+                    action = btn.action
                 )
             }
             GradientSeparator(
@@ -247,9 +320,14 @@ fun GradientSeparator(modifier: Modifier) {
 }
 
 @Composable
-fun SettingsButton(icon: ImageVector, name: String, modifier: Modifier) {
+fun SettingsButton(icon: ImageVector, name: String, modifier: Modifier, action: () -> Unit) {
     val iconSize = 35.dp
-    Row(modifier = modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        modifier = modifier
+            .clickable(onClick = action)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Icon(
             imageVector = icon,
             contentDescription = "settings icon",
@@ -277,4 +355,5 @@ fun SettingsButton(icon: ImageVector, name: String, modifier: Modifier) {
 private class SettingsButtonContent(
     var icon: ImageVector,
     var name: String,
+    var action: () -> Unit
 )

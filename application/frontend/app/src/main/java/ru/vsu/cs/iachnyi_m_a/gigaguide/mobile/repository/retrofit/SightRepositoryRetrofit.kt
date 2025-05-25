@@ -48,4 +48,21 @@ class SightRepositoryRetrofit(private val sightAPI: SightAPI) : SightRepository 
         return getAllSightInfos()
     }
 
+    override suspend fun search(name: String): List<SightInfo>? {
+        var response: Response<List<SightDTO>> = sightAPI.searchSights(name).execute()
+        return if (response.isSuccessful) {
+            response.body()!!.map { dto ->
+                SightInfo(
+                    id = dto.id,
+                    name = dto.name,
+                    description = dto.description,
+                    time = 30,
+                    imageLink = ServerUtils.imageLink(dto.imagePath)
+                )
+            }
+        } else {
+            null
+        }
+    }
+
 }

@@ -1,7 +1,9 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel
 
 import android.util.Log
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -9,7 +11,9 @@ import kotlinx.coroutines.launch
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.datastore.DataStoreManager
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.user.UserDataDTO
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.UserRepository
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.CurrentThemeSettings
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ThemeSettings
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,6 +24,20 @@ class SettingsScreenViewModel @Inject constructor(
 
     val userData = mutableStateOf<UserDataDTO?>(null)
     val loading = mutableStateOf(false)
+    var themeSetting by mutableStateOf(ThemeSettings.AS_DEVICE)
+
+    fun loadSettings(){
+        viewModelScope.launch {
+            themeSetting = dataStoreManager.getThemeSettings()
+        }
+    }
+
+    fun updateThemeSettings() {
+        viewModelScope.launch {
+            dataStoreManager.setThemeSettings(themeSetting)
+            CurrentThemeSettings.currentState = themeSetting
+        }
+    }
 
     fun discoverJWT() {
         viewModelScope.launch {

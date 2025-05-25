@@ -25,7 +25,7 @@ class SightDTOtoSightInfoMapperTest {
                 name = "sight1",
                 time = 30,
 
-                imageLink = "${ServerUtils.SERVER_ADDRESS}/api/tour-sight/image?fileName=nbdkas-41289312-das.jpg"
+                imageLink = ServerUtils.imageLink("nbdkas-41289312-das.jpg")
 
             )
         )
