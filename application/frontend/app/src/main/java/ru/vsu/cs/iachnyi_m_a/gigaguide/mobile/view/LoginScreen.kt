@@ -38,6 +38,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumGrey
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.Red
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.CurrentThemeSettings
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.Pancake
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.LoginScreenViewModel
@@ -88,7 +89,7 @@ fun LoginScreen(
 
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Image(
-                    imageVector = ImageVector.vectorResource(if (isSystemInDarkTheme()) R.drawable.logo_dark else R.drawable.logo),
+                    imageVector = ImageVector.vectorResource(if (CurrentThemeSettings.isAppInDarkTheme()) R.drawable.logo_dark else R.drawable.logo),
                     contentDescription = "logo"
                 )
 
@@ -98,7 +99,7 @@ fun LoginScreen(
                     modifier = Modifier.padding(20.dp),
                     color = MaterialTheme.colorScheme.onBackground
                 )
-                LoginRegisterTextField(
+                CustomTextField(
                     modifier = Modifier.dropShadow(
                         offsetY = 0.dp,
                         offsetX = 0.dp,
@@ -110,7 +111,7 @@ fun LoginScreen(
                     onValueChange = { loginScreenViewModel.emailInput.value = it },
                     isPassword = false
                 )
-                LoginRegisterTextField(
+                CustomTextField(
                     modifier = Modifier
                         .padding(top=25.dp)
                         .dropShadow(

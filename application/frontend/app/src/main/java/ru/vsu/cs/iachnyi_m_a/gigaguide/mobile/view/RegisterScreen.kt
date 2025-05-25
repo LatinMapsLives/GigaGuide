@@ -35,6 +35,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.Green
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumGrey
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.Red
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.CurrentThemeSettings
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.RegisterScreenViewModel
 
@@ -74,7 +75,7 @@ fun RegisterScreen(
 
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Image(
-                    imageVector = ImageVector.vectorResource(if (isSystemInDarkTheme()) R.drawable.logo_dark else R.drawable.logo),
+                    imageVector = ImageVector.vectorResource(if (CurrentThemeSettings.isAppInDarkTheme()) R.drawable.logo_dark else R.drawable.logo),
                     contentDescription = "logo"
                 )
 
@@ -84,7 +85,7 @@ fun RegisterScreen(
                     modifier = Modifier.padding(20.dp),
                     color = MaterialTheme.colorScheme.onBackground
                 )
-                LoginRegisterTextField(
+                CustomTextField(
                     modifier = Modifier.dropShadow(
                         offsetY = 0.dp,
                         offsetX = 0.dp,
@@ -100,7 +101,7 @@ fun RegisterScreen(
                     },
                     isPassword = false
                 )
-                LoginRegisterTextField(
+                CustomTextField(
                     modifier = Modifier
                         .padding(25.dp)
                         .dropShadow(
@@ -118,7 +119,7 @@ fun RegisterScreen(
                     }
                     , isPassword = false
                 )
-                LoginRegisterTextField(
+                CustomTextField(
                     modifier = Modifier.dropShadow(
                         offsetY = 0.dp,
                         offsetX = 0.dp,
@@ -134,7 +135,7 @@ fun RegisterScreen(
                     },
                     isPassword = true
                 )
-                LoginRegisterTextField(
+                CustomTextField(
                     modifier = Modifier
                         .padding(top = 25.dp)
                         .dropShadow(

@@ -11,4 +11,7 @@ interface SightAPI {
 
     @GET("sights")
     fun getSightById(@Query("id") id: Long): Call<SightDTO>
+
+    @GET("sights/search")
+    fun searchSights(@Query("name") name: String): Call<List<SightDTO>>
 }

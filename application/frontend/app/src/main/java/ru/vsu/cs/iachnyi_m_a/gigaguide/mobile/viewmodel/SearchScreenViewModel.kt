@@ -1,6 +1,9 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,13 +23,18 @@ class SearchScreenViewModel @Inject constructor(private val sightRepository: Sig
 
     var sightResult = mutableStateListOf<SightTourThumbnail>()
     var tourResult = mutableStateListOf<SightTourThumbnail>()
+    var loading by mutableStateOf(false)
+    var searchBarValue by mutableStateOf("")
 
-    fun loadSights(){
+    fun loadSearchResult(){
+
+        loading = true
+
         viewModelScope.launch {
             sightResult.clear()
             tourResult.clear()
 
-            var sightInfos: List<SightInfo>? = ServerUtils.executeNetworkCall { sightRepository.getAllSightInfos() }
+            var sightInfos: List<SightInfo>? = ServerUtils.executeNetworkCall { sightRepository.search(searchBarValue.trim()) }
             if (sightInfos != null) {
                 sightResult.addAll(sightInfos.map { si ->
                     SightTourThumbnail(
@@ -51,6 +59,7 @@ class SearchScreenViewModel @Inject constructor(private val sightRepository: Sig
                     )
                 });
             }
+            loading = false
         }
     }
 }

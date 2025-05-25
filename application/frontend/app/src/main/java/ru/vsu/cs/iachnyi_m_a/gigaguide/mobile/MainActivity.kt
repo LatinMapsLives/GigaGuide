@@ -119,6 +119,7 @@ class MainActivity : ComponentActivity() {
         var geoLocationProvider = GeoLocationProvider(this)
 
         setContent {
+
             GigaGuideMobileTheme {
 
                 var showNavigationBarMutableState by remember { mutableStateOf(false) };

@@ -6,4 +6,5 @@ interface SightRepository {
     suspend fun getSightInfoById(id: Long): SightInfo?
     suspend fun getAllSightInfos(): List<SightInfo>?
     suspend fun getAllSightInfosByTourId(tourId: Long): List<SightInfo>?
+    suspend fun search(string: String): List<SightInfo>?
 }

@@ -44,4 +44,8 @@ class SightRepositoryMock: SightRepository {
     override suspend fun getAllSightInfosByTourId(tourId: Long): List<SightInfo>? {
         TODO("Not yet implemented")
     }
+
+    override suspend fun search(string: String): List<SightInfo>? {
+        return null
+    }
 }

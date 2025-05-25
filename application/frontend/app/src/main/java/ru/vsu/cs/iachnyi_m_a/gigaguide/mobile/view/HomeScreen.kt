@@ -43,6 +43,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SearchScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SightPageScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.CurrentThemeSettings
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.HomeScreenViewModel
 
@@ -59,6 +60,7 @@ fun HomeScreen(
 
         LaunchedEffect(Unit) {
             homeScreenViewModel.loadClosestTours()
+            homeScreenViewModel.updateAppTheme()
         }
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -68,7 +70,7 @@ fun HomeScreen(
                 .padding(20.dp)
         ) {
             Image(
-                imageVector = if (!isSystemInDarkTheme()) ImageVector.vectorResource(id = R.drawable.logo) else ImageVector.vectorResource(
+                imageVector = if (!CurrentThemeSettings.isAppInDarkTheme()) ImageVector.vectorResource(id = R.drawable.logo) else ImageVector.vectorResource(
                     id = R.drawable.logo_dark
                 ),
                 contentScale = ContentScale.Fit,

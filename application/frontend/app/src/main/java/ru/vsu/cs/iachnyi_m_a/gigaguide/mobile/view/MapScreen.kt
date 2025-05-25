@@ -61,6 +61,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumGrey
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.CurrentThemeSettings
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.GeoLocationProvider
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.Pancake
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
@@ -73,7 +74,7 @@ fun MapScreen(
     navController: NavController,
     locationProvider: GeoLocationProvider
 ) {
-    var dark = isSystemInDarkTheme()
+    var dark = CurrentThemeSettings.isAppInDarkTheme()
     if (mapScreenViewModel.needToLoad) {
         mapScreenViewModel.loadSightsOnMap()
     }
