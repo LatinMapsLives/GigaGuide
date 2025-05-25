@@ -15,7 +15,7 @@ public class TourReviewMapper {
     public TourReviewDto toDto(TourReview review) {
         return new TourReviewDto(
                 review.getId(),
-                userService.getUsername(review.getId()),
+                userService.getUsername(review.getUserId()),
                 review.getRating(),
                 review.getComment(),
                 review.getCreatedAt()
