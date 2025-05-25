@@ -40,7 +40,7 @@ public class TourReviewService {
         TourReview userReview = reviewRepository.findByTourIdAndUserId(tourId, Integer.parseInt(userId));
         allReviews.remove(userReview);
         return new TourReviewsDto(
-                mapper.toDto(userReview),
+                userReview != null ? mapper.toDto(userReview) : null,
                 allReviews.stream()
                         .map(mapper::toDto)
                         .toList()
