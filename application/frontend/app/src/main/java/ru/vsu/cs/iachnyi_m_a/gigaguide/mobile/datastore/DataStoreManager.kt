@@ -16,9 +16,22 @@ private val JWT_SETTING_KEY = "JWT"
 private val LOCATION_LAT_KEY = "LOCATION_LAT"
 private val LOCATION_LONG_KEY = "LOCATION_LONG"
 private val THEME_KEY = "THEME"
+private val LANGUAGE_KEY = "LANGUAGE"
 
 
 class DataStoreManager(val context: Context) {
+
+    suspend fun getCurrentLanguage(): String {
+        var prefs = context.dataStore.data.first()
+        var str = prefs[stringPreferencesKey(LANGUAGE_KEY)]
+        return str?: "en"
+    }
+
+    suspend fun setLanguage(language: String) {
+        context.dataStore.edit { pref ->
+            pref[stringPreferencesKey(LANGUAGE_KEY)] = language
+        }
+    }
 
     suspend fun getThemeSettings(): ThemeSettings {
         var prefs = context.dataStore.data.first()
