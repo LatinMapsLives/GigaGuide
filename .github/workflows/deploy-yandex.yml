@@ -12,41 +12,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up JDK
-        uses: actions/setup-java@v3
-        with:
-          java-version: '21'  # Или ваша версия Java
-          distribution: 'temurin'
-
-      - name: Cache Maven dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-maven-
-
-      - name: Build all microservices
-        run: |
-          cd application/backend/api-gateway && mvn clean package -DskipTests
-          cd ../auth && mvn clean package -DskipTests
-          cd ../guide && mvn clean package -DskipTests
-          cd ../map && mvn clean package -DskipTests
-          cd ../reviews && mvn clean package -DskipTests
-          cd ../tour-sight && mvn clean package -DskipTests
-          cd ../user-service && mvn clean package -DskipTests
-
       - name: Install SSH key
         uses: webfactory/ssh-agent@v0.7.0
         with:
           ssh-private-key: ${{ secrets.YC_SSH_PRIVATE_KEY }}
 
-      - name: Copy files to server
-        run: |
-          rsync -avz -e "ssh -o StrictHostKeyChecking=no" \
-            --exclude='.git' \
-            --exclude='.github' \
-            --exclude='presentation' \
-            ./ ${{ secrets.YC_SSH_USER }}@${{ secrets.YC_SSH_HOST }}:/home/gigaguide/gigaguide
       - name: Clear volumes
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.YC_SSH_USER }}@${{ secrets.YC_SSH_HOST }} "docker system prune --volumes -f"
+          ssh -o StrictHostKeyChecking=no ${{ secrets.YC_SSH_USER }}@${{ secrets.YC_SSH_HOST }} "docker stop \$(docker ps -q) && docker system prune --volumes -f"
+      
