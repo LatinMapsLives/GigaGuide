@@ -5,5 +5,8 @@ data class SightDTO(
     var name: String,
     var description: String,
     var city: String,
-    var imagePath: String
+    var imagePath: String,
+    var latitude: Float,
+    var longitude: Float,
+    var rating: Float
 )

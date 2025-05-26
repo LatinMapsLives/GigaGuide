@@ -111,10 +111,18 @@ public class SightController {
                     )
             )
     })
-    @PutMapping
-    public ResponseEntity<?> updateSight(@RequestParam Integer id, @RequestBody UpdateSightDto dto) {
-        sightService.updateSight(id, dto);
-        return ResponseEntity.ok(new SuccessResponse("Достопримечательность успешно обновлена"));
+    @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateSight(@RequestParam(value = "sight") String updateSightJson,
+                                         @RequestParam(value = "image", required = false) MultipartFile image) {
+        ObjectMapper mapper = new ObjectMapper();
+        UpdateSightDto dto = null;
+        try {
+            dto = mapper.readValue(updateSightJson, UpdateSightDto.class);
+            sightService.updateSight(dto, image);
+            return ResponseEntity.ok(new SuccessResponse("Достопримечательность успешно обновлена"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Operation(summary = "Удалить достопримечательность")

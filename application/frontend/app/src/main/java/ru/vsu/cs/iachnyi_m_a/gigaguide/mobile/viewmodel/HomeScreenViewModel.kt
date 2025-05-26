@@ -7,36 +7,69 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.launch
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.SightInfo
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.datastore.DataStoreManager
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.SightSearchResult
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.Sight
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.SightTourThumbnail
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.SightRepository
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.CurrentThemeSettings
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
-import kotlin.random.Random
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 @HiltViewModel
-class HomeScreenViewModel @Inject constructor(private val sightRepository: SightRepository) :
+class HomeScreenViewModel @Inject constructor(
+    private val sightRepository: SightRepository,
+    private val dataStoreManager: DataStoreManager
+) :
     ViewModel() {
 
     var closestTours = mutableStateListOf<SightTourThumbnail>()
+    var popularTours = mutableStateListOf<SightTourThumbnail>()
     var loading = mutableStateOf<Boolean>(false)
+
+    fun updateAppTheme() {
+        viewModelScope.launch {
+            var currTheme = dataStoreManager.getThemeSettings()
+            CurrentThemeSettings.currentState = currTheme
+        }
+    }
 
     fun loadClosestTours() {
         loading.value = true;
         viewModelScope.launch {
 
-            var sightInfos: List<SightInfo>? = ServerUtils.executeNetworkCall { sightRepository.getAllSightInfos() }
+            var sightInfos: List<SightSearchResult>? =
+                ServerUtils.executeNetworkCall { sightRepository.search("") }
 
             closestTours.clear()
+            popularTours.clear()
             if (sightInfos != null) {
-                closestTours.addAll(sightInfos.map { si ->
+                var currentLocation = dataStoreManager.getLastLocation()
+                closestTours.addAll(sightInfos.map {
+
+                        si ->
+                    var proximity_coords = sqrt(
+                        (si.latitude - currentLocation.latitude).pow(2.0) + (si.longitude - currentLocation.longitude).pow(
+                            2.0
+                        )
+                    )
+
+                    var proximity_km = ((proximity_coords * 100) * 10).toInt() / 10f
+
                     SightTourThumbnail(
-                        sightId = si.id,
+                        sightId = si.id.toLong(),
                         name = si.name,
-                        rating = Random(13471407342).nextInt(40, 51) / 10f,
-                        proximity = Random(13471407342).nextInt(2, 20) / 10f,
+                        rating = si.rating,
+                        proximity = proximity_km,
                         imageLink = si.imageLink
                     )
                 });
+
+                closestTours.sortWith { s1, s2 -> s1.proximity.compareTo(s2.proximity) }
+
+                popularTours.addAll(closestTours)
+                popularTours.sortWith { s1, s2 -> s2.rating.compareTo(s1.rating) }
             }
             loading.value = false;
         }

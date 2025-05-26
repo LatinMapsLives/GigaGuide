@@ -38,11 +38,15 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import kotlinx.coroutines.delay
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.HomeScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SearchScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SightPageScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.CurrentThemeSettings
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.RememberLocale
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.HomeScreenViewModel
 
@@ -56,9 +60,9 @@ fun HomeScreen(
         Modifier
             .fillMaxWidth()
     ) {
-
         LaunchedEffect(Unit) {
             homeScreenViewModel.loadClosestTours()
+            homeScreenViewModel.updateAppTheme()
         }
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -68,7 +72,7 @@ fun HomeScreen(
                 .padding(20.dp)
         ) {
             Image(
-                imageVector = if (!isSystemInDarkTheme()) ImageVector.vectorResource(id = R.drawable.logo) else ImageVector.vectorResource(
+                imageVector = if (!CurrentThemeSettings.isAppInDarkTheme()) ImageVector.vectorResource(id = R.drawable.logo) else ImageVector.vectorResource(
                     id = R.drawable.logo_dark
                 ),
                 contentScale = ContentScale.Fit,
@@ -130,8 +134,6 @@ fun HomeScreen(
             )
         }
 
-        var sights = homeScreenViewModel.closestTours
-
         Row(
             modifier = Modifier
                 .horizontalScroll(rememberScrollState())
@@ -143,7 +145,7 @@ fun HomeScreen(
                     LoadingThumbnailBox(modifier = Modifier.width(275.dp))
                 }
             } else {
-                for (sight in sights) {
+                for (sight in homeScreenViewModel.closestTours) {
                     Spacer(Modifier.width(20.dp))
                     SightTourThumbnailBox(
                         modifier = Modifier
@@ -188,7 +190,7 @@ fun HomeScreen(
                     LoadingThumbnailBox(modifier = Modifier.width(275.dp))
                 }
             } else {
-                for (sight in sights) {
+                for (sight in homeScreenViewModel.popularTours) {
                     Spacer(Modifier.width(20.dp))
                     SightTourThumbnailBox(modifier = Modifier
                         .width(275.dp)

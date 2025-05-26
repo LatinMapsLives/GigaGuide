@@ -1,30 +1,37 @@
 package ru.rogotovskiy.toursight.dto.read;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Schema(description = "Данные тура")
-public record TourDto(
+public class TourDto {
         @Schema(description = "ID тура", example = "256")
-        Integer id,
+        Integer id;
         @Schema(description = "Название тура", example = "Тур по главным достопримечательностям Воронежа")
-        String name,
+        String name;
         @Schema(description = "Описание тура")
-        String description,
+        String description;
         @Schema(description = "Город, по которому проходит этот тур", example = "Воронеж")
-        String city,
+        String city;
         @Schema(description = "Длительность тура", example = "64")
-        Integer durationMinutes,
+        Integer durationMinutes;
         @Schema(description = "Протяжённость тура", example = "2.54")
-        BigDecimal distanceKm,
+        BigDecimal distanceKm;
         @Schema(description = "Категория тура", example = "Исторический")
-        String category,
+        String category;
         @Schema(description = "Тип тура", example = "Пеший")
-        String type,
+        String type;
         @Schema(description = "Рейтинг тура", example = "4.57")
-        BigDecimal rating,
+        BigDecimal rating;
         @Schema(description = "Имя файла картинки", example = "a0d3c84b-f1d1-40e0-81ba-fabffd0d5ed4.jpg")
-        String imagePath
-) {
+        String imagePath;
+        List<PreviewSightDto> sights;
 }

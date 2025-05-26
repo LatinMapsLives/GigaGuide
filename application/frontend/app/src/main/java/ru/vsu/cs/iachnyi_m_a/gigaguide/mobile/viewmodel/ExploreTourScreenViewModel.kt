@@ -24,6 +24,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.SightOnMapInfo
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.MapRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.MomentRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.SightRepository
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.TourRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.Pancake
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
 
@@ -31,6 +32,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
 class ExploreTourScreenViewModel @Inject constructor(
     private var momentRepository: MomentRepository,
     private var sightRepository: SightRepository,
+    private val tourRepository: TourRepository,
     private var mapRepository: MapRepository,
     private val dataStoreManager: DataStoreManager
 ) :
@@ -67,6 +69,7 @@ class ExploreTourScreenViewModel @Inject constructor(
     var userLocation = mutableStateOf(MapPoint(0.0,0.0))
 
     var doLoop = false
+
     fun stopLoop(){
         doLoop = false
     }
@@ -93,11 +96,14 @@ class ExploreTourScreenViewModel @Inject constructor(
     }
 
     fun loadTour(){
+
         viewModelScope.launch {
+            userLocation.value = dataStoreManager.getLastLocation()
             var i = 0
             loadingTour = true
-            var loadedSights = ServerUtils.executeNetworkCall { sightRepository.getAllSightInfosByTourId(tourId) }
-            Log.e("TOUR", loadedSights.toString())
+            var loadedTour = ServerUtils.executeNetworkCall { tourRepository.getTourInfoById(tourId) }
+            if( loadedTour == null) return@launch
+            var loadedSights = loadedTour.sights
             sightsOnMapInfos.clear()
             sightRoutes.clear()
             tourRoute.clear()
@@ -105,15 +111,15 @@ class ExploreTourScreenViewModel @Inject constructor(
             indexesMap.clear()
             if (loadedSights != null) {
                 for (sightInfo in loadedSights) {
-                    var sightMapPoint = ServerUtils.executeNetworkCall {  mapRepository.getCoordinatedOfSight(sightInfo.id)}
+                    var sightMapPoint = ServerUtils.executeNetworkCall {  mapRepository.getCoordinatedOfSight(sightInfo.sightId)}
                     if (sightMapPoint != null){
                         sightsOnMapInfos.add(
                             SightOnMapInfo(
-                                id = sightInfo.id,
+                                id = sightInfo.sightId,
                                 name = sightInfo.name,
                                 latitude = sightMapPoint.latitude,
                                 longitude = sightMapPoint.longitude,
-                                sightInfo.imageLink
+                                imageLink = sightInfo.imageLink
                             )
                         )
                         tourRoute.add(MapPoint(sightMapPoint.latitude, sightMapPoint.longitude))
@@ -121,7 +127,7 @@ class ExploreTourScreenViewModel @Inject constructor(
                         Pancake.serverError()
                         return@launch
                     }
-                    var loadedMoments = ServerUtils.executeNetworkCall { momentRepository.getSightMoments(sightInfo.id) }
+                    var loadedMoments = ServerUtils.executeNetworkCall { momentRepository.getSightMoments(sightInfo.sightId) }
                     if (loadedMoments != null) {
                         var indices = mutableListOf<Int>()
                         var momentOnMapsForThisSight = mutableListOf<MomentOnMap>()

@@ -76,11 +76,13 @@ import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polyline
 import org.osmdroid.views.overlay.TilesOverlay
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.MapPoint
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.LightGrey
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumGrey
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.CurrentThemeSettings
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.GeoLocationProvider
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.Pancake
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
@@ -143,8 +145,16 @@ fun ExploreSightScreen(
         exploreSightScreenViewModel.player.prepare()
         exploreSightScreenViewModel.player.seekTo(0, 0)
         exploreSightScreenViewModel.launchPositionUpdateLoop()
+        exploreSightScreenViewModel.launchLoop(10000) {
+            locationProvider.getCurrentLocation({
+                exploreSightScreenViewModel.saveCurrentLocation(MapPoint(it.first, it.second))
+            }, {
+                exploreSightScreenViewModel.stopLoop()
+                Pancake.info("Ошибка получения геолокации")
+            })
+        }
     }
-    var dark = isSystemInDarkTheme()
+    var dark = CurrentThemeSettings.isAppInDarkTheme()
     var deselectCallback: () -> Unit = {
         exploreSightScreenViewModel.selected = false
         exploreSightScreenViewModel.player.playWhenReady = false

@@ -7,7 +7,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -31,6 +33,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,6 +53,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import dagger.hilt.android.AndroidEntryPoint
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.datastore.DataStoreManager
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ExploreSightScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ExploreTourScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.FavoriteScreenObject
@@ -59,11 +63,12 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.MapScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.NavBarItem
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ProfileScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.RegisterScreenObject
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ReviewScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SearchScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SettingsScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SightPageScreenClass
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SightReviewScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.TourPageScreenClass
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.TourReviewScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.InfoContainer
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
@@ -71,7 +76,9 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumGrey
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.SuccessContainer
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.GeoLocationProvider
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.LocaleManager
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.Pancake
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.RememberLocale
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.ExploreSightScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.ExploreTourScreen
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.FavoritesScreen
@@ -100,6 +107,13 @@ class MainActivity : ComponentActivity() {
 
         val startScreenObject = HomeScreenObject;
 
+        var selectedNavItemIndex = mutableIntStateOf(0);
+        var infoMessage = mutableStateOf("Интернет недоступен, приди пж попозже")
+        var infoColor = mutableStateOf<Color>(Color(0))
+
+        var geoLocationProvider = GeoLocationProvider(this)
+        var dataStoreManager = DataStoreManager(this)
+
         var navItems = listOf(
             NavBarItem(R.drawable.home, HomeScreenObject, R.string.nav_label_home), NavBarItem(
                 R.drawable.map, MapScreenObject, R.string.nav_label_map
@@ -110,15 +124,14 @@ class MainActivity : ComponentActivity() {
             )
         )
 
-
-        var selectedNavItemIndex = mutableIntStateOf(0);
-        var infoMessage = mutableStateOf("Интернет недоступен, приди пж попозже")
-        var infoColor = mutableStateOf<Color>(Color(0))
-
-        var geoLocationProvider = GeoLocationProvider(this)
-
         setContent {
+
+            RememberLocale(
+                LocaleManager.currentLanguage,
+                { LocaleManager.recomposeFlag = !LocaleManager.recomposeFlag })
+
             GigaGuideMobileTheme {
+
 
                 var showNavigationBarMutableState by remember { mutableStateOf(false) };
                 var infoVisibleMutableState by remember { mutableStateOf(false) }
@@ -130,6 +143,7 @@ class MainActivity : ComponentActivity() {
                 var serverErrorMessage = stringResource(R.string.error_server_error)
 
                 LaunchedEffect(Unit) {
+                    LocaleManager.currentLanguage = dataStoreManager.getCurrentLanguage()
                     Pancake.setMessageHandler(
                         onError = {
                             infoMessage.value = it
@@ -202,7 +216,9 @@ class MainActivity : ComponentActivity() {
                                 settingsScreenViewModel = hiltViewModel<SettingsScreenViewModel>()
                             )
                         }
-                        composable<LoginScreenObject> {
+                        composable<LoginScreenObject> (enterTransition = {slideInVertically(initialOffsetY = {h -> h})},
+                            exitTransition = {slideOutVertically(targetOffsetY = {h -> h})}) {
+
                             showNavigationBarMutableState = false
                             LoginScreen(
                                 navController = navController
@@ -214,7 +230,22 @@ class MainActivity : ComponentActivity() {
                                 navController = navController
                             )
                         }
-                        composable<SightPageScreenClass> {
+                        composable<SightPageScreenClass>(
+                            enterTransition = {
+                                if(Regex("(SightReviewScreen|ExploreSightScreen)").containsMatchIn(initialState.destination.route!!)){
+                                    slideInHorizontally(initialOffsetX = { w -> -w })
+                                } else {
+                                    slideInHorizontally(initialOffsetX = { w -> w })
+                                }
+                            },
+                            exitTransition = {
+                                if(Regex("(SightReviewScreen|ExploreSightScreen)").containsMatchIn(targetState.destination.route!!)){
+                                    slideOutHorizontally(targetOffsetX = { w -> -w })
+                                } else {
+                                    slideOutHorizontally(targetOffsetX = { w -> w })
+                                }
+                            }
+                        ) {
                             val args = it.toRoute<SightPageScreenClass>()
                             showNavigationBarMutableState = false
                             SightPageScreen(
@@ -222,7 +253,13 @@ class MainActivity : ComponentActivity() {
                                 navController = navController,
                             )
                         }
-                        composable<ExploreSightScreenClass> {
+                        composable<ExploreSightScreenClass> (enterTransition = {
+                                slideInHorizontally(initialOffsetX = { w -> w })
+
+                        },
+                            exitTransition = {
+                                slideOutHorizontally(targetOffsetX = { w -> w })
+                            }){
                             val args = it.toRoute<ExploreSightScreenClass>()
                             showNavigationBarMutableState = false;
                             ExploreSightScreen(
@@ -233,16 +270,47 @@ class MainActivity : ComponentActivity() {
                                 locationProvider = geoLocationProvider
                             )
                         }
-                        composable<ReviewScreenClass> {
-                            val args = it.toRoute<ReviewScreenClass>()
+                        composable<SightReviewScreenClass>(
+                            enterTransition = {
+                                slideInHorizontally(initialOffsetX = { w -> w })
+                            },
+                            exitTransition = {
+                                slideOutHorizontally(targetOffsetX = { w -> w })
+                            }) {
+                            val args = it.toRoute<SightReviewScreenClass>()
                             showNavigationBarMutableState = false
-                            ReviewScreen(sightId = args.sightId, navController = navController)
+                            ReviewScreen(
+                                objectId = args.sightId,
+                                navController = navController,
+                                isTour = false
+                            )
+                        }
+                        composable<TourReviewScreenClass>(
+                            enterTransition = {
+                                slideInHorizontally(initialOffsetX = { w -> w })
+                            },
+                            exitTransition = {
+                                slideOutHorizontally(targetOffsetX = { w -> w })
+                            }) {
+                            val args = it.toRoute<TourReviewScreenClass>()
+                            showNavigationBarMutableState = false
+                            ReviewScreen(
+                                objectId = args.tourId,
+                                navController = navController,
+                                isTour = true
+                            )
                         }
                         composable<SearchScreenObject> {
                             showNavigationBarMutableState = false
                             SearchScreen(navController = navController)
                         }
-                        composable<TourPageScreenClass> {
+                        composable<TourPageScreenClass>(
+                            enterTransition = {
+                                slideInHorizontally(initialOffsetX = { w -> w })
+                            },
+                            exitTransition = {
+                                slideOutHorizontally(targetOffsetX = { w -> w })
+                            }) {
                             val args = it.toRoute<TourPageScreenClass>()
                             showNavigationBarMutableState = false
                             TourPageScreen(tourId = args.tourId, navController = navController)
@@ -268,12 +336,15 @@ class MainActivity : ComponentActivity() {
                         enter = slideInVertically(initialOffsetY = { h -> h + 60 }),
                         exit = slideOutVertically(targetOffsetY = { h -> h + 60 })
                     ) {
+                        //key (LocaleManager.recomposeFlag){
+                        //Log.e("LANG", "KEY " + LocaleManager.currentLanguage)
                         BottomNavigationBar(
                             modifier = Modifier,
                             navItems = navItems,
                             selectedIndex = selectedNavItemIndex,
                             navController = navController
                         )
+                        //}
                     }
                     AnimatedVisibility(
                         modifier = Modifier.align(Alignment.TopCenter),
@@ -311,6 +382,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                 }
+
             }
         }
     }
@@ -331,33 +403,38 @@ fun BottomNavigationBar(
             .dropShadow(offsetX = 0.dp, offsetY = 0.dp, blur = 16.dp),
         containerColor = MaterialTheme.colorScheme.background
     ) {
-        navItems.forEachIndexed { i, navItem ->
-            NavigationBarItem(
-                onClick = {
-                    if (selectedIndex.value != i) {
-                        selectedIndex.value = i
-                        navController.navigate(navItem.screenObject)
-                    }
-                },
-                colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = MediumBlue,
-                    unselectedIconColor = MediumGrey,
-                    selectedTextColor = MaterialTheme.colorScheme.onBackground,
-                    indicatorColor = Color(0x00000000)
-                ),
-                icon = {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(navItem.iconId),
-                        contentDescription = "das",
-                    )
-                },
-                selected = selectedIndex.value == i,
-                label = {
-                    Text(text = stringResource(navItem.iconLabelId));
-                },
-                alwaysShowLabel = false,
-            )
+        key(LocaleManager.recomposeFlag) {
+            navItems.forEachIndexed { i, navItem ->
+                NavigationBarItem(
+                    onClick = {
+                        if (selectedIndex.value != i) {
+                            selectedIndex.value = i
+                            navController.navigate(navItem.screenObject)
+                        }
+                    },
+                    colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = MediumBlue,
+                        unselectedIconColor = MediumGrey,
+                        selectedTextColor = MaterialTheme.colorScheme.onBackground,
+                        indicatorColor = Color(0x00000000)
+                    ),
+                    icon = {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(navItem.iconId),
+                            contentDescription = "das",
+                        )
+                    },
+                    selected = selectedIndex.value == i,
+                    label = {
+                        Text(text = stringResource(navItem.iconLabel));
+                    },
+                    alwaysShowLabel = false,
+                )
+
+            }
 
         }
+
     }
+
 }

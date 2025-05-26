@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -61,6 +62,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumGrey
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.CurrentThemeSettings
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.GeoLocationProvider
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.Pancake
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
@@ -73,7 +75,7 @@ fun MapScreen(
     navController: NavController,
     locationProvider: GeoLocationProvider
 ) {
-    var dark = isSystemInDarkTheme()
+    var dark = CurrentThemeSettings.isAppInDarkTheme()
     if (mapScreenViewModel.needToLoad) {
         mapScreenViewModel.loadSightsOnMap()
     }
@@ -95,8 +97,7 @@ fun MapScreen(
     Box(modifier = Modifier.fillMaxSize()) {
         AndroidView(
             modifier = Modifier
-                .fillMaxSize()
-                .testTag("MAP_VIEW"),
+                .fillMaxSize(),
             factory = { context ->
                 MapView(context).apply {
                     setMultiTouchControls(true)
@@ -307,7 +308,8 @@ fun SightBox(
                         )
                         .aspectRatio(180f / 100),
                     contentDescription = "image",
-                    model = sightOnMapInfo.imageLink
+                    model = sightOnMapInfo.imageLink,
+                    contentScale = ContentScale.Crop
                 )
                 Column(
                     modifier = Modifier

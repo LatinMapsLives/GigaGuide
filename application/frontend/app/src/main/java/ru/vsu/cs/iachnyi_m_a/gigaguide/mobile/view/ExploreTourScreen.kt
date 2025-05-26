@@ -59,9 +59,11 @@ import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polyline
 import org.osmdroid.views.overlay.TilesOverlay
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.MapPoint
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumGrey
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.CurrentThemeSettings
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.GeoLocationProvider
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.Pancake
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.ExploreTourScreenViewModel
@@ -107,8 +109,16 @@ fun ExploreTourScreen(
             }
         })
         exploreTourScreenViewModel.loadTour()
+        exploreTourScreenViewModel.launchLoop(10000) {
+            locationProvider.getCurrentLocation({
+                exploreTourScreenViewModel.saveCurrentLocation(MapPoint(it.first, it.second))
+            }, {
+                exploreTourScreenViewModel.stopLoop()
+                Pancake.info("Ошибка получения геолокации")
+            })
+        }
     }
-    var dark = isSystemInDarkTheme()
+    var dark = CurrentThemeSettings.isAppInDarkTheme()
     var deselectMomentCallback: () -> Unit = {
         exploreTourScreenViewModel.momentIsSelected = false
         exploreTourScreenViewModel.player.playWhenReady = false

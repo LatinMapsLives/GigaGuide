@@ -48,7 +48,8 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.SightTourThumbnail
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ExploreTourScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.LoginScreenObject
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ReviewScreenClass
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SightPageScreenClass
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.TourReviewScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.Black
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.FavoritePink
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
@@ -129,7 +130,7 @@ fun TourPageScreen(
                         ) {
 
                             Text(
-                                text = "3 места на маршруте",
+                                text = "${tourPageScreenViewModel.sightThumbnails.size} ${stringResource(R.string.tour_page_screen_sights_count)}",
                                 color = White
                             )
 
@@ -200,12 +201,12 @@ fun TourPageScreen(
                             .padding(bottom = 10.dp)
                             .clickable(onClick = {
                                 navController.navigate(
-                                    ReviewScreenClass(tourId)
+                                    TourReviewScreenClass(tourId)
                                 )
                             })
                     ) {
                         Text(
-                            text = "16 отзывов | 4.8",
+                            text = "${tourPageScreenViewModel.reviewCount} ${stringResource(R.string.sight_page_screen_review_count)} | ${tourPageScreenViewModel.rating}",
                             style = MaterialTheme.typography.headlineSmall,
                             color = MaterialTheme.colorScheme.onBackground
                         )
@@ -252,7 +253,7 @@ fun TourPageScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Достопримечательности",
+                            text = stringResource(R.string.tour_page_screen_sights_list),
                             style = MaterialTheme.typography.headlineSmall,
                             color = MaterialTheme.colorScheme.onBackground
                         )
@@ -263,6 +264,22 @@ fun TourPageScreen(
                             imageVector = Icons.Filled.Place,
                             tint = MaterialTheme.colorScheme.onBackground,
                             contentDescription = null
+                        )
+                    }
+
+                    for (i in 1..(tourPageScreenViewModel.sightThumbnails.size)) {
+                        SightListItem(
+                            modifier = Modifier
+                                .padding(bottom = 10.dp)
+                                .clickable(onClick = {
+                                    navController.navigate(
+                                        SightPageScreenClass(tourPageScreenViewModel.sightThumbnails[i - 1].sightId)
+                                    )
+                                })
+                                .height(75.dp)
+                                .fillMaxWidth(),
+                            number = i,
+                            value = tourPageScreenViewModel.sightThumbnails[i - 1]
                         )
                     }
 
@@ -299,12 +316,12 @@ fun TourPageScreen(
                     .size(50.dp),
                 onClick = {
                     if (!tourPageScreenViewModel.loadingFavorite) {
-                        if(tourPageScreenViewModel.token == null){
+                        if (tourPageScreenViewModel.token == null) {
                             navController.navigate(LoginScreenObject)
                         } else {
                             if (tourPageScreenViewModel.inFavorite.value) {
                                 tourPageScreenViewModel.deleteFromFavorite()
-                            } else{
+                            } else {
                                 tourPageScreenViewModel.addToFavorite()
                             }
                         }
@@ -321,7 +338,7 @@ fun TourPageScreen(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.secondary, contentColor = White
                 ),
-                onClick = {navController.navigate(ExploreTourScreenClass(tourId))}
+                onClick = { navController.navigate(ExploreTourScreenClass(tourId)) }
             ) {
                 Text(
                     text = stringResource(R.string.tour_screen_button_explore_tour),

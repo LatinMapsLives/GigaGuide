@@ -29,7 +29,7 @@ public class Sight {
     @Column(name = "city")
     private String city;
 
-    @Column(name = "image_path")
+    @Column(name = "image_url")
     private String imagePath;
 
     @Column(name = "latitude")
@@ -37,6 +37,9 @@ public class Sight {
 
     @Column(name = "longitude")
     private BigDecimal longitude;
+
+    @Column(name = "rating")
+    private BigDecimal rating;
 
     @OneToMany(mappedBy = "sight", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Moment> moments = new ArrayList<>();

@@ -11,7 +11,7 @@ class ServerUtils {
     companion object {
         const val SERVER_ADDRESS = "http://158.160.179.56:8080"
         fun imageLink(imageName: String): String {
-            return "${SERVER_ADDRESS}/api/tour-sight/image?fileName=${imageName}"
+            return imageName
         }
         fun audioGuideLink(momentId: Long): String{
             return "${SERVER_ADDRESS}/api/guide?id=${momentId}"
@@ -28,7 +28,7 @@ class ServerUtils {
                     Pancake.noInternet()
                     null
                 } catch (e: Exception) {
-                    Log.e("ERR", e.toString())
+                    Log.e("ERR", e.stackTraceToString())
                     Pancake.serverError()
                     null
                 }

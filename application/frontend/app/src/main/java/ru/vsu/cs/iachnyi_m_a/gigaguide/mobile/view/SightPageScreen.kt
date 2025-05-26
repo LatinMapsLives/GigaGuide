@@ -44,10 +44,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.datastore.DataStoreManager
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ExploreSightScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.LoginScreenObject
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.ReviewScreenClass
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SightReviewScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.Black
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.FavoritePink
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumGrey
@@ -126,7 +125,7 @@ fun SightPageScreen(
                         ) {
 
                             Text(
-                                text = "${sightPageScreenViewModel.momentNames.size} моментов",
+                                text = "${sightPageScreenViewModel.momentNames.size} ${stringResource(R.string.sight_page_screen_moments_count)}",
                                 color = White
                             )
 
@@ -134,7 +133,7 @@ fun SightPageScreen(
                             Row {
 
                                 Text(
-                                    text = "${sightPageScreenViewModel.sight.value!!.time} мин",
+                                    text = "${sightPageScreenViewModel.sight.value!!.time} ${stringResource(R.string.sight_page_screen_minutes)}",
                                     color = White
                                 )
 
@@ -161,12 +160,12 @@ fun SightPageScreen(
                             .padding(bottom = 10.dp)
                             .clickable(onClick = {
                                 navController.navigate(
-                                    ReviewScreenClass(sightId)
+                                    SightReviewScreenClass(sightId)
                                 )
                             })
                     ) {
                         Text(
-                            text = "16 отзывов | 4.8",
+                            text = "${sightPageScreenViewModel.reviewCount} ${stringResource(R.string.sight_page_screen_review_count)} | ${sightPageScreenViewModel.rating}",
                             style = MaterialTheme.typography.headlineSmall,
                             color = MaterialTheme.colorScheme.onBackground
                         )

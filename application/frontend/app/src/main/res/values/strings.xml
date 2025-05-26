@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">GigaGuide</string>
     <string name="home_screen_closest_to_you">Рядом с вами</string>
@@ -51,4 +52,28 @@
     <string name="explore_sight_screen_loading_route">Загружаем маршрут</string>
     <string name="warning_no_location_permissions">Отсутствует разрешение на геолокацию</string>
     <string name="success_login_success">Успешный вход в аккаунт</string>
+    <string name="review_screen_label_your_review">Ваш отзыв</string>
+    <string name="review_screen_button_delete_comment">Удалить</string>
+    <string name="review_screen_button_cancel_deletion">Отмена</string>
+    <string name="review_screen_login_to_leave_review">Войдите, чтобы оставить отзыв</string>
+    <string name="review_screen_screen_header">Оценки и отзывы</string>
+    <string name="review_screen_be_the_first">Пока никто не оставил отзыв. Будьте первым, кто это сделает!</string>
+    <string name="review_screen_leave_comment">Добавить отзыв</string>
+    <string name="review_screen_tell_your_impressions">Поделитесь своими впечатлениями</string>
+    <string name="review_screen_confirm_leave_comment">Отправить</string>
+    <string name="review_screen_cancel_leave_comment">Отмена</string>
+    <string name="review_screen_empty_comment_error">Заполните поле текста</string>
+    <string name="settings_screen_theme_as_device">Как на устройстве</string>
+    <string name="settings_screen_theme_always_light">Всегда светлая</string>
+    <string name="settings_screen_theme_always_dark">Всегда тёмная</string>
+    <string name="search_screen_bar_hint">Найти место, тур</string>
+    <string name="search_bar_sort">Сортировка</string>
+    <string name="search_screen_filters">Фильтры</string>
+    <string name="search_screen_search_result">Результаты поиска</string>
+    <string name="sight_page_screen_moments_count">Моментов</string>
+    <string name="sight_page_screen_minutes">мин</string>
+    <string name="sight_page_screen_review_count">отзывов</string>
+    <string name="review_screen_comment_count">оценок</string>
+    <string name="tour_page_screen_sights_count">мест на маршруте</string>
+    <string name="tour_page_screen_sights_list">Достопримечательности</string>
 </resources>

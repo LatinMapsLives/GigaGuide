@@ -5,12 +5,16 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import ru.rogotovskiy.reviews.dto.create.CreateSightReviewDto;
 import ru.rogotovskiy.reviews.dto.read.SightReviewsDto;
+import ru.rogotovskiy.reviews.entity.Sight;
 import ru.rogotovskiy.reviews.entity.SightReview;
 import ru.rogotovskiy.reviews.exception.ReviewNotFoundException;
 import ru.rogotovskiy.reviews.exception.ReviewPermissionException;
 import ru.rogotovskiy.reviews.mapper.SightReviewMapper;
+import ru.rogotovskiy.reviews.repository.SightRepository;
 import ru.rogotovskiy.reviews.repository.SightReviewRepository;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
@@ -23,6 +27,7 @@ public class SightReviewService {
     private final SightReviewRepository reviewRepository;
     private final SightReviewMapper mapper;
     private final MessageSource messageSource;
+    private final SightRepository sightRepository;
 
     public SightReviewsDto getAll(Integer sightId, String userId) {
         List<SightReview> allReviews = reviewRepository.findAllBySightId(sightId);
@@ -56,6 +61,7 @@ public class SightReviewService {
                 dto.comment(),
                 LocalDateTime.now()
         ));
+        updateSightRating(sightId);
     }
 
     public void deleteReview(Integer userId, Integer reviewId) {
@@ -72,5 +78,16 @@ public class SightReviewService {
             );
         }
         reviewRepository.delete(review);
+    }
+
+    public void updateSightRating(Integer sightId) {
+        BigDecimal avgRating = reviewRepository.getAverageRatingBySightId(sightId);
+        if (avgRating == null) avgRating = BigDecimal.ZERO;
+        avgRating = avgRating.setScale(1, RoundingMode.HALF_UP);
+        Sight sight = sightRepository.findById(sightId).orElseThrow(
+                () -> new NoSuchElementException("Достопримечательность не найдена")
+        );
+        sight.setRating(avgRating);
+        sightRepository.save(sight);
     }
 }

@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -54,7 +55,7 @@ fun SearchScreen(
     navController: NavController = rememberNavController()
 ) {
     LaunchedEffect(Unit) {
-        searchScreenViewModel.loadSights()
+        searchScreenViewModel.loadSearchResult()
     }
     GigaGuideMobileTheme {
         Column(
@@ -64,15 +65,16 @@ fun SearchScreen(
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(modifier = Modifier.weight(1f)) {
-                    LoginRegisterTextField(
+                    CustomTextField(
                         modifier = Modifier.fillMaxWidth(),
-                        value = "",
-                        onValueChange = {},
-                        hint = "Найти тур, место",
+                        value = searchScreenViewModel.searchBarValue,
+                        onValueChange = {searchScreenViewModel.searchBarValue = it},
+                        hint = stringResource(R.string.search_screen_bar_hint),
                         isPassword = false
                     )
                     Icon(
                         modifier = Modifier
+                            .clickable(onClick = {searchScreenViewModel.loadSearchResult()}, enabled = !searchScreenViewModel.loading)
                             .align(alignment = Alignment.CenterEnd)
                             .padding(10.dp)
                             .size(30.dp),
@@ -115,7 +117,7 @@ fun SearchScreen(
                         tint = MaterialTheme.colorScheme.onBackground
                     )
                     Text(
-                        text = "Сортировка",
+                        text = stringResource(R.string.search_bar_sort),
                         style = MaterialTheme.typography.labelLarge,
                         modifier = Modifier.padding(start = 10.dp),
                         color = MaterialTheme.colorScheme.onBackground
@@ -123,7 +125,7 @@ fun SearchScreen(
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = "Фильтры",
+                        text = stringResource(R.string.search_screen_filters),
                         style = MaterialTheme.typography.labelLarge,
                         modifier = Modifier.padding(end = 10.dp),
                         color = MaterialTheme.colorScheme.onBackground
@@ -137,7 +139,7 @@ fun SearchScreen(
                 }
             }
             Text(
-                style = MaterialTheme.typography.headlineMedium, text = "Результаты поиска",
+                style = MaterialTheme.typography.headlineMedium, text = stringResource(R.string.search_screen_search_result),
                 color = MaterialTheme.colorScheme.onBackground
             )
             FlowRow(

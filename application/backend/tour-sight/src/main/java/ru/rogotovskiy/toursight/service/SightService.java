@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.rogotovskiy.toursight.dto.create.CreateSightDto;
+import ru.rogotovskiy.toursight.dto.read.PreviewSightDto;
 import ru.rogotovskiy.toursight.dto.read.SightDto;
 import ru.rogotovskiy.toursight.dto.update.UpdateSightDto;
 import ru.rogotovskiy.toursight.entity.Sight;
@@ -12,6 +13,7 @@ import ru.rogotovskiy.toursight.mapper.SightMapper;
 import ru.rogotovskiy.toursight.repository.SightRepository;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
@@ -37,21 +39,28 @@ public class SightService {
 
     public void createSight(CreateSightDto dto, MultipartFile image) throws IOException {
         Sight sight = sightMapper.toEntity(dto);
+        sight.setRating(new BigDecimal("0.0"));
         sight.setImagePath(imageService.saveImage(image, "sights"));
         sightRepository.save(sight);
     }
 
-    public void updateSight(Integer id, UpdateSightDto dto) {
-        Sight sight = getSightById(id);
+    public void updateSight(UpdateSightDto dto, MultipartFile image) throws IOException {
+        Sight sight = getSightById(dto.id());
         sight.setName(dto.name());
         sight.setDescription(dto.description());
         sight.setCity(dto.city());
         sight.setLatitude(dto.latitude());
         sight.setLongitude(dto.longitude());
+        if (image != null) {
+            imageService.deleteImage(sight.getImagePath());
+            sight.setImagePath(imageService.saveImage(image, "sights"));
+        }
         sightRepository.save(sight);
     }
 
     public void deleteSight(Integer id) {
+        Sight sight = getSightById(id);
+        imageService.deleteImage(sight.getImagePath());
         sightRepository.delete(getSightById(id));
     }
 
@@ -61,9 +70,9 @@ public class SightService {
                 .toList();
     }
 
-    public List<SightDto> searchSights(String name) {
+    public List<PreviewSightDto> searchSights(String name) {
         return sightRepository.findByNameContainingIgnoreCase(name).stream()
-                .map(sightMapper::toDto)
+                .map(sightMapper::toPreviewDto)
                 .toList();
     }
 }
