@@ -19,5 +19,5 @@ jobs:
 
       - name: Clear volumes
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.YC_SSH_USER }}@${{ secrets.YC_SSH_HOST }} "docker stop \$(docker ps -q) && docker system prune --volumes -f"
+          ssh -o StrictHostKeyChecking=no ${{ secrets.YC_SSH_USER }}@${{ secrets.YC_SSH_HOST }} "docker system prune --volumes -f"
       
