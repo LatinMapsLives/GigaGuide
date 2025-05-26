@@ -47,7 +47,6 @@ jobs:
             --exclude='.github' \
             --exclude='presentation' \
             ./ ${{ secrets.YC_SSH_USER }}@${{ secrets.YC_SSH_HOST }}:/home/gigaguide/gigaguide
-
-      - name: Run deploy script
+      - name: Clear volumes
         run: |
-         ssh -o StrictHostKeyChecking=no ${{ secrets.YC_SSH_USER }}@${{ secrets.YC_SSH_HOST }} "chmod +x /home/gigaguide/scripts/deploy.sh && /home/gigaguide/scripts/deploy.sh"
+          ssh -o StrictHostKeyChecking=no ${{ secrets.YC_SSH_USER }}@${{ secrets.YC_SSH_HOST }} "docker system prune --volumes -f"
