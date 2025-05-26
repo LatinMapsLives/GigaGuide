@@ -45,9 +45,15 @@ jobs:
           rsync -avz -e "ssh -o StrictHostKeyChecking=no" \
             --exclude='.git' \
             --exclude='.github' \
+            --exclude='presentation' \
             ./ ${{ secrets.YC_SSH_USER }}@${{ secrets.YC_SSH_HOST }}:/home/gigaguide/gigaguide
+
+      - name: Delete all containers and volumes
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.YC_SSH_USER }}@${{ secrets.YC_SSH_HOST }} 
+          "docker stop \$(docker ps -aq) && docker rm \$(docker ps -aq) && docker volume prune -f"
 
       - name: Run deploy script
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.YC_SSH_USER }}@${{ secrets.YC_SSH_HOST }} 
-          "docker stop \$(docker ps -aq) && docker rm \$(docker ps -aq) && docker volume prune -f && chmod +x /home/gigaguide/scripts/deploy.sh && /home/gigaguide/scripts/deploy.sh"
+          "chmod +x /home/gigaguide/scripts/deploy.sh && /home/gigaguide/scripts/deploy.sh"
