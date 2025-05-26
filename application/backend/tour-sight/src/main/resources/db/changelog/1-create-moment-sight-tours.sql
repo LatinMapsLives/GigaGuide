@@ -12,7 +12,7 @@ CREATE TABLE tours
     category varchar(100),
     type varchar(100),
     rating decimal(2,1) default 0.0,
-    image_url text
+    image_path varchar(255)
 );
 
 --changeset hakyur:2
@@ -24,8 +24,7 @@ CREATE TABLE sights
     city varchar(100) not null,
     latitude decimal(9,6),
     longitude decimal(9,6),
-    rating decimal(2,1) default 0.0,
-    image_url text
+    image_path varchar(255)
 );
 
 --changeset hakyur:3
@@ -44,7 +43,7 @@ create table moments
     name varchar(255) not null check ( length(trim(name)) > 0 ),
     order_number integer not null,
     content text,
-    image_url text,
+    image_path varchar(255),
     latitude decimal(9,6),
     longitude decimal(9,6),
     sight_id integer not null,
