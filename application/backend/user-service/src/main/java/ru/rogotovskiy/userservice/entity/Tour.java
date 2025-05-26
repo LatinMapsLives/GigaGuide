@@ -44,7 +44,7 @@ public class Tour {
     @Column(name = "rating")
     private BigDecimal rating;
 
-    @Column(name = "image_path")
+    @Column(name = "image_url")
     private String imagePath;
 
     @ManyToMany

@@ -25,6 +25,6 @@ public class Sight {
     @Column(name = "city")
     private String city;
 
-    @Column(name = "image_path")
+    @Column(name = "image_url")
     private String imagePath;
 }
