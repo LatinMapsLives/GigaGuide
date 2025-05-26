@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -307,7 +308,8 @@ fun SightBox(
                         )
                         .aspectRatio(180f / 100),
                     contentDescription = "image",
-                    model = sightOnMapInfo.imageLink
+                    model = sightOnMapInfo.imageLink,
+                    contentScale = ContentScale.Crop
                 )
                 Column(
                     modifier = Modifier

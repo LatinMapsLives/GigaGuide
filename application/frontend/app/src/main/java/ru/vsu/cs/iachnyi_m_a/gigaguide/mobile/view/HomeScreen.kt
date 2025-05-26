@@ -134,8 +134,6 @@ fun HomeScreen(
             )
         }
 
-        var sights = homeScreenViewModel.closestTours
-
         Row(
             modifier = Modifier
                 .horizontalScroll(rememberScrollState())
@@ -147,7 +145,7 @@ fun HomeScreen(
                     LoadingThumbnailBox(modifier = Modifier.width(275.dp))
                 }
             } else {
-                for (sight in sights) {
+                for (sight in homeScreenViewModel.closestTours) {
                     Spacer(Modifier.width(20.dp))
                     SightTourThumbnailBox(
                         modifier = Modifier
@@ -192,7 +190,7 @@ fun HomeScreen(
                     LoadingThumbnailBox(modifier = Modifier.width(275.dp))
                 }
             } else {
-                for (sight in sights) {
+                for (sight in homeScreenViewModel.popularTours) {
                     Spacer(Modifier.width(20.dp))
                     SightTourThumbnailBox(modifier = Modifier
                         .width(275.dp)

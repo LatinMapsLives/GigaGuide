@@ -59,10 +59,10 @@ class SightRepositoryRetrofit(private val sightAPI: SightAPI) : SightRepository 
                 SightSearchResult(
                     id = dto.id,
                     name = dto.name,
-                    imageLink = "",
+                    imageLink = dto.imagePath,
                     latitude = dto.latitude,
                     longitude = dto.longitude,
-                    rating = /*dto.rating*/ 0f
+                    rating = dto.rating
                 )
             }
         } else {

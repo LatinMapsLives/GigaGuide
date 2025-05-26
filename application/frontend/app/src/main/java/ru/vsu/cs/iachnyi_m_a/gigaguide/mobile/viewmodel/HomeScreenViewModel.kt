@@ -9,6 +9,7 @@ import jakarta.inject.Inject
 import kotlinx.coroutines.launch
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.datastore.DataStoreManager
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.SightSearchResult
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.Sight
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.SightTourThumbnail
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.SightRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.CurrentThemeSettings
@@ -24,6 +25,7 @@ class HomeScreenViewModel @Inject constructor(
     ViewModel() {
 
     var closestTours = mutableStateListOf<SightTourThumbnail>()
+    var popularTours = mutableStateListOf<SightTourThumbnail>()
     var loading = mutableStateOf<Boolean>(false)
 
     fun updateAppTheme() {
@@ -41,6 +43,7 @@ class HomeScreenViewModel @Inject constructor(
                 ServerUtils.executeNetworkCall { sightRepository.search("") }
 
             closestTours.clear()
+            popularTours.clear()
             if (sightInfos != null) {
                 var currentLocation = dataStoreManager.getLastLocation()
                 closestTours.addAll(sightInfos.map {
@@ -57,13 +60,16 @@ class HomeScreenViewModel @Inject constructor(
                     SightTourThumbnail(
                         sightId = si.id.toLong(),
                         name = si.name,
-                        rating = 0f,
+                        rating = si.rating,
                         proximity = proximity_km,
                         imageLink = si.imageLink
                     )
                 });
 
-                closestTours.sortWith(Comparator<SightTourThumbnail> { s1, s2 -> s1.proximity.compareTo(s2.proximity) })
+                closestTours.sortWith { s1, s2 -> s1.proximity.compareTo(s2.proximity) }
+
+                popularTours.addAll(closestTours)
+                popularTours.sortWith { s1, s2 -> s2.rating.compareTo(s1.rating) }
             }
             loading.value = false;
         }

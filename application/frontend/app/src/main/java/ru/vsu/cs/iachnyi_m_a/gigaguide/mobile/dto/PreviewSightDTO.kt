@@ -5,5 +5,6 @@ data class PreviewSightDTO(
     var name: String,
     var latitude: Float,
     var longitude: Float,
-    var rating: Float
+    var rating: Float,
+    var imagePath: String
 )

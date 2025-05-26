@@ -36,7 +36,7 @@ class TourRepositoryRetrofit(private val tourAPI: TourAPI): TourRepository {
         var response: Response<List<PreviewTourDTO>> = call.execute()
         Log.e("SEARCH", call.request().url.toString())
         return if (response.isSuccessful) {
-            response.body()!!.map { dto -> SightTourThumbnail(sightId = dto.id.toLong(), rating = 0f, name = dto.name, proximity = 0f, imageLink = "") }
+            response.body()!!.map { dto -> SightTourThumbnail(sightId = dto.id.toLong(), rating = dto.rating, name = dto.name, proximity = 0f, imageLink = dto.imagePath) }
         } else {
             null
         }

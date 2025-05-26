@@ -15,7 +15,10 @@ class SightDTOtoSightInfoMapperTest {
                 "sight1",
                 "desc",
                 "Воронеж",
-                "nbdkas-41289312-das.jpg"
+                "nbdkas-41289312-das.jpg",
+                1f,
+                2f,
+                4f
             )
         )
         assert(
@@ -24,9 +27,7 @@ class SightDTOtoSightInfoMapperTest {
                 description = "desc",
                 name = "sight1",
                 time = 30,
-
                 imageLink = ServerUtils.imageLink("nbdkas-41289312-das.jpg")
-
             )
         )
     }

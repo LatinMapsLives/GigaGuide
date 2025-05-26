@@ -26,7 +26,6 @@ import javax.inject.Inject
 class TourPageScreenViewModel @Inject constructor(
 
     private val tourRepository: TourRepository,
-    private val sightRepository: SightRepository,
     private val favoritesRepository: FavoritesRepository,
     private val dataStoreManager: DataStoreManager,
     private val tourReviewRepository: TourReviewRepository): ViewModel() {

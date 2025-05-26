@@ -48,7 +48,7 @@ class SearchScreenViewModel @Inject constructor(private val sightRepository: Sig
                     SightTourThumbnail(
                         sightId = ti.sightId,
                         name = ti.name,
-                        rating = 0f,
+                        rating = ti.rating,
                         proximity = 0f,
                         imageLink = ti.imageLink
                     )
