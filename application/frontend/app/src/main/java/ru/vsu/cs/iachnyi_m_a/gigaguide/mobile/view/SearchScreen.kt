@@ -88,7 +88,7 @@ fun SearchScreen(
                     contentPadding = PaddingValues(6.dp),
                     modifier = Modifier
                         .padding(start = 10.dp)
-                        .height(50.dp)
+                        .height(54.dp)
                         .aspectRatio(1f),
                     shape = RoundedCornerShape(10.dp),
                     colors = ButtonDefaults.buttonColors(

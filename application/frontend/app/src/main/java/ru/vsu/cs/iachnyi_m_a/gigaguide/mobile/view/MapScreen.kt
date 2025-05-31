@@ -97,6 +97,7 @@ fun MapScreen(
     Box(modifier = Modifier.fillMaxSize()) {
         AndroidView(
             modifier = Modifier
+                .clip(RoundedCornerShape(1.dp))
                 .fillMaxSize(),
             factory = { context ->
                 MapView(context).apply {

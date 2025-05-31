@@ -76,15 +76,15 @@ fun HomeScreen(
                     id = R.drawable.logo_dark
                 ),
                 contentScale = ContentScale.Fit,
-                contentDescription = "logo",
-                modifier = Modifier.fillMaxHeight()
+                contentDescription = null,
+                modifier = Modifier.weight(1f)
             )
             GigaGuideMobileTheme {
                 Button(
                     onClick = {},
                     contentPadding = PaddingValues(6.dp),
                     modifier = Modifier
-                        .defaultMinSize(minWidth = 1.dp, minHeight = 1.dp)
+                        .padding(start = 30.dp)
                         .fillMaxHeight()
                         .aspectRatio(1f)
                         .dropShadow(
