@@ -1,5 +1,6 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +31,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,7 +44,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
-import androidx.datastore.dataStore
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
@@ -120,31 +124,18 @@ fun SightPageScreen(
 
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
+                            horizontalArrangement = Arrangement.Start,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
 
                             Text(
-                                text = "${sightPageScreenViewModel.momentNames.size} ${stringResource(R.string.sight_page_screen_moments_count)}",
+                                text = "${sightPageScreenViewModel.momentNames.size} ${
+                                    stringResource(
+                                        R.string.sight_page_screen_moments_count
+                                    )
+                                }",
                                 color = White
                             )
-
-
-                            Row {
-
-                                Text(
-                                    text = "${sightPageScreenViewModel.sight.value!!.time} ${stringResource(R.string.sight_page_screen_minutes)}",
-                                    color = White
-                                )
-
-
-                                Icon(
-                                    modifier = Modifier.padding(horizontal = 10.dp),
-                                    imageVector = ImageVector.vectorResource(R.drawable.time),
-                                    tint = White,
-                                    contentDescription = "time"
-                                )
-                            }
                         }
                     }
                 }
@@ -182,7 +173,8 @@ fun SightPageScreen(
                             tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    var descVisible by remember { mutableStateOf(true) }
+                    Row(modifier = Modifier.padding(bottom = 20.dp), verticalAlignment = Alignment.CenterVertically) {
                         Text(
                             text = stringResource(R.string.sight_page_screen_header_description),
                             style = MaterialTheme.typography.headlineSmall,
@@ -190,23 +182,23 @@ fun SightPageScreen(
                         )
                         Icon(
                             modifier = Modifier
+                                .clickable(onClick = {descVisible = !descVisible})
                                 .padding(horizontal = 10.dp)
-                                .width(30.dp),
-                            imageVector = ImageVector.vectorResource(R.drawable.chevron_down),
+                                .size(30.dp),
+                            imageVector = ImageVector.vectorResource(if (descVisible) R.drawable.chevron_down else R.drawable.chevron_right_big),
                             tint = MaterialTheme.colorScheme.onBackground,
                             contentDescription = "chevron down"
                         )
                     }
-
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 20.dp),
-                        text = sightPageScreenViewModel.sight.value!!.description,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-
-
+                    AnimatedVisibility(modifier = Modifier.fillMaxWidth(), visible = descVisible) {
+                        Text(
+                            modifier = Modifier
+                                .padding(bottom = 20.dp)
+                                .fillMaxWidth(),
+                            text = sightPageScreenViewModel.sight.value!!.description,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                    }
                     Row(
                         modifier = Modifier.padding(bottom = 10.dp),
                         verticalAlignment = Alignment.CenterVertically
@@ -215,14 +207,6 @@ fun SightPageScreen(
                             text = stringResource(R.string.sight_page_screen_header_moments),
                             style = MaterialTheme.typography.headlineSmall,
                             color = MaterialTheme.colorScheme.onBackground
-                        )
-                        Icon(
-                            modifier = Modifier
-                                .padding(horizontal = 10.dp)
-                                .width(30.dp),
-                            imageVector = ImageVector.vectorResource(R.drawable.moments),
-                            tint = MaterialTheme.colorScheme.onBackground,
-                            contentDescription = "moments"
                         )
                     }
 
@@ -271,12 +255,12 @@ fun SightPageScreen(
                     .size(50.dp),
                 onClick = {
                     if (!sightPageScreenViewModel.loadingFavorite) {
-                        if(sightPageScreenViewModel.token == null){
+                        if (sightPageScreenViewModel.token == null) {
                             navController.navigate(LoginScreenObject)
                         } else {
                             if (sightPageScreenViewModel.inFavorite.value) {
                                 sightPageScreenViewModel.deleteFromFavorite()
-                            } else{
+                            } else {
                                 sightPageScreenViewModel.addToFavorite()
                             }
                         }
