@@ -161,7 +161,7 @@ fun ExploreSightScreen(
         if (exploreSightScreenViewModel.player.isPlaying) exploreSightScreenViewModel.player.pause()
     }
     Box(modifier = Modifier.fillMaxSize()) {
-        AndroidView(modifier = Modifier.fillMaxSize(), factory = { context ->
+        AndroidView(modifier = Modifier.clip(RoundedCornerShape(1.dp)).fillMaxSize(), factory = { context ->
             MapView(context).apply {
                 setBuiltInZoomControls(false)
                 setMultiTouchControls(true)

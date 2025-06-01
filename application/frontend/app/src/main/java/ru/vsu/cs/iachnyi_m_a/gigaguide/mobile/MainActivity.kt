@@ -7,6 +7,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
@@ -188,14 +190,63 @@ class MainActivity : ComponentActivity() {
                         popEnterTransition = { EnterTransition.None },
                         popExitTransition = { ExitTransition.None },
                     ) {
-                        composable<HomeScreenObject> {
+                        composable<HomeScreenObject>(
+                            enterTransition = {
+                                if (Regex("(MapScreen|FavoriteScreen|SettingsScreen)").containsMatchIn(
+                                        initialState.destination.route!!
+                                    )
+                                ) {
+                                    slideInHorizontally(initialOffsetX = { w -> -w })
+                                } else if (Regex("(SearchScreen)").containsMatchIn(initialState.destination.route!!)) {
+                                    fadeIn()
+                                } else {
+                                    null
+                                }
+                            },
+                            exitTransition = {
+                                if (Regex("(MapScreen|FavoriteScreen|SettingsScreen)").containsMatchIn(
+                                        targetState.destination.route!!
+                                    )
+                                ) {
+                                    slideOutHorizontally(targetOffsetX = { w -> -w })
+                                } else if (Regex("(SearchScreen)").containsMatchIn(targetState.destination.route!!)) {
+                                    fadeOut()
+                                } else {
+                                    null
+                                }
+                            }
+                        ) {
                             HomeScreen(
                                 homeScreenViewModel = homeScreenViewModel,
                                 navController = navController
                             );
                             showNavigationBarMutableState = true;
                         }
-                        composable<MapScreenObject> {
+                        composable<MapScreenObject>(
+                            enterTransition = {
+                                if (Regex("(HomeScreen)").containsMatchIn(initialState.destination.route!!)) {
+                                    slideInHorizontally(initialOffsetX = { w -> w })
+                                } else if (Regex("(FavoriteScreen|SettingsScreen)").containsMatchIn(
+                                        initialState.destination.route!!
+                                    )
+                                ) {
+                                    slideInHorizontally(initialOffsetX = { w -> -w })
+                                } else {
+                                    null
+                                }
+                            },
+                            exitTransition = {
+                                if (Regex("(HomeScreen)").containsMatchIn(targetState.destination.route!!)) {
+                                    slideOutHorizontally(targetOffsetX = { w -> w })
+                                } else if (Regex("(FavoriteScreen|SettingsScreen)").containsMatchIn(
+                                        targetState.destination.route!!
+                                    )
+                                ) {
+                                    slideOutHorizontally(targetOffsetX = { w -> -w })
+                                } else {
+                                    null
+                                }
+                            }) {
                             MapScreen(
                                 navController = navController,
                                 mapScreenViewModel = mapScreenViewModel,
@@ -203,28 +254,89 @@ class MainActivity : ComponentActivity() {
                             )
                             showNavigationBarMutableState = true;
                         }
-                        composable<FavoriteScreenObject> {
+                        composable<FavoriteScreenObject>(
+                            enterTransition = {
+                                if (Regex("(MapScreen|HomeScreen)").containsMatchIn(initialState.destination.route!!)) {
+                                    slideInHorizontally(initialOffsetX = { w -> w })
+                                } else if (Regex("(SettingsScreen)").containsMatchIn(initialState.destination.route!!)) {
+                                    slideInHorizontally(initialOffsetX = { w -> -w })
+                                } else {
+                                    null
+                                }
+                            },
+                            exitTransition = {
+                                if (Regex("(MapScreen|HomeScreen)").containsMatchIn(targetState.destination.route!!)) {
+                                    slideOutHorizontally(targetOffsetX = { w -> w })
+                                } else if (Regex("(SettingsScreen)").containsMatchIn(targetState.destination.route!!)) {
+                                    slideOutHorizontally(targetOffsetX = { w -> -w })
+                                } else {
+                                    null
+                                }
+                            }) {
                             FavoritesScreen(
                                 navController = navController
                             )
                             showNavigationBarMutableState = true;
                         }
-                        composable<SettingsScreenObject> {
+                        composable<SettingsScreenObject>(
+                            enterTransition = {
+                                if (Regex("(FavoriteScreen|MapScreen|HomeScreen)").containsMatchIn(
+                                        initialState.destination.route!!
+                                    )
+                                ) {
+                                    slideInHorizontally(initialOffsetX = { w -> w })
+                                } else {
+                                    null
+                                }
+                            },
+                            exitTransition = {
+                                if (Regex("(FavoriteScreen|MapScreen|HomeScreen)").containsMatchIn(
+                                        targetState.destination.route!!
+                                    )
+                                ) {
+                                    slideOutHorizontally(targetOffsetX = { w -> w })
+                                } else {
+                                    null
+                                }
+                            }
+                        ) {
                             showNavigationBarMutableState = true;
                             SettingsScreen(
                                 navController = navController,
                                 settingsScreenViewModel = hiltViewModel<SettingsScreenViewModel>()
                             )
                         }
-                        composable<LoginScreenObject> (enterTransition = {slideInVertically(initialOffsetY = {h -> h})},
-                            exitTransition = {slideOutVertically(targetOffsetY = {h -> h})}) {
+                        composable<LoginScreenObject>(
+                            enterTransition = {
+                                if (!Regex("(RegisterScreen)").containsMatchIn(
+                                        initialState.destination.route!!
+                                    )
+                                ) {
+                                    slideInVertically(initialOffsetY = { h -> h })
+                                } else {
+                                    null
+                                }
+                            },
+                            exitTransition = {
+                                if (!Regex("(RegisterScreen)").containsMatchIn(
+                                        targetState.destination.route!!
+                                    )
+                                ) {
+                                    slideOutVertically(targetOffsetY = { h -> h })
+                                } else {
+                                    null
+                                }
+                            }) {
 
                             showNavigationBarMutableState = false
                             LoginScreen(
                                 navController = navController
                             )
                         }
-                        composable<RegisterScreenObject> {
+                        composable<RegisterScreenObject>(enterTransition = {
+                            slideInVertically(
+                                initialOffsetY = { h -> h })
+                        }, exitTransition = { slideOutVertically(targetOffsetY = { h -> h }) }) {
                             showNavigationBarMutableState = false
                             RegisterScreen(
                                 navController = navController
@@ -232,17 +344,23 @@ class MainActivity : ComponentActivity() {
                         }
                         composable<SightPageScreenClass>(
                             enterTransition = {
-                                if(Regex("(SightReviewScreen|ExploreSightScreen)").containsMatchIn(initialState.destination.route!!)){
-                                    slideInHorizontally(initialOffsetX = { w -> -w })
-                                } else {
+                                if (Regex("(HomeScreen|FavoriteScreen|SearchScreen|MapScreen|TourPageScreen)").containsMatchIn(
+                                        initialState.destination.route!!
+                                    )
+                                ) {
                                     slideInHorizontally(initialOffsetX = { w -> w })
+                                } else {
+                                    null
                                 }
                             },
                             exitTransition = {
-                                if(Regex("(SightReviewScreen|ExploreSightScreen)").containsMatchIn(targetState.destination.route!!)){
-                                    slideOutHorizontally(targetOffsetX = { w -> -w })
-                                } else {
+                                if (Regex("(HomeScreen|FavoriteScreen|SearchScreen|MapScreen|TourPageScreen)").containsMatchIn(
+                                        targetState.destination.route!!
+                                    )
+                                ) {
                                     slideOutHorizontally(targetOffsetX = { w -> w })
+                                } else {
+                                    null
                                 }
                             }
                         ) {
@@ -253,13 +371,13 @@ class MainActivity : ComponentActivity() {
                                 navController = navController,
                             )
                         }
-                        composable<ExploreSightScreenClass> (enterTransition = {
+                        composable<ExploreSightScreenClass>(
+                            enterTransition = {
                                 slideInHorizontally(initialOffsetX = { w -> w })
-
-                        },
+                            },
                             exitTransition = {
                                 slideOutHorizontally(targetOffsetX = { w -> w })
-                            }){
+                            }) {
                             val args = it.toRoute<ExploreSightScreenClass>()
                             showNavigationBarMutableState = false;
                             ExploreSightScreen(
@@ -272,10 +390,24 @@ class MainActivity : ComponentActivity() {
                         }
                         composable<SightReviewScreenClass>(
                             enterTransition = {
-                                slideInHorizontally(initialOffsetX = { w -> w })
+                                if (Regex("(SightPageScreen)").containsMatchIn(
+                                        initialState.destination.route!!
+                                    )
+                                ) {
+                                    slideInHorizontally(initialOffsetX = { h -> h })
+                                } else {
+                                    null
+                                }
                             },
                             exitTransition = {
-                                slideOutHorizontally(targetOffsetX = { w -> w })
+                                if (Regex("(SightPageScreen)").containsMatchIn(
+                                        targetState.destination.route!!
+                                    )
+                                ) {
+                                    slideOutHorizontally(targetOffsetX = { h -> h })
+                                } else {
+                                    null
+                                }
                             }) {
                             val args = it.toRoute<SightReviewScreenClass>()
                             showNavigationBarMutableState = false
@@ -285,12 +417,51 @@ class MainActivity : ComponentActivity() {
                                 isTour = false
                             )
                         }
-                        composable<TourReviewScreenClass>(
+                        composable<TourPageScreenClass>(
                             enterTransition = {
-                                slideInHorizontally(initialOffsetX = { w -> w })
+                                if (Regex("(HomeScreen|FavoriteScreen|SearchScreen)").containsMatchIn(
+                                        initialState.destination.route!!
+                                    )
+                                ) {
+                                    slideInHorizontally(initialOffsetX = { w -> w })
+                                } else {
+                                    null
+                                }
                             },
                             exitTransition = {
-                                slideOutHorizontally(targetOffsetX = { w -> w })
+                                if (Regex("(HomeScreen|FavoriteScreen|SearchScreen)").containsMatchIn(
+                                        targetState.destination.route!!
+                                    )
+                                ) {
+                                    slideOutHorizontally(targetOffsetX = { w -> w })
+                                } else {
+                                    null
+                                }
+                            }) {
+                            val args = it.toRoute<TourPageScreenClass>()
+                            showNavigationBarMutableState = false
+                            TourPageScreen(tourId = args.tourId, navController = navController)
+                        }
+                        composable<TourReviewScreenClass>(
+                            enterTransition = {
+                                if (Regex("(TourPageScreen)").containsMatchIn(
+                                        initialState.destination.route!!
+                                    )
+                                ) {
+                                    slideInHorizontally(initialOffsetX = { h -> h })
+                                } else {
+                                    null
+                                }
+                            },
+                            exitTransition = {
+                                if (Regex("(TourPageScreen)").containsMatchIn(
+                                        targetState.destination.route!!
+                                    )
+                                ) {
+                                    slideOutHorizontally(targetOffsetX = { h -> h })
+                                } else {
+                                    null
+                                }
                             }) {
                             val args = it.toRoute<TourReviewScreenClass>()
                             showNavigationBarMutableState = false
@@ -300,22 +471,15 @@ class MainActivity : ComponentActivity() {
                                 isTour = true
                             )
                         }
-                        composable<SearchScreenObject> {
+                        composable<SearchScreenObject>(
+                            enterTransition = { fadeIn() },
+                            exitTransition = { fadeOut() }
+                        ) {
                             showNavigationBarMutableState = false
                             SearchScreen(navController = navController)
                         }
-                        composable<TourPageScreenClass>(
-                            enterTransition = {
-                                slideInHorizontally(initialOffsetX = { w -> w })
-                            },
-                            exitTransition = {
-                                slideOutHorizontally(targetOffsetX = { w -> w })
-                            }) {
-                            val args = it.toRoute<TourPageScreenClass>()
-                            showNavigationBarMutableState = false
-                            TourPageScreen(tourId = args.tourId, navController = navController)
-                        }
-                        composable<ExploreTourScreenClass> {
+                        composable<ExploreTourScreenClass> (enterTransition = {slideInHorizontally(initialOffsetX = {h->h})},
+                            exitTransition = {slideOutHorizontally(targetOffsetX = {h->h})}) {
                             val args = it.toRoute<ExploreTourScreenClass>()
                             showNavigationBarMutableState = false
                             ExploreTourScreen(
@@ -325,7 +489,10 @@ class MainActivity : ComponentActivity() {
                                 locationProvider = geoLocationProvider
                             )
                         }
-                        composable<ProfileScreenObject> {
+                        composable<ProfileScreenObject>(enterTransition = {
+                            slideInHorizontally(
+                                initialOffsetX = { w -> w })
+                        }, exitTransition = { slideOutHorizontally(targetOffsetX = { w -> w }) }) {
                             showNavigationBarMutableState = false
                             ProfileScreen(navController = navController)
                         }
@@ -354,6 +521,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         Row(
                             modifier = Modifier
+                                .clickable(onClick = {}, enabled = false)
                                 .fillMaxWidth()
                                 .padding(10.dp)
                                 .clip(RoundedCornerShape(10.dp))
@@ -373,7 +541,7 @@ class MainActivity : ComponentActivity() {
                                     .clickable(onClick = { infoVisibleMutableState = false })
                                     .background(White)
                                     .padding(5.dp)
-                                    .size(20.dp),
+                                    .size(30.dp),
                                 imageVector = Icons.Filled.Close,
                                 contentDescription = null,
                                 tint = MediumGrey,
