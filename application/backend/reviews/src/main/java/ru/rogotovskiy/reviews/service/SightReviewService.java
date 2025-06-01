@@ -90,4 +90,15 @@ public class SightReviewService {
         sight.setRating(avgRating);
         sightRepository.save(sight);
     }
+
+    public void deleteReview(Integer reviewId) {
+        SightReview review = reviewRepository.findById(reviewId).orElseThrow(
+                () -> new ReviewNotFoundException(
+                        "REVIEW_NOT_FOUND",
+                        messageSource.getMessage("reviews.errors.review.not_found", null, Locale.ROOT)
+                )
+        );
+
+        reviewRepository.delete(review);
+    }
 }

@@ -63,6 +63,7 @@ public class TourReviewService {
                 dto.comment(),
                 LocalDateTime.now())
         );
+        updateTourRating(tourId);
     }
 
     public void deleteReview(Integer userId, Integer reviewId) {
@@ -91,5 +92,15 @@ public class TourReviewService {
         );
         tour.setRating(avgRating);
         tourRepository.save(tour);
+    }
+
+    public void deleteReview(Integer reviewId) {
+        TourReview tourReview = reviewRepository.findById(reviewId).orElseThrow(
+                () -> new ReviewNotFoundException(
+                        "REVIEW_NOT_FOUND",
+                        messageSource.getMessage("reviews.errors.review.not_found", null, Locale.ROOT)
+                )
+        );
+        reviewRepository.delete(tourReview);
     }
 }
