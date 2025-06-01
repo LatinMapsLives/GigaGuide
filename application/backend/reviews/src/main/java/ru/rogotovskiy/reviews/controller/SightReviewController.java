@@ -70,4 +70,10 @@ public class SightReviewController {
         service.deleteReview(Integer.parseInt(userId), reviewId);
         return ResponseEntity.ok(messageSource.getMessage("reviews.success.delete_review", null, Locale.ROOT));
     }
+
+    @DeleteMapping("/admin")
+    public ResponseEntity<?> adminDeleteReview(@RequestParam Integer reviewId) {
+        service.deleteReview(reviewId);
+        return ResponseEntity.ok(messageSource.getMessage("reviews.success.delete_review", null, Locale.ROOT));
+    }
 }
