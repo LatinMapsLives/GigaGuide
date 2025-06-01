@@ -7,5 +7,5 @@ import ru.rogotovskiy.userservice.entity.Sight;
 @Mapper(componentModel = "spring")
 public interface FavoriteSightMapper {
 
-    public FavoriteSightDto toDto(Sight sight);
+    FavoriteSightDto toDto(Sight sight);
 }

@@ -28,9 +28,4 @@ public class AudioGuideService {
         byte[] lpcmAudio = ttsService.synthesizeText(content, lang);
         return WavUtil.wrapLpcmInWav(lpcmAudio, 48000, 1);
     }
-
-    public String test(Integer id) throws IOException {
-        return translationService.translateToEnglish(momentRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("")).getContent());
-    }
 }

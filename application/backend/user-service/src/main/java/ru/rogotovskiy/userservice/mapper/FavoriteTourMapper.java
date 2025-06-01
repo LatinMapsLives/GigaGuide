@@ -7,5 +7,5 @@ import ru.rogotovskiy.userservice.entity.Tour;
 @Mapper(componentModel = "spring")
 public interface FavoriteTourMapper {
 
-    public FavoriteTourDto toDto(Tour tour);
+    FavoriteTourDto toDto(Tour tour);
 }
