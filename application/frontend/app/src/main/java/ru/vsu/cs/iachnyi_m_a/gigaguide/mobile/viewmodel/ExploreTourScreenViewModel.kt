@@ -25,6 +25,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.MapRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.MomentRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.SightRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.TourRepository
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.LocaleManager
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.Pancake
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
 
@@ -127,7 +128,7 @@ class ExploreTourScreenViewModel @Inject constructor(
                         Pancake.serverError()
                         return@launch
                     }
-                    var loadedMoments = ServerUtils.executeNetworkCall { momentRepository.getSightMoments(sightInfo.sightId) }
+                    var loadedMoments = ServerUtils.executeNetworkCall { momentRepository.getSightMoments(sightInfo.sightId, LocaleManager.currentLanguage) }
                     if (loadedMoments != null) {
                         var indices = mutableListOf<Int>()
                         var momentOnMapsForThisSight = mutableListOf<MomentOnMap>()

@@ -19,6 +19,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.FavoritesRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.MomentRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.SightRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.review.SightReviewRepository
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.LocaleManager
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
 
 @HiltViewModel
@@ -44,10 +45,10 @@ class SightPageScreenViewModel @Inject constructor(
     fun loadSight() {
         viewModelScope.launch {
             loading.value = true
-            var loadedSight: SightInfo? = ServerUtils.executeNetworkCall { sightRepository.getSightInfoById(sightId) }
+            var loadedSight: SightInfo? = ServerUtils.executeNetworkCall { sightRepository.getSightInfoById(sightId, LocaleManager.currentLanguage) }
             sight.value = loadedSight
             momentNames.clear()
-            var loadedMoments = ServerUtils.executeNetworkCall { momentRepository.getSightMoments(sightId) }
+            var loadedMoments = ServerUtils.executeNetworkCall { momentRepository.getSightMoments(sightId, LocaleManager.currentLanguage) }
             if (loadedMoments != null) {
                 momentNames.addAll(loadedMoments.map { m -> m.name })
             }

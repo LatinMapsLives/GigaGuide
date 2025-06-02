@@ -12,7 +12,7 @@ interface TourAPI {
     fun getAllTours(): Call<List<TourDTO>>
 
     @GET("tours")
-    fun getTourById(@Query("id") id: Long): Call<TourDTO>
+    fun getTourById(@Query("id") id: Long, @Query("language") language: String): Call<TourDTO>
 
     @GET("tours/search")
     fun searchTours(@Query("name") name: String): Call<List<PreviewTourDTO>>
