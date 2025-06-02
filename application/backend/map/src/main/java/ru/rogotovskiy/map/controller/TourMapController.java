@@ -17,4 +17,9 @@ public class TourMapController {
         tourMapService.addTourRouteInfo(tourId);
         return ResponseEntity.ok("Протяжённость и длительность успешно расчитаны");
     }
+
+    @GetMapping("/path")
+    public ResponseEntity<?> getRoutePath(@RequestParam Integer tourId) {
+        return ResponseEntity.ok(tourMapService.getRouteForTour(tourId));
+    }
 }
