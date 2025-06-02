@@ -1,6 +1,5 @@
 package ru.rogotovskiy.toursight.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,8 +33,8 @@ public class MomentController {
 
     @Hidden
     @GetMapping("/all")
-    public ResponseEntity<?> getAll() {
-        return ResponseEntity.ok(momentService.getAll());
+    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "ru") String language) {
+        return ResponseEntity.ok(momentService.getAll(language));
     }
 
     @Operation(summary = "Получить момент по ID")
@@ -59,8 +58,8 @@ public class MomentController {
     })
     @Parameter(name = "id", description = "ID момента")
     @GetMapping
-    public ResponseEntity<?> getMomentById(@RequestParam Integer id) {
-        return ResponseEntity.ok(momentService.getById(id));
+    public ResponseEntity<?> getMomentById(@RequestParam Integer id, @RequestParam(defaultValue = "ru") String language) {
+        return ResponseEntity.ok(momentService.getById(id, language));
     }
 
     @Operation(summary = "Получить список моментов по ID достопримечательности")
@@ -72,8 +71,9 @@ public class MomentController {
     })
     @Parameter(name = "id", description = "ID достопримечательности")
     @GetMapping("/sight")
-    public ResponseEntity<?> getMomentsBySightId(@RequestParam Integer sightId) {
-        return ResponseEntity.ok(momentService.getMomentsBySightId(sightId));
+    public ResponseEntity<?> getMomentsBySightId(@RequestParam Integer sightId,
+                                                 @RequestParam(defaultValue = "ru") String language) {
+        return ResponseEntity.ok(momentService.getMomentsBySightId(sightId, language));
     }
 
     @Operation(summary = "Создать новый момент")

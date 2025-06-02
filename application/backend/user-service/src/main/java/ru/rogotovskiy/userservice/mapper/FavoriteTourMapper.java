@@ -1,11 +1,21 @@
 package ru.rogotovskiy.userservice.mapper;
 
-import org.mapstruct.Mapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import ru.rogotovskiy.userservice.dto.favorites.FavoriteTourDto;
 import ru.rogotovskiy.userservice.entity.Tour;
+import ru.rogotovskiy.userservice.service.TourTranslationService;
 
-@Mapper(componentModel = "spring")
-public interface FavoriteTourMapper {
+@Component
+@RequiredArgsConstructor
+public class FavoriteTourMapper {
 
-    public FavoriteTourDto toDto(Tour tour);
+    private final TourTranslationService tourTranslationService;
+
+    public FavoriteTourDto toDto(Tour tour, String language) {
+        return new FavoriteTourDto(
+                tour.getId(),
+                tourTranslationService.getTourTranslation(tour.getId(), language).getName()
+        );
+    }
 }

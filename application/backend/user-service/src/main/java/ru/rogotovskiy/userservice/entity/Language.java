@@ -1,4 +1,4 @@
-package ru.rogotovskiy.guide.entity;
+package ru.rogotovskiy.userservice.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,16 +6,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "moments")
+@Table(name = "languages")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Moment {
+public class Language {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "content")
-    private String content;
+    @Column(name = "code", unique = true, nullable = false, length = 10)
+    private String code;
+
 }

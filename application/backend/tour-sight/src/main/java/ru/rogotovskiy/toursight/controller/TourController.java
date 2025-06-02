@@ -31,8 +31,8 @@ public class TourController {
 
     @Hidden
     @GetMapping("/all")
-    public ResponseEntity<?> getAll() {
-        return ResponseEntity.ok(tourService.getAll());
+    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "ru") String language) {
+        return ResponseEntity.ok(tourService.getAll(language));
     }
 
     @Operation(summary = "Получить тур по ID")
@@ -56,8 +56,9 @@ public class TourController {
     })
     @Parameter(name = "id", description = "ID тура")
     @GetMapping
-    public ResponseEntity<?> getTourById(@RequestParam Integer id) {
-        return ResponseEntity.ok(tourService.getById(id));
+    public ResponseEntity<?> getTourById(@RequestParam Integer id,
+                                         @RequestParam(defaultValue = "ru") String language) {
+        return ResponseEntity.ok(tourService.getById(id, language));
     }
 
     @Operation(summary = "Создать новый тур")
@@ -146,7 +147,7 @@ public class TourController {
         return ResponseEntity.ok("Тур успешно удалён");
     }
 
-    @Operation(summary = "Поиск туров по названию")
+/*    @Operation(summary = "Поиск туров по названию")
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
@@ -171,5 +172,5 @@ public class TourController {
         return ResponseEntity.ok(
                 tourService.filterTours(category, minDuration, maxDuration, minDistance, maxDistance)
         );
-    }
+    }*/
 }

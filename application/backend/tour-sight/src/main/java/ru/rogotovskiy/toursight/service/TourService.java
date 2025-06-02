@@ -29,12 +29,13 @@ public class TourService {
     private final TourRepository tourRepository;
     private final TourMapper tourMapper;
     private final ImageService imageService;
-    private final SightMapper sightMapper;
     private final SightService sightService;
+    private final TourTranslationService tourTranslationService;
 
-    public List<TourDto> getAll() {
-        return StreamSupport.stream(tourRepository.findAll().spliterator(), false)
-                .map(tourMapper::toDto)
+    public List<TourDto> getAll(String languageCode) {
+        List<Tour> tours = tourRepository.findAll();
+        return tours.stream()
+                .map(tour -> getById(tour.getId(), languageCode))
                 .toList();
     }
 
@@ -44,11 +45,11 @@ public class TourService {
         );
     }
 
-    public TourDto getById(Integer id) {
+    public TourDto getById(Integer id, String languageCode) {
         Tour tour = getTourById(id);
-        TourDto tourDto = tourMapper.toDto(tour);
+        TourDto tourDto = tourMapper.toDto(tour, tourTranslationService.getTranslation(tour.getId(), languageCode));
         tourDto.setSights(tour.getSights().stream()
-                .map(sightMapper::toPreviewDto)
+                .map(sight -> sightService.getPreviewSightDto(sight.getId(), languageCode))
                 .toList());
         return tourDto;
     }
@@ -58,23 +59,19 @@ public class TourService {
         tour.setSights(dto.getSights().stream()
                 .map(sightService::getSightById)
                 .toList());
-        tour.setRating(new BigDecimal("0.0"));
         tour.setImagePath(imageService.saveImage(image, "tours"));
         tourRepository.save(tour);
+        tourTranslationService.createTourTranslation(dto, tour.getId());
     }
 
     public void updateTour(UpdateTourDto dto, MultipartFile image) throws IOException {
         Tour tour = getTourById(dto.id());
-        tour.setName(dto.name());
-        tour.setDescription(dto.description());
-        tour.setCity(dto.city());
-        tour.setCategory(dto.category());
-        tour.setType(dto.type());
         if (image != null) {
             imageService.deleteImage(tour.getImagePath());
             tour.setImagePath(imageService.saveImage(image, "tours"));
         }
         tourRepository.save(tour);
+        tourTranslationService.updateTourTranslation(dto, tour.getId());
     }
 
     public void deleteTour(Integer id) {
@@ -82,7 +79,7 @@ public class TourService {
         imageService.deleteImage(tour.getImagePath());
         tourRepository.delete(tour);
     }
-
+/*
     public List<PreviewTourDto> searchTours(String name) {
         return tourRepository.findByNameContainingIgnoreCase(name).stream()
                 .map(tourMapper::toPreviewDto)
@@ -113,5 +110,5 @@ public class TourService {
                 }).stream()
                 .map(tourMapper::toPreviewDto)
                 .toList();
-    }
+    }*/
 }

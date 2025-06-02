@@ -1,4 +1,4 @@
-package ru.rogotovskiy.userservice.entity;
+package ru.rogotovskiy.guide.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,16 +6,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "sights")
+@Table(name = "moment_translations")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Sight {
+public class MomentTranslation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "image_url")
-    private String imagePath;
+    @Column(name = "moment_id")
+    private Integer momentId;
+
+    @Column(name = "content")
+    private String content;
 }

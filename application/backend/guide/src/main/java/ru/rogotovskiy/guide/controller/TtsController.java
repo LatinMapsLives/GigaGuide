@@ -45,9 +45,4 @@ public class TtsController {
                 .contentType(MediaType.parseMediaType("audio/wav"))
                 .body(audio);
     }
-
-    @GetMapping("/test")
-    public ResponseEntity<?> translate(@RequestParam Integer id) throws IOException {
-        return ResponseEntity.ok(audioGuideService.test(id));
-    }
 }

@@ -1,11 +1,21 @@
 package ru.rogotovskiy.userservice.mapper;
 
-import org.mapstruct.Mapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import ru.rogotovskiy.userservice.dto.favorites.FavoriteSightDto;
 import ru.rogotovskiy.userservice.entity.Sight;
+import ru.rogotovskiy.userservice.service.SightTranslationService;
 
-@Mapper(componentModel = "spring")
-public interface FavoriteSightMapper {
+@Component
+@RequiredArgsConstructor
+public class FavoriteSightMapper {
 
-    public FavoriteSightDto toDto(Sight sight);
+    private final SightTranslationService sightTranslationService;
+
+    public FavoriteSightDto toDto(Sight sight, String languageCode) {
+        return new FavoriteSightDto(
+                sight.getId(),
+                sightTranslationService.getSighTranslation(sight.getId(), languageCode).getName()
+        );
+    }
 }
