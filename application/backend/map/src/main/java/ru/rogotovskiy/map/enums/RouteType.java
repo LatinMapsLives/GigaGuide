@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum RouteType {
     AUTO("auto", "Автомобильный", "car"),
-    PEDESTRIAN("pedestrian", "Пешеходный", "foot"),
+    PEDESTRIAN("pedestrian", "Пеший", "foot"),
     BICYCLE("bicycle", "Велосипедный", "bike");
 
     private final String tourType;
