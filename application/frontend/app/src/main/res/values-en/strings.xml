@@ -76,4 +76,10 @@
     <string name="review_screen_comment_count">reviews</string>
     <string name="tour_page_screen_sights_count">sights on route</string>
     <string name="tour_page_screen_sights_list">Sights</string>
+    <string name="search_screen_sorting_option_none">None</string>
+    <string name="search_screen_sorting_option_rating">By rating</string>
+    <string name="search_screen_sorting_option_remoteness">By remoteness</string>
+    <string name="search_screen_sorting_header">Sorting:</string>
+    <string name="search_screen_sort_dialog_apply">Apply</string>
+    <string name="search_screen_sort_dialog_cancel">Cancel</string>
 </resources>

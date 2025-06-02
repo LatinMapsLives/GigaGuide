@@ -126,6 +126,8 @@ class MainActivity : ComponentActivity() {
             )
         )
 
+        geoLocationProvider.checkPermissions()
+
         setContent {
 
             RememberLocale(

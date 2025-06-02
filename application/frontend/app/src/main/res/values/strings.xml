@@ -76,4 +76,10 @@
     <string name="review_screen_comment_count">оценок</string>
     <string name="tour_page_screen_sights_count">мест на маршруте</string>
     <string name="tour_page_screen_sights_list">Достопримечательности</string>
+    <string name="search_screen_sorting_option_none">Отсутствует</string>
+    <string name="search_screen_sorting_option_rating">По рейтингу</string>
+    <string name="search_screen_sorting_option_remoteness">По удалённости</string>
+    <string name="search_screen_sorting_header">Сортировка:</string>
+    <string name="search_screen_sort_dialog_apply">Применить</string>
+    <string name="search_screen_sort_dialog_cancel">Отмена</string>
 </resources>
