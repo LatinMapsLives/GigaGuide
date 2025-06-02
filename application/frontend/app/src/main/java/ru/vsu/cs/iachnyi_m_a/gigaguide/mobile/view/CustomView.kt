@@ -50,7 +50,7 @@ fun CustomTextField(
     hint: String,
     value: String,
     onValueChange: (String) -> Unit,
-    isPassword: Boolean
+    isPassword: Boolean = false
 ) {
     TextField(
         value = value,

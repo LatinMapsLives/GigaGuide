@@ -82,4 +82,12 @@
     <string name="search_screen_sorting_header">Sorting:</string>
     <string name="search_screen_sort_dialog_apply">Apply</string>
     <string name="search_screen_sort_dialog_cancel">Cancel</string>
+    <string name="search_screen_filter_dialog_headers">Filters</string>
+    <string name="search_screen_filter_search_sights">Search sights</string>
+    <string name="search_screen_filter_search_tours">Search tours</string>
+    <string name="search_screen_filter_tours_header">Filter tours:</string>
+    <string name="search_screen_filters_from">From</string>
+    <string name="search_screen_filters_to">to</string>
+    <string name="search_screen_filters_duration">Duration</string>
+    <string name="search_screen_filters_length">Distance</string>
 </resources>

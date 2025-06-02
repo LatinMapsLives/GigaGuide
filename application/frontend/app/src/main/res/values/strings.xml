@@ -82,4 +82,12 @@
     <string name="search_screen_sorting_header">Сортировка:</string>
     <string name="search_screen_sort_dialog_apply">Применить</string>
     <string name="search_screen_sort_dialog_cancel">Отмена</string>
+    <string name="search_screen_filter_dialog_headers">Фильтры</string>
+    <string name="search_screen_filter_search_sights">Искать дост-ти</string>
+    <string name="search_screen_filter_search_tours">Искать туры</string>
+    <string name="search_screen_filter_tours_header">Фильтры для туров:</string>
+    <string name="search_screen_filters_from">От</string>
+    <string name="search_screen_filters_to">до</string>
+    <string name="search_screen_filters_duration">Продолжительность</string>
+    <string name="search_screen_filters_length">Протяженность</string>
 </resources>

@@ -149,6 +149,7 @@ fun MapScreen(
                         }
                     })
                     view.overlays.add(clickOverlay)
+
                     if(locationProvider.hasLocationPermissions()){
                         var userMarker = Marker(view)
                         userMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)

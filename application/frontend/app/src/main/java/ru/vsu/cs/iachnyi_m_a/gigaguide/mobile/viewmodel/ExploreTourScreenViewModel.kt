@@ -102,7 +102,8 @@ class ExploreTourScreenViewModel @Inject constructor(
             userLocation.value = dataStoreManager.getLastLocation()
             var i = 0
             loadingTour = true
-            var loadedTour = ServerUtils.executeNetworkCall { tourRepository.getTourInfoById(tourId) }
+            var loadedTour = ServerUtils.executeNetworkCall { tourRepository.getTourInfoById(tourId,
+                LocaleManager.currentLanguage) }
             if( loadedTour == null) return@launch
             var loadedSights = loadedTour.sights
             sightsOnMapInfos.clear()
