@@ -9,12 +9,12 @@ import java.net.SocketTimeoutException
 
 class ServerUtils {
     companion object {
-        const val SERVER_ADDRESS = "http://158.160.179.56:8080"
+        const val SERVER_ADDRESS = "http://192.168.1.84:8080"
         fun imageLink(imageName: String): String {
             return imageName
         }
         fun audioGuideLink(momentId: Long): String{
-            return "${SERVER_ADDRESS}/api/guide?id=${momentId}"
+            return "${SERVER_ADDRESS}/api/guide?id=${momentId}&lang=${LocaleManager.currentLanguage}"
         }
         suspend fun <T> executeNetworkCall(block: suspend () -> T): T?{
             var result: T? = null

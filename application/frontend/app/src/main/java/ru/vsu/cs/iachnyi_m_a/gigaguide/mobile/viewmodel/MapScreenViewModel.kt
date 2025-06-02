@@ -17,6 +17,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.MapPoint
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.SightOnMapInfo
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.MapRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.SightRepository
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.LocaleManager
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
 
 @HiltViewModel
@@ -64,15 +65,16 @@ class MapScreenViewModel @Inject constructor(
         viewModelScope.launch {
             userLocation.value = dataStoreManager.getLastLocation()
             loading = true
-            var loadedSights = ServerUtils.executeNetworkCall { sightRepository.getAllSightInfos() }
+            var loadedSights = ServerUtils.executeNetworkCall { sightRepository.search("",
+                LocaleManager.currentLanguage) }
             sights.clear()
             if (loadedSights != null) {
                 for (sightInfo in loadedSights) {
-                    var coords = ServerUtils.executeNetworkCall {  mapRepository.getCoordinatedOfSight(sightInfo.id)}
+                    var coords = ServerUtils.executeNetworkCall {  mapRepository.getCoordinatedOfSight(sightInfo.id.toLong())}
                     if (coords != null)
                         sights.add(
                             SightOnMapInfo(
-                                id = sightInfo.id,
+                                id = sightInfo.id.toLong(),
                                 name = sightInfo.name,
                                 latitude = coords.latitude,
                                 longitude = coords.longitude,

@@ -12,6 +12,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.SightTourThumbnail
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.FavoritesRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.SightRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.TourRepository
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.LocaleManager
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
 
 @HiltViewModel
@@ -45,7 +46,8 @@ class FavoritesScreenViewModel @Inject constructor(
                 var favorites = ServerUtils.executeNetworkCall { favoritesRepository.getFavorites(token) }
                 favorites?.let {
                     for (id in favorites.sightIds) {
-                        var sight = ServerUtils.executeNetworkCall { sightRepository.getSightInfoById(id.toLong()) }
+                        var sight = ServerUtils.executeNetworkCall { sightRepository.getSightInfoById(id.toLong(),
+                            LocaleManager.currentLanguage) }
                         sight?.let {
                             sights.add(
                                 SightTourThumbnail(

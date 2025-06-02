@@ -13,6 +13,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.Sight
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.SightTourThumbnail
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.SightRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.CurrentThemeSettings
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.LocaleManager
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -40,7 +41,7 @@ class HomeScreenViewModel @Inject constructor(
         viewModelScope.launch {
 
             var sightInfos: List<SightSearchResult>? =
-                ServerUtils.executeNetworkCall { sightRepository.search("") }
+                ServerUtils.executeNetworkCall { sightRepository.search("", LocaleManager.currentLanguage) }
 
             closestTours.clear()
             popularTours.clear()

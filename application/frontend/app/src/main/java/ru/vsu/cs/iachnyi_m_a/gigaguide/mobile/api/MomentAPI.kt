@@ -7,5 +7,5 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.MomentDTO
 
 interface MomentAPI {
     @GET("sight")
-    fun getAllMoments(@Query("sightId") sightId: Long): Call<List<MomentDTO>>
+    fun getAllMoments(@Query("sightId") sightId: Long, @Query("language") lang: String): Call<List<MomentDTO>>
 }

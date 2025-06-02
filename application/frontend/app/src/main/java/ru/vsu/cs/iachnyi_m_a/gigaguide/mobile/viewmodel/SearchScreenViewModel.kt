@@ -14,6 +14,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.SightSearchResult
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.SightTourThumbnail
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.SightRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.TourRepository
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.LocaleManager
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
 import javax.inject.Inject
 import kotlin.math.pow
@@ -48,7 +49,8 @@ class SearchScreenViewModel @Inject constructor(
             tourResult.clear()
 
             var sightInfos: List<SightSearchResult>? =
-                ServerUtils.executeNetworkCall { sightRepository.search(searchBarValue.trim()) }
+                ServerUtils.executeNetworkCall { sightRepository.search(searchBarValue.trim(),
+                    LocaleManager.currentLanguage) }
             if (sightInfos != null) {
                 if(sortingOptions == SortingOptions.RATING){
                     sightInfos = sightInfos.sortedBy { - it.rating }

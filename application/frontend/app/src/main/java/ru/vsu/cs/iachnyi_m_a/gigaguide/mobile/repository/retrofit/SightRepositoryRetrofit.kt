@@ -13,8 +13,8 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.SightRepository
 
 class SightRepositoryRetrofit(private val sightAPI: SightAPI) : SightRepository {
 
-    override suspend fun getSightInfoById(id: Long): SightInfo? {
-        var call = sightAPI.getSightById(id)
+    override suspend fun getSightInfoById(id: Long, language: String): SightInfo? {
+        var call = sightAPI.getSightById(id, language)
         var response: Response<SightDTO> = call.execute()
         return if (response.isSuccessful) {
             response.body().let {
@@ -31,29 +31,8 @@ class SightRepositoryRetrofit(private val sightAPI: SightAPI) : SightRepository 
         }
     }
 
-    override suspend fun getAllSightInfos(): List<SightInfo>? {
-        var response: Response<List<SightDTO>> = sightAPI.getAllSights().execute()
-        return if (response.isSuccessful) {
-            response.body()!!.map { dto ->
-                SightInfo(
-                    id = dto.id,
-                    name = dto.name,
-                    description = dto.description,
-                    time = 30,
-                    imageLink = ServerUtils.imageLink(dto.imagePath)
-                )
-            }
-        } else {
-            null
-        }
-    }
-
-    override suspend fun getAllSightInfosByTourId(tourId: Long): List<SightInfo>? {
-        return getAllSightInfos()
-    }
-
-    override suspend fun search(name: String): List<SightSearchResult>? {
-        var response: Response<List<PreviewSightDTO>> = sightAPI.searchSights(name).execute()
+    override suspend fun search(name: String, language: String): List<SightSearchResult>? {
+        var response: Response<List<PreviewSightDTO>> = sightAPI.searchSights(name, language).execute()
         return if (response.isSuccessful) {
             response.body()!!.map { dto ->
                 SightSearchResult(

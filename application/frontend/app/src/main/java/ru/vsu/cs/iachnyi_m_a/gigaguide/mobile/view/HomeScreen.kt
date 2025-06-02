@@ -46,6 +46,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SightPageScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.CurrentThemeSettings
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.LocaleManager
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.RememberLocale
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.HomeScreenViewModel
@@ -60,7 +61,7 @@ fun HomeScreen(
         Modifier
             .fillMaxWidth()
     ) {
-        LaunchedEffect(Unit) {
+        LaunchedEffect(LocaleManager.recomposeFlag) {
             homeScreenViewModel.loadClosestTours()
             homeScreenViewModel.updateAppTheme()
         }
