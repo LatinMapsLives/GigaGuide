@@ -4,6 +4,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.rogotovskiy.map.dto.CoordinatesDto;
+import ru.rogotovskiy.map.dto.PointDto;
 import ru.rogotovskiy.map.dto.RouteInfoDto;
 import ru.rogotovskiy.map.entity.Sight;
 import ru.rogotovskiy.map.entity.Tour;
@@ -29,5 +31,15 @@ public class TourMapService {
         tour.setDistanceKm(dto.distanceKm());
         tour.setDurationMinutes(dto.durationMinutes());
         tourRepository.save(tour);
+    }
+
+    public List<PointDto> getRouteForTour(Integer tourId) {
+        Tour tour = tourRepository.findById(tourId)
+                .orElseThrow(() -> new EntityNotFoundException("Тур с id " + tourId + " не найден"));
+
+        List<Sight> sights = tour.getSights();
+        String routeType = tourTranslationService.getTourTranslation(tourId).getType();
+
+        return routeService.getRoutePath(sights, routeType);
     }
 }
