@@ -10,3 +10,6 @@ spring:
       ddl-auto: validate
 server:
   port: 8086
+graphhopper:
+  api:
+    key: 3293bf5b-d348-4028-bca4-9cd2a0064251

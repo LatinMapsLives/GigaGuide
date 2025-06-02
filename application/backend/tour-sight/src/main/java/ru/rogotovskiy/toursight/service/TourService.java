@@ -3,6 +3,7 @@ package ru.rogotovskiy.toursight.service;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import ru.rogotovskiy.toursight.dto.create.CreateTourDto;
 import ru.rogotovskiy.toursight.dto.read.PreviewTourDto;
@@ -31,6 +32,7 @@ public class TourService {
     private final ImageService imageService;
     private final SightService sightService;
     private final TourTranslationService tourTranslationService;
+    private final RestTemplate restTemplate;
 
     public List<TourDto> getAll(String languageCode) {
         List<Tour> tours = tourRepository.findAll();
@@ -62,6 +64,12 @@ public class TourService {
         tour.setImagePath(imageService.saveImage(image, "tours"));
         tourRepository.save(tour);
         tourTranslationService.createTourTranslation(dto, tour.getId());
+        String url = String.format("%s/api/map/tour?tourId=%d", "http://localhost:8086", tour.getId());
+        try {
+            restTemplate.postForEntity(url, null, Void.class);
+        } catch (Exception e) {
+            System.err.println("Ошибка при расчёте маршрута: " + e.getMessage());
+        }
     }
 
     public void updateTour(UpdateTourDto dto, MultipartFile image) throws IOException {
