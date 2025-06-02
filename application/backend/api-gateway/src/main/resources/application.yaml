@@ -9,7 +9,7 @@ spring:
     gateway:
       routes:
         - id: auth-service
-          uri: http://158.160.179.56:8081
+          uri: http://127.0.0.1:8081
           predicates:
             - Path=/api/auth/**
 
@@ -21,7 +21,7 @@ spring:
             - SetPath=/v3/api-docs
 
         - id: tour-sight-service
-          uri: http://158.160.179.56:8082
+          uri: http://127.0.0.1:8082
           predicates:
             - Path=/api/tour-sight/**
 
@@ -35,7 +35,7 @@ spring:
         - id: user-service
           predicates:
             - Path=/api/user/**
-          uri: http://158.160.179.56:8084
+          uri: http://127.0.0.1:8084
 
         - id: user-service-docs
           uri: http://user-service:8084
@@ -45,7 +45,7 @@ spring:
             - SetPath=/v3/api-docs
 
         - id: guide-service
-          uri: http://158.160.179.56:8083
+          uri: http://127.0.0.1:8083
           predicates:
             - Path=/api/guide/**
 
@@ -57,7 +57,7 @@ spring:
             - SetPath=/v3/api-docs
 
         - id: map-service
-          uri: http://158.160.179.56:8086
+          uri: http://127.0.0.1:8086
           predicates:
             - Path=/api/map/**
 
@@ -69,7 +69,7 @@ spring:
             - SetPath=/v3/api-docs
 
         - id: reviews-service
-          uri: http://158.160.179.56:8085
+          uri: http://127.0.0.1:8085
           predicates:
             - Path=/api/reviews/**
 

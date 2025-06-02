@@ -19,6 +19,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.FavoritesRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.SightRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.TourRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.review.TourReviewRepository
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.LocaleManager
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
 import javax.inject.Inject
 
@@ -43,7 +44,8 @@ class TourPageScreenViewModel @Inject constructor(
     fun loadTour() {
         viewModelScope.launch {
             loading.value = true
-            var loadedTour: TourInfo? = ServerUtils.executeNetworkCall { tourRepository.getTourInfoById(tourId) }
+            var loadedTour: TourInfo? = ServerUtils.executeNetworkCall { tourRepository.getTourInfoById(tourId,
+                LocaleManager.currentLanguage) }
             if(loadedTour == null) {
                 return@launch
             }

@@ -1,5 +1,6 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,6 +27,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
@@ -33,6 +35,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -75,10 +79,11 @@ fun SearchScreen(
         searchScreenViewModel.loadSearchResult()
     }
     var sortDialogOpen by remember { mutableStateOf(false) }
+    var filterDialogOpen by remember { mutableStateOf(false) }
     GigaGuideMobileTheme {
         when {
             sortDialogOpen -> {
-                Dialog(onDismissRequest = {}) {
+                Dialog(onDismissRequest = {sortDialogOpen = false}) {
                     Column(
                         modifier = Modifier
                             .clip(RoundedCornerShape(20.dp))
@@ -147,6 +152,132 @@ fun SearchScreen(
                                     searchScreenViewModel.sortingOptions = currentOption
                                     searchScreenViewModel.loadSearchResult()
                                     sortDialogOpen = false
+                                },
+                                contentPadding = PaddingValues(horizontal = 20.dp, vertical = 5.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    contentColor = White,
+                                    containerColor = MediumBlue
+                                )
+                            ) {
+                                Text(stringResource(R.string.search_screen_sort_dialog_apply))
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        when {
+            filterDialogOpen -> {
+                Dialog(onDismissRequest = {filterDialogOpen = false}) {
+                    Column(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(20.dp))
+                            .background(color = MaterialTheme.colorScheme.background)
+                            .padding(20.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = stringResource(R.string.search_screen_filter_dialog_headers),
+                            color = MaterialTheme.colorScheme.onBackground,
+                            style = MaterialTheme.typography.titleLarge
+                        )
+
+                        var searchTours by remember { mutableStateOf(searchScreenViewModel.searchTours) }
+                        var searchSights by remember { mutableStateOf(searchScreenViewModel.searchSights) }
+
+                        Row (modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically){
+                            Box(modifier = Modifier.size(35.dp), contentAlignment = Alignment.Center){
+                                Checkbox(checked = searchSights, onCheckedChange = {searchSights = it})
+                            }
+                            Text(modifier = Modifier.padding(start = 5.dp).clickable(onClick = {searchSights = !searchSights}), text = stringResource(R.string.search_screen_filter_search_sights), color = MaterialTheme.colorScheme.onBackground)
+                        }
+
+                        Row (modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically){
+                            Box(modifier = Modifier.size(35.dp), contentAlignment = Alignment.Center){
+                                Checkbox(checked = searchTours, onCheckedChange = {searchTours = it})
+                            }
+                            Text(modifier = Modifier.padding(start = 5.dp).clickable(onClick = {searchTours = !searchTours}), text = stringResource(R.string.search_screen_filter_search_tours), color = MaterialTheme.colorScheme.onBackground)
+                        }
+
+                        var newMinDuration by remember { mutableIntStateOf(searchScreenViewModel.minDuration) }
+                        var newMaxDuration by remember { mutableIntStateOf(searchScreenViewModel.maxDuration) }
+                        var newMinDistance by remember { mutableDoubleStateOf(searchScreenViewModel.minDistance) }
+                        var newMaxDistance by remember { mutableDoubleStateOf(searchScreenViewModel.maxDistance) }
+
+                        AnimatedVisibility(visible = searchTours) {
+                            Column (modifier = Modifier.fillMaxWidth()){
+                                Text(color = MaterialTheme.colorScheme.onBackground, text = stringResource(R.string.search_screen_filter_tours_header), style = MaterialTheme.typography.titleMedium)
+                                Text(color = MaterialTheme.colorScheme.onBackground, text = stringResource(R.string.search_screen_filters_duration))
+                                Row (verticalAlignment = Alignment.CenterVertically){
+                                    Text(color = MaterialTheme.colorScheme.onBackground, modifier = Modifier.weight(1f), text = stringResource(R.string.search_screen_filters_from))
+                                    CustomTextField(modifier = Modifier.weight(2f), value = newMinDuration.toString(), onValueChange = {
+                                        try {
+                                            val int = it.toInt()
+                                            if (int >= 0) newMinDuration = int
+                                        } catch (e: Exception){
+
+                                        }
+                                    }, hint = "")
+                                    Text(color = MaterialTheme.colorScheme.onBackground, modifier = Modifier.weight(1f), text = stringResource(R.string.search_screen_filters_to))
+                                    CustomTextField(modifier = Modifier.weight(2f), value = newMaxDuration.toString(), onValueChange = {
+                                        try {
+                                            val int = it.toInt()
+                                            if(int >= 0) newMaxDuration = int
+                                        } catch (e: Exception){
+
+                                        }
+                                    }, hint = "")
+                                    Text(color = MaterialTheme.colorScheme.onBackground, modifier = Modifier.weight(1f), text = stringResource(R.string.sight_page_screen_minutes))
+                                }
+                                Text(color = MaterialTheme.colorScheme.onBackground, text = stringResource(R.string.search_screen_filters_length))
+                                Row (verticalAlignment = Alignment.CenterVertically){
+                                    Text(color = MaterialTheme.colorScheme.onBackground, modifier = Modifier.weight(1f), text = stringResource(R.string.search_screen_filters_from))
+                                    CustomTextField(modifier = Modifier.weight(2f), value = newMinDistance.toString(), onValueChange = {
+                                        try {
+                                            val int = it.toDouble()
+                                            if(int >= 0) newMinDistance = int
+                                        } catch (e: Exception){
+
+                                        }
+                                    }, hint = "")
+                                    Text(color = MaterialTheme.colorScheme.onBackground, modifier = Modifier.weight(1f), text = stringResource(R.string.search_screen_filters_to))
+                                    CustomTextField(modifier = Modifier.weight(2f), value = newMaxDistance.toString(), onValueChange = {
+                                        try {
+                                            val int = it.toDouble()
+                                            if(int >= 0) newMaxDistance = int
+                                        } catch (e: Exception){
+
+                                        }
+                                    }, hint = "")
+                                    Text(color = MaterialTheme.colorScheme.onBackground, modifier = Modifier.weight(1f), text = "км")
+                                }
+                            }
+                        }
+
+                        Row {
+                            Button(
+                                onClick = { filterDialogOpen = false },
+                                contentPadding = PaddingValues(horizontal = 20.dp, vertical = 5.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    contentColor = White,
+                                    containerColor = MediumBlue
+                                )
+                            ) {
+                                Text(stringResource(R.string.search_screen_sort_dialog_cancel))
+                            }
+                            Button(
+                                modifier = Modifier.padding(start = 10.dp),
+                                onClick = {
+                                    searchScreenViewModel.searchTours = searchTours
+                                    searchScreenViewModel.searchSights = searchSights
+                                    searchScreenViewModel.minDuration = newMinDuration
+                                    searchScreenViewModel.maxDuration = newMaxDuration
+                                    searchScreenViewModel.minDistance = newMinDistance
+                                    searchScreenViewModel.maxDistance = newMaxDistance
+
+
+                                    searchScreenViewModel.loadSearchResult()
+                                    filterDialogOpen = false
                                 },
                                 contentPadding = PaddingValues(horizontal = 20.dp, vertical = 5.dp),
                                 colors = ButtonDefaults.buttonColors(
@@ -249,7 +380,7 @@ fun SearchScreen(
                         }
                     }
                 }
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(modifier = Modifier.clickable(onClick = {filterDialogOpen = true}), verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = stringResource(R.string.search_screen_filters),
                         style = MaterialTheme.typography.labelLarge,
@@ -273,7 +404,7 @@ fun SearchScreen(
                 verticalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.padding(vertical = 15.dp)
             ) {
-                if (searchScreenViewModel.sightResult.isNotEmpty()) {
+                if (searchScreenViewModel.sightResult.isNotEmpty() || searchScreenViewModel.tourResult.isNotEmpty()) {
                     for (thumbnail in searchScreenViewModel.sightResult) {
                         SightTourSearchResult(
                             modifier = Modifier

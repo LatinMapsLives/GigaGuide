@@ -61,7 +61,8 @@ class FavoritesScreenViewModel @Inject constructor(
                         }
                     }
                     for (id in favorites.tourIds) {
-                        var tour = ServerUtils.executeNetworkCall { tourRepository.getTourInfoById(id.toLong()) }
+                        var tour = ServerUtils.executeNetworkCall { tourRepository.getTourInfoById(id.toLong(),
+                            LocaleManager.currentLanguage) }
                         tour?.let {
                             tours.add(
                                 SightTourThumbnail(
