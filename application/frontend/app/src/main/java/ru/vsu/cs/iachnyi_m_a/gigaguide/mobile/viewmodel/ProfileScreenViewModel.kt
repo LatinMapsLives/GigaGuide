@@ -1,6 +1,7 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -8,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.launch
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.datastore.DataStoreManager
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.user.UserDataDTO
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.UserRepository
@@ -24,9 +26,9 @@ class ProfileScreenViewModel @Inject constructor(private var userRepository: Use
     var oldPassword by mutableStateOf("")
     var newPassword by mutableStateOf("")
 
-    var usernameChangeError by mutableStateOf("")
-    var emailChangeError by mutableStateOf("")
-    var passwordChangeError by mutableStateOf("")
+    var usernameChangeError by mutableIntStateOf(R.string.empty)
+    var emailChangeError by mutableIntStateOf(R.string.empty)
+    var passwordChangeError by mutableIntStateOf(R.string.empty)
 
     var usernameEditorOpen by mutableStateOf(false)
     var passwordEditorOpen by mutableStateOf(false)
@@ -35,6 +37,10 @@ class ProfileScreenViewModel @Inject constructor(private var userRepository: Use
     var currentUsername by mutableStateOf("")
     var currentEmail by mutableStateOf("")
     var loading by mutableStateOf(false)
+
+    var usernameSuccess = ""
+    var passwordSuccess = ""
+    var emailSuccess = ""
 
     fun loadUserData(){
         viewModelScope.launch {
@@ -54,7 +60,7 @@ class ProfileScreenViewModel @Inject constructor(private var userRepository: Use
 
     fun updatePassword(){
         if(oldPassword.trim().isEmpty() || newPassword.trim().isEmpty()){
-            passwordChangeError = "Заполните оба поля"
+            passwordChangeError = R.string.profile_screen_error_fill_both_fields
             return
         }
         viewModelScope.launch {
@@ -65,13 +71,13 @@ class ProfileScreenViewModel @Inject constructor(private var userRepository: Use
             loading = true
             var success  = ServerUtils.executeNetworkCall { userRepository.updatePassword(dataStoreManager.getJWT()!!, oldPassword.trim(), newPassword.trim()) }
             if(success != null && success){
-                Pancake.success("Пароль успешно обновлён")
-                passwordChangeError = ""
+                Pancake.success(passwordSuccess)
+                passwordChangeError = R.string.empty
                 oldPassword = ""
                 newPassword = ""
                 loadUserData()
             } else {
-                passwordChangeError = "Ошибка обновления пароля"
+                passwordChangeError = R.string.profile_screen_error_password_change_error
             }
             loading = false
         }
@@ -79,15 +85,15 @@ class ProfileScreenViewModel @Inject constructor(private var userRepository: Use
 
     fun updateUsername(){
         if(newUsername.trim().isEmpty()){
-            usernameChangeError = "Заполните поле имени"
+            usernameChangeError = R.string.profile_screen_error_fill_in_the_field
             return
         }
         if(newUsername.trim() == currentUsername){
-            usernameChangeError = "Новое имя должно отличаться от старого"
+            usernameChangeError = R.string.profile_screen_error_names_must_differ
             return
         }
         if(!UsernameValidator().validate(newUsername)){
-            usernameChangeError = "Неверный формат имени"
+            usernameChangeError = R.string.profile_screen_error_wrong_username_format
             return
         }
         loading = true
@@ -98,12 +104,12 @@ class ProfileScreenViewModel @Inject constructor(private var userRepository: Use
             }
             var success  = ServerUtils.executeNetworkCall { userRepository.updateUsername(dataStoreManager.getJWT()!!, newUsername.trim()) }
             if(success != null && success){
-                Pancake.success("Имя успешно обновлено")
-                usernameChangeError = ""
+                Pancake.success(usernameSuccess)
+                usernameChangeError = R.string.empty
                 newUsername = ""
                 loadUserData()
             } else {
-                usernameChangeError = "Ошибка обновления имени"
+                usernameChangeError = R.string.profile_screen_error_username_update_error
             }
         }
         loading = false
@@ -111,15 +117,15 @@ class ProfileScreenViewModel @Inject constructor(private var userRepository: Use
 
     fun updateEmail(){
         if(newEmail.trim().isEmpty()){
-            emailChangeError = "Заполните поле почты"
+            emailChangeError = R.string.profile_screen_error_fill_in_the_field
             return
         }
         if(newEmail.trim() == currentEmail){
-            emailChangeError = "Новая почта должна отличаться от старой"
+            emailChangeError = R.string.profile_screen_error_email_must_differ
             return
         }
         if(!EmailValidator().validate(newEmail)){
-            emailChangeError = "Неверный формат почты"
+            emailChangeError = R.string.profile_screen_error_wrong_email_fomat
             return
         }
         loading = true
@@ -130,12 +136,12 @@ class ProfileScreenViewModel @Inject constructor(private var userRepository: Use
             }
             var success  = ServerUtils.executeNetworkCall { userRepository.updateEmail(dataStoreManager.getJWT()!!, newEmail.trim()) }
             if(success != null && success){
-                Pancake.success("Почта успешно обновлена")
-                emailChangeError = ""
+                Pancake.success(emailSuccess)
+                emailChangeError = R.string.empty
                 newEmail = ""
                 loadUserData()
             } else {
-                emailChangeError = "Ошибка обновления почты"
+                emailChangeError = R.string.profile_screen_error_email_update_error
             }
         }
         loading = false

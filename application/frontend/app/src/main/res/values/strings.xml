@@ -42,7 +42,7 @@
     <string name="login_screen_success">Успешный вход</string>
     <string name="settings_screen_logged_in_as">Выполнен вход под именем</string>
     <string name="tour_screen_button_explore_tour">Пройти тур</string>
-    <string name="error_no_internet">Отсутствует подключение к Интернету</string>
+    <string name="error_no_internet">Ошибка подключения</string>
     <string name="error_server_unavailable">Сервер недоступен. Повторите попытку позже</string>
     <string name="error_server_error">Ошибка сервера</string>
     <string name="profile_screen_button_change_active">Изменить</string>
@@ -90,4 +90,26 @@
     <string name="search_screen_filters_to">до</string>
     <string name="search_screen_filters_duration">Продолжительность</string>
     <string name="search_screen_filters_length">Протяженность</string>
+    <string name="empty"></string>
+    <string name="profile_screen_header">Информация профиля</string>
+    <string name="profile_screen_username">Имя пользователя</string>
+    <string name="profile_screen_hint_new_name">Новое имя</string>
+    <string name="profile_screen_email">Электронная почта</string>
+    <string name="profile_screen_hint_new_email">Новая почта</string>
+    <string name="profile_screen_password">Пароль</string>
+    <string name="profile_screen_current_password">Текущий пароль</string>
+    <string name="profile_screen_new_password">Новый пароль</string>
+    <string name="profile_screen_log_out">Выйти</string>
+    <string name="profile_screen_error_fill_in_the_field">Заполните поле</string>
+    <string name="profile_screen_error_fill_both_fields">Заполните оба поля</string>
+    <string name="profile_screen_error_password_change_error">Ошибка обновления пароля</string>
+    <string name="profile_screen_error_names_must_differ">Новое имя должно отличаться</string>
+    <string name="profile_screen_error_email_must_differ">Новая почта должна отличаться</string>
+    <string name="profile_screen_error_wrong_username_format">Неверный формат имени</string>
+    <string name="profile_screen_error_wrong_email_fomat">Неверный формат почты</string>
+    <string name="profile_screen_error_email_update_error">Ошибка обновления почты</string>
+    <string name="profile_screen_error_username_update_error">Ошибка обновления имени</string>
+    <string name="profile_screen_email_success">Почта успешно обновлена</string>
+    <string name="profile_screen_password_success">Пароль успешно обновлён</string>
+    <string name="profile_screen_username_success">Имя успешно обновлено</string>
 </resources>

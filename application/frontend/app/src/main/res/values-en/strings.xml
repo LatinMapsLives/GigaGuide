@@ -42,7 +42,7 @@
     <string name="login_screen_success">Login successful</string>
     <string name="settings_screen_logged_in_as">Logged in under the name</string>
     <string name="tour_screen_button_explore_tour">Launch tour</string>
-    <string name="error_no_internet">No Internet connection</string>
+    <string name="error_no_internet">Connect error</string>
     <string name="error_server_unavailable">Server unavailable. Try again later</string>
     <string name="error_server_error">Server error</string>
     <string name="profile_screen_button_change_active">Change</string>
@@ -90,4 +90,26 @@
     <string name="search_screen_filters_to">to</string>
     <string name="search_screen_filters_duration">Duration</string>
     <string name="search_screen_filters_length">Distance</string>
+    <string name="empty">" "</string>
+    <string name="profile_screen_header">Profile info</string>
+    <string name="profile_screen_username">Username</string>
+    <string name="profile_screen_hint_new_name">New name</string>
+    <string name="profile_screen_email">Email</string>
+    <string name="profile_screen_hint_new_email">New email</string>
+    <string name="profile_screen_password">Password</string>
+    <string name="profile_screen_current_password">Current password</string>
+    <string name="profile_screen_new_password">New password</string>
+    <string name="profile_screen_log_out">Log out</string>
+    <string name="profile_screen_error_fill_in_the_field">Fill in the field</string>
+    <string name="profile_screen_error_fill_both_fields">Fill in both fields</string>
+    <string name="profile_screen_error_password_change_error">Password change error</string>
+    <string name="profile_screen_error_names_must_differ">New username must be different</string>
+    <string name="profile_screen_error_email_must_differ">New email must be different</string>
+    <string name="profile_screen_error_wrong_username_format">Wrong username format</string>
+    <string name="profile_screen_error_wrong_email_fomat">Wrong email format</string>
+    <string name="profile_screen_error_email_update_error">Email change error</string>
+    <string name="profile_screen_error_username_update_error">Username change error</string>
+    <string name="profile_screen_email_success">Email change success</string>
+    <string name="profile_screen_password_success">Password change success</string>
+    <string name="profile_screen_username_success">Username change success</string>
 </resources>

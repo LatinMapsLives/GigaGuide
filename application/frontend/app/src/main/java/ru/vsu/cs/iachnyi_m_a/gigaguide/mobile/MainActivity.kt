@@ -110,7 +110,7 @@ class MainActivity : ComponentActivity() {
         val startScreenObject = HomeScreenObject;
 
         var selectedNavItemIndex = mutableIntStateOf(0);
-        var infoMessage = mutableStateOf("Интернет недоступен, приди пж попозже")
+        var infoMessage = mutableStateOf("")
         var infoColor = mutableStateOf<Color>(Color(0))
 
         var geoLocationProvider = GeoLocationProvider(this)

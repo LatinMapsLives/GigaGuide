@@ -22,7 +22,7 @@ class ServerUtils {
                 result= try {
                     block.invoke()
                 } catch (e: SocketTimeoutException){
-                    Pancake.serverUnavailable()
+                    Pancake.noInternet()
                     null
                 } catch (e: ConnectException) {
                     Pancake.noInternet()
