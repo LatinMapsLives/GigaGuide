@@ -31,6 +31,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
@@ -42,6 +43,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.res.ResourcesCompat
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
+import com.google.gson.Gson
 import org.osmdroid.config.Configuration
 import org.osmdroid.events.MapEventsReceiver
 import org.osmdroid.events.MapListener
@@ -52,6 +54,7 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.Polyline
 import org.osmdroid.views.overlay.TilesOverlay
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.MapPoint
@@ -67,8 +70,11 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.GeoLocationProvider
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.Pancake
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.MapScreenViewModel
+import kotlin.reflect.javaType
+import kotlin.reflect.typeOf
 
 
+@OptIn(ExperimentalStdlibApi::class)
 @Composable
 fun MapScreen(
     mapScreenViewModel: MapScreenViewModel,
@@ -148,6 +154,7 @@ fun MapScreen(
                             return false
                         }
                     })
+
                     view.overlays.add(clickOverlay)
 
                     if(locationProvider.hasLocationPermissions()){
