@@ -147,30 +147,18 @@ public class TourController {
         return ResponseEntity.ok("Тур успешно удалён");
     }
 
-/*    @Operation(summary = "Поиск туров по названию")
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Туры найдены"
-            )
-    })
-    @Parameter(name = "name", description = "Имя тура")
-    @GetMapping("/search")
-    public ResponseEntity<?> searchTours(@RequestParam(required = false) String name) {
-        return ResponseEntity.ok(tourService.searchTours(name));
-    }
-
-    @Operation(summary = "Фильтрация туров по категории, длительности и расстоянию")
-    @GetMapping("/filter")
-    public ResponseEntity<?> filterTours(
+    @GetMapping("/search-filter")
+    public ResponseEntity<?> searchAndFilterTours(
+            @RequestParam(required = false) String query,
             @RequestParam(required = false) String category,
             @RequestParam(required = false) Integer minDuration,
             @RequestParam(required = false) Integer maxDuration,
             @RequestParam(required = false) Double minDistance,
-            @RequestParam(required = false) Double maxDistance
+            @RequestParam(required = false) Double maxDistance,
+            @RequestParam(defaultValue = "ru") String language
     ) {
         return ResponseEntity.ok(
-                tourService.filterTours(category, minDuration, maxDuration, minDistance, maxDistance)
+                tourService.searchAndFilterTours(query, category, minDuration, maxDuration, minDistance, maxDistance, language)
         );
-    }*/
+    }
 }

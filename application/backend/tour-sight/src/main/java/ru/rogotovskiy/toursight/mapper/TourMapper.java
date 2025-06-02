@@ -3,6 +3,7 @@ package ru.rogotovskiy.toursight.mapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.rogotovskiy.toursight.dto.create.CreateTourDto;
+import ru.rogotovskiy.toursight.dto.read.PreviewTourDto;
 import ru.rogotovskiy.toursight.dto.read.TourDto;
 import ru.rogotovskiy.toursight.entity.Tour;
 import ru.rogotovskiy.toursight.entity.TourTranslation;
@@ -37,6 +38,16 @@ public class TourMapper {
                 BigDecimal.ZERO,
                 null,
                 null
+        );
+    }
+
+    public PreviewTourDto toPreviewDto(Tour tour, TourTranslation translation) {
+        return new PreviewTourDto(
+                tour.getId(),
+                translation.getName(),
+                tour.getDistanceKm(),
+                tour.getRating(),
+                tour.getImagePath()
         );
     }
 }

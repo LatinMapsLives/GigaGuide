@@ -1,5 +1,6 @@
 package ru.rogotovskiy.toursight.service;
 
+import com.opencsv.bean.CsvToBean;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.rogotovskiy.toursight.dto.create.CreateTourDto;
@@ -12,6 +13,8 @@ import ru.rogotovskiy.toursight.repository.TourTranslationRepository;
 import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -108,5 +111,16 @@ public class TourTranslationService {
             }
         }
         repository.saveAll(translations);
+    }
+
+    public Set<Integer> findTourIdsByQueryAndLanguage(String likeQuery, String language) {
+        return repository.findByNameOrCityLikeIgnoreCaseAndLanguage(likeQuery, language)
+                .stream()
+                .map(TourTranslation::getTourId)
+                .collect(Collectors.toSet());
+    }
+
+    public List<TourTranslation> findByLanguage(String language) {
+        return repository.findByLanguage_Code(language);
     }
 }
