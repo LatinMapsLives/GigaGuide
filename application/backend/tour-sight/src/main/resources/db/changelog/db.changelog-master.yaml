@@ -9,3 +9,7 @@ databaseChangeLog:
       file: db/changelog/4-update-image_url.sql
   - include:
       file: db/changelog/5-add-column-rating-to-sights.sql
+  - include:
+      file: db/changelog/6-add-localization-tables.sql
+  - include:
+      file: db/changelog/7-update-test-sight-moments-data.sql

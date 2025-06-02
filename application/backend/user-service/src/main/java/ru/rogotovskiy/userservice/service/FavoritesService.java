@@ -11,8 +11,11 @@ public class FavoritesService {
     private final FavoriteSightService favoriteSightService;
     private final FavoriteTourService favoriteTourService;
 
-    public FavoritesDto getAll(Integer userId) {
-        return new FavoritesDto(favoriteTourService.getAll(userId), favoriteSightService.getAll(userId));
+    public FavoritesDto getAll(Integer userId, String language) {
+        return new FavoritesDto(
+                favoriteTourService.getAll(userId, language),
+                favoriteSightService.getAll(userId, language)
+        );
     }
 
 }

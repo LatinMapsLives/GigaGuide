@@ -1,25 +1,42 @@
 package ru.rogotovskiy.toursight.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import ru.rogotovskiy.toursight.dto.create.CreateTourDto;
-import ru.rogotovskiy.toursight.dto.read.PreviewTourDto;
 import ru.rogotovskiy.toursight.dto.read.TourDto;
 import ru.rogotovskiy.toursight.entity.Tour;
+import ru.rogotovskiy.toursight.entity.TourTranslation;
 
-@Mapper(componentModel = "spring")
-public interface TourMapper {
+import java.math.BigDecimal;
 
-    @Mapping(target = "sights", ignore = true)
-    TourDto toDto(Tour tour);
+@Component
+@RequiredArgsConstructor
+public class TourMapper {
 
-    @Mapping(source = "name", target = "name")
-    @Mapping(source = "description", target = "description")
-    @Mapping(source = "city", target = "city")
-    @Mapping(source = "category", target = "category")
-    @Mapping(source = "type", target = "type")
-    @Mapping(target = "sights", ignore = true)
-    Tour toEntity(CreateTourDto dto);
+    public TourDto toDto(Tour tour, TourTranslation translation) {
+        return new TourDto(
+                tour.getId(),
+                translation.getName(),
+                translation.getDescription(),
+                translation.getCity(),
+                tour.getDurationMinutes(),
+                tour.getDistanceKm(),
+                translation.getCategory(),
+                translation.getType(),
+                tour.getRating(),
+                tour.getImagePath(),
+                null
+        );
+    }
 
-    PreviewTourDto toPreviewDto(Tour tour);
+    public Tour toEntity(CreateTourDto dto) {
+        return new Tour(
+                null,
+                null,
+                null,
+                BigDecimal.ZERO,
+                null,
+                null
+        );
+    }
 }

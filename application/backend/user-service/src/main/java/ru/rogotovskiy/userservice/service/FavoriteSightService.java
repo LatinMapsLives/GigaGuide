@@ -37,12 +37,12 @@ public class FavoriteSightService {
         favoriteSightRepository.delete(getFavoriteSight(userId, sightId));
     }
 
-    public List<FavoriteSightDto> getAll(Integer userId) {
+    public List<FavoriteSightDto> getAll(Integer userId, String language) {
         return favoriteSightRepository.findAllByUserId(userId).stream()
                 .map(fav -> sightRepository.findById(fav.getSightId()))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .map(favoriteSightMapper::toDto)
+                .map(sight -> favoriteSightMapper.toDto(sight, language))
                 .toList();
     }
 

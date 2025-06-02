@@ -20,26 +20,11 @@ public class Tour {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "description")
-    private String description;
-
-    @Column(name = "city")
-    private String city;
-
     @Column(name = "duration")
     private Integer durationMinutes;
 
     @Column(name = "distance")
     private BigDecimal distanceKm;
-
-    @Column(name = "category")
-    private String category;
-
-    @Column(name = "type")
-    private String type;
 
     @Column(name = "rating")
     private BigDecimal rating;

@@ -3,8 +3,8 @@ package ru.rogotovskiy.guide.service;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.rogotovskiy.guide.entity.Moment;
-import ru.rogotovskiy.guide.repository.MomentRepository;
+import ru.rogotovskiy.guide.entity.MomentTranslation;
+import ru.rogotovskiy.guide.repository.MomentTranslationRepository;
 import ru.rogotovskiy.guide.util.WavUtil;
 
 import java.io.IOException;
@@ -13,12 +13,12 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class AudioGuideService {
 
-    private final MomentRepository momentRepository;
+    private final MomentTranslationRepository momentRepository;
     private final TtsService ttsService;
     private final TranslationService translationService;
 
     public byte[] getAudioForMoment(Integer momentId, String lang) throws IOException {
-        Moment moment = momentRepository.findById(momentId)
+        MomentTranslation moment = momentRepository.findByMomentId(momentId)
                 .orElseThrow(() -> new EntityNotFoundException("Moment not found"));
 
         String content = moment.getContent();

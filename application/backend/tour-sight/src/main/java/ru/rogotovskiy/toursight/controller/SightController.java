@@ -1,6 +1,5 @@
 package ru.rogotovskiy.toursight.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,8 +33,8 @@ public class SightController {
 
     @Hidden
     @GetMapping("/all")
-    public ResponseEntity<?> getAll() {
-        return ResponseEntity.ok(sightService.getAll());
+    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "ru") String language) {
+        return ResponseEntity.ok(sightService.getAll(language));
     }
 
     @Operation(summary = "Получить достопримечательность по ID")
@@ -59,8 +58,8 @@ public class SightController {
     })
     @Parameter(name = "id", description = "ID достопримечательности")
     @GetMapping
-    public ResponseEntity<?> getSightById(@RequestParam Integer id) {
-        return ResponseEntity.ok(sightService.getById(id));
+    public ResponseEntity<?> getSightById(@RequestParam Integer id, @RequestParam(defaultValue = "ru") String language) {
+        return ResponseEntity.ok(sightService.getById(id, language));
     }
 
     @Operation(summary = "Создать новую достопримечательность")
@@ -159,7 +158,8 @@ public class SightController {
     })
     @Parameter(name = "name", description = "Название достопримечательности")
     @GetMapping("/search")
-    public ResponseEntity<?> searchSights(@RequestParam(required = false) String name) {
-        return ResponseEntity.ok(sightService.searchSights(name));
+    public ResponseEntity<?> searchSights(@RequestParam(required = false) String name,
+                                          @RequestParam(defaultValue = "ru") String language) {
+        return ResponseEntity.ok(sightService.searchSights(name, language));
     }
 }

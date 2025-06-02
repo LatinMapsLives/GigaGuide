@@ -1,23 +1,48 @@
 package ru.rogotovskiy.toursight.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.springframework.stereotype.Component;
 import ru.rogotovskiy.toursight.dto.create.CreateSightDto;
 import ru.rogotovskiy.toursight.dto.read.PreviewSightDto;
 import ru.rogotovskiy.toursight.dto.read.SightDto;
 import ru.rogotovskiy.toursight.entity.Sight;
+import ru.rogotovskiy.toursight.entity.SightTranslation;
 
-@Mapper(componentModel = "spring")
-public interface SightMapper {
+import java.math.BigDecimal;
 
-    SightDto toDto(Sight sight);
+@Component
+public class SightMapper {
 
-    @Mapping(source = "name", target = "name")
-    @Mapping(source = "description", target = "description")
-    @Mapping(source = "city", target = "city")
-    @Mapping(source = "latitude", target = "latitude")
-    @Mapping(source = "longitude", target = "longitude")
-    Sight toEntity(CreateSightDto dto);
+    public SightDto toDto(Sight sight, SightTranslation translation) {
+        return new SightDto(
+                sight.getId(),
+                translation.getName(),
+                translation.getDescription(),
+                translation.getCity(),
+                sight.getImagePath(),
+                sight.getLatitude(),
+                sight.getLongitude(),
+                sight.getRating());
+    }
 
-    PreviewSightDto toPreviewDto(Sight sight);
+    public PreviewSightDto toPreviewDto(Sight sight, SightTranslation translation) {
+        return new PreviewSightDto(
+                sight.getId(),
+                translation.getName(),
+                sight.getLatitude(),
+                sight.getLongitude(),
+                sight.getRating(),
+                sight.getImagePath()
+        );
+    }
+
+    public Sight toEntity(CreateSightDto dto) {
+        return new Sight(
+                null,
+                null,
+                dto.latitude(),
+                dto.longitude(),
+                BigDecimal.ZERO,
+                null
+        );
+    }
 }

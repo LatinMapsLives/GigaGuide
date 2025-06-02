@@ -37,12 +37,12 @@ public class FavoriteTourService {
         favoriteTourRepository.delete(getFavoriteTour(userId, tourId));
     }
 
-    public List<FavoriteTourDto> getAll(Integer userId) {
+    public List<FavoriteTourDto> getAll(Integer userId, String language) {
         return favoriteTourRepository.findAllByUserId(userId).stream()
                 .map(fav -> tourRepository.findById(fav.getTourId()))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .map(favoriteTourMapper::toDto)
+                .map(tour -> favoriteTourMapper.toDto(tour, language))
                 .toList();
     }
 
