@@ -8,6 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface MomentTranslationRepository extends CrudRepository<MomentTranslation, Integer> {
-    Optional<MomentTranslation> findByMomentId(Integer momentId);
+    Optional<MomentTranslation> findByMomentIdAndLanguage_Code(Integer momentId, String languageCode);
 }
 

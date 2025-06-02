@@ -6,23 +6,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "moment_translations")
+@Table(name = "languages")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MomentTranslation {
+public class Language {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "language_id", nullable = false)
-    private Language language;
+    @Column(name = "code", unique = true, nullable = false, length = 10)
+    private String code;
 
-    @Column(name = "moment_id")
-    private Integer momentId;
-
-    @Column(name = "content")
-    private String content;
 }

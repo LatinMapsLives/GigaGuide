@@ -18,7 +18,7 @@ public class AudioGuideService {
     private final TranslationService translationService;
 
     public byte[] getAudioForMoment(Integer momentId, String lang) throws IOException {
-        MomentTranslation moment = momentRepository.findByMomentId(momentId)
+        MomentTranslation moment = momentRepository.findByMomentIdAndLanguage_Code(momentId, lang)
                 .orElseThrow(() -> new EntityNotFoundException("Moment not found"));
 
         String content = moment.getContent();
