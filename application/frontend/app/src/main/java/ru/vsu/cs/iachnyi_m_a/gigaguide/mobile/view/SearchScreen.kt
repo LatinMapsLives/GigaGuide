@@ -1,5 +1,6 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -23,9 +28,14 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,8 +43,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -44,8 +57,12 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.SightTourThumbnail
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SightPageScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.TourPageScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.Red
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.SearchScreenViewModel
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.SortingOptions
 
 @OptIn(ExperimentalLayoutApi::class)
 @Preview
@@ -57,7 +74,93 @@ fun SearchScreen(
     LaunchedEffect(Unit) {
         searchScreenViewModel.loadSearchResult()
     }
+    var sortDialogOpen by remember { mutableStateOf(false) }
     GigaGuideMobileTheme {
+        when {
+            sortDialogOpen -> {
+                Dialog(onDismissRequest = {}) {
+                    Column(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(20.dp))
+                            .background(color = MaterialTheme.colorScheme.background)
+                            .padding(20.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = stringResource(R.string.search_screen_sorting_header),
+                            color = MaterialTheme.colorScheme.onBackground,
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                        var currentOption by
+                        remember { mutableStateOf(SortingOptions.valueOf(searchScreenViewModel.sortingOptions.name)) }
+                        val radioOptions = listOf(
+                            SortingOptions.NONE, SortingOptions.RATING,
+                            SortingOptions.REMOTENESS
+                        )
+                        val radioLabels = listOf(
+                            stringResource(R.string.search_screen_sorting_option_none),
+                            stringResource(R.string.search_screen_sorting_option_rating),
+                            stringResource(R.string.search_screen_sorting_option_remoteness)
+                        )
+                        Column(Modifier.selectableGroup()) {
+                            radioOptions.forEachIndexed { i, option ->
+                                Row(
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .selectable(
+                                            selected = (option == currentOption),
+                                            onClick = {
+                                                currentOption = option
+                                            },
+                                            role = Role.RadioButton
+                                        )
+                                        .padding(top = 10.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    RadioButton(
+                                        selected = (option == currentOption),
+                                        onClick = null
+                                    )
+                                    Text(
+                                        color = MaterialTheme.colorScheme.onBackground,
+                                        text = radioLabels[i],
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        modifier = Modifier.padding(start = 16.dp)
+                                    )
+                                }
+                            }
+                        }
+                        Row {
+                            Button(
+                                onClick = { sortDialogOpen = false },
+                                contentPadding = PaddingValues(horizontal = 20.dp, vertical = 5.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    contentColor = White,
+                                    containerColor = MediumBlue
+                                )
+                            ) {
+                                Text(stringResource(R.string.search_screen_sort_dialog_cancel))
+                            }
+                            Button(
+                                modifier = Modifier.padding(start = 10.dp),
+                                onClick = {
+                                    searchScreenViewModel.sortingOptions = currentOption
+                                    searchScreenViewModel.loadSearchResult()
+                                    sortDialogOpen = false
+                                },
+                                contentPadding = PaddingValues(horizontal = 20.dp, vertical = 5.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    contentColor = White,
+                                    containerColor = MediumBlue
+                                )
+                            ) {
+                                Text(stringResource(R.string.search_screen_sort_dialog_apply))
+                            }
+                        }
+                    }
+                }
+            }
+        }
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -68,13 +171,16 @@ fun SearchScreen(
                     CustomTextField(
                         modifier = Modifier.fillMaxWidth(),
                         value = searchScreenViewModel.searchBarValue,
-                        onValueChange = {searchScreenViewModel.searchBarValue = it},
+                        onValueChange = { searchScreenViewModel.searchBarValue = it },
                         hint = stringResource(R.string.search_screen_bar_hint),
                         isPassword = false
                     )
                     Icon(
                         modifier = Modifier
-                            .clickable(onClick = {searchScreenViewModel.loadSearchResult()}, enabled = !searchScreenViewModel.loading)
+                            .clickable(
+                                onClick = { searchScreenViewModel.loadSearchResult() },
+                                enabled = !searchScreenViewModel.loading
+                            )
                             .align(alignment = Alignment.CenterEnd)
                             .padding(10.dp)
                             .size(30.dp),
@@ -109,7 +215,10 @@ fun SearchScreen(
                     .padding(10.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.clickable(onClick = { sortDialogOpen = true })
+                ) {
                     Icon(
                         modifier = Modifier.size(20.dp),
                         imageVector = ImageVector.vectorResource(R.drawable.sort),
@@ -119,9 +228,26 @@ fun SearchScreen(
                     Text(
                         text = stringResource(R.string.search_bar_sort),
                         style = MaterialTheme.typography.labelLarge,
-                        modifier = Modifier.padding(start = 10.dp),
+                        modifier = Modifier.padding(horizontal = 5.dp),
                         color = MaterialTheme.colorScheme.onBackground
                     )
+                    if (searchScreenViewModel.sortingOptions != SortingOptions.NONE) {
+                        Box(
+                            modifier = Modifier
+                                .clip(CircleShape)
+                                .background(color = Red)
+                                .width(20.dp)
+                                .height(20.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                textAlign = TextAlign.Center,
+                                text = "1",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = White
+                            )
+                        }
+                    }
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
@@ -139,7 +265,8 @@ fun SearchScreen(
                 }
             }
             Text(
-                style = MaterialTheme.typography.headlineMedium, text = stringResource(R.string.search_screen_search_result),
+                style = MaterialTheme.typography.headlineMedium,
+                text = stringResource(R.string.search_screen_search_result),
                 color = MaterialTheme.colorScheme.onBackground
             )
             FlowRow(
