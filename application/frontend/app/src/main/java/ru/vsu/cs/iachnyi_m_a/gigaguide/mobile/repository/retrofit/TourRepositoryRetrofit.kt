@@ -52,8 +52,8 @@ class TourRepositoryRetrofit(private val tourAPI: TourAPI) : TourRepository {
                     name = dto.name,
                     proximity = proximityKm(
                         userLatitude,
-                        dto.latitude,
                         userLongitude,
+                        dto.latitude,
                         dto.longitude
                     ),
                     imageLink = dto.imagePath

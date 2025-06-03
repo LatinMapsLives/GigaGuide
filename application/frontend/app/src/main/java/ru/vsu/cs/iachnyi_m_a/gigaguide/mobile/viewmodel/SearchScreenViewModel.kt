@@ -71,7 +71,7 @@ class SearchScreenViewModel @Inject constructor(
                             sightId = it.id.toLong(),
                             name = it.name,
                             rating = it.rating,
-                            proximity = proximityKm(dataStoreManager.getLastLocation().latitude, it.latitude.toDouble(), dataStoreManager.getLastLocation().longitude, it.longitude.toDouble()),
+                            proximity = proximityKm(dataStoreManager.getLastLocation().latitude, dataStoreManager.getLastLocation().longitude, it.latitude.toDouble(), it.longitude.toDouble()),
                             imageLink = it.imageLink
                         )
                     });

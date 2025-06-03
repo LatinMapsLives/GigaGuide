@@ -23,6 +23,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
@@ -445,24 +446,40 @@ fun SightTourSearchResult(modifier: Modifier, sightTourThumbnail: SightTourThumb
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                modifier = Modifier.fillMaxWidth(0.75f),
+                modifier = Modifier.weight(1f),
                 text = sightTourThumbnail.name,
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onBackground
             )
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    imageVector = Icons.Filled.Star,
-                    contentDescription = null,
-                    modifier = Modifier.size(20.dp),
-                    tint = MaterialTheme.colorScheme.onBackground
-                )
-                Text(
-                    style = MaterialTheme.typography.labelSmall,
-                    text = sightTourThumbnail.rating.toString(),
-                    color = MaterialTheme.colorScheme.onBackground
-                )
+            Column(){
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Filled.Star,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp),
+                        tint = MaterialTheme.colorScheme.onBackground
+                    )
+                    Text(
+                        style = MaterialTheme.typography.labelSmall,
+                        text = sightTourThumbnail.rating.toString(),
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Filled.Place,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp),
+                        tint = MaterialTheme.colorScheme.onBackground
+                    )
+                    Text(
+                        style = MaterialTheme.typography.labelSmall,
+                        text = sightTourThumbnail.proximity.toString(),
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                }
             }
+
         }
     }
 }
