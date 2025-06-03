@@ -51,6 +51,7 @@ class FavoritesScreenViewModel @Inject constructor(
                         sight?.let {
                             sights.add(
                                 SightTourThumbnail(
+                                    isTour = false,
                                     sightId = sight.id,
                                     name = sight.name,
                                     rating = 4.5f,
@@ -66,6 +67,7 @@ class FavoritesScreenViewModel @Inject constructor(
                         tour?.let {
                             tours.add(
                                 SightTourThumbnail(
+                                    isTour = true,
                                     sightId = tour.id,
                                     name = tour.name,
                                     rating = 4.5f,

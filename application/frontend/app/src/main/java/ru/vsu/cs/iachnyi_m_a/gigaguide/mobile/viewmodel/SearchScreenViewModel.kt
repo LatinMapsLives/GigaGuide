@@ -35,14 +35,11 @@ class SearchScreenViewModel @Inject constructor(
     private val dataStoreManager: DataStoreManager
 ) : ViewModel() {
 
-    var sightResult = mutableStateListOf<SightTourThumbnail>()
-    var tourResult = mutableStateListOf<SightTourThumbnail>()
+    var searchResult = mutableStateListOf<SightTourThumbnail>()
     var loading by mutableStateOf(false)
 
     var searchSights by mutableStateOf(true)
     var searchTours by mutableStateOf(true)
-    var filterByDistance by mutableStateOf(false)
-    var filterByDuration by mutableStateOf(false)
     var minDuration by mutableIntStateOf(0)
     var maxDuration by mutableIntStateOf(120)
     var minDistance by mutableDoubleStateOf(0.0)
@@ -56,8 +53,7 @@ class SearchScreenViewModel @Inject constructor(
         loading = true
 
         viewModelScope.launch {
-            sightResult.clear()
-            tourResult.clear()
+            searchResult.clear()
 
             if(searchSights) {
                 var sightInfos: List<SightSearchResult>? =
@@ -68,23 +64,14 @@ class SearchScreenViewModel @Inject constructor(
                         )
                     }
                 if (sightInfos != null) {
-                    if (sortingOptions == SortingOptions.RATING) {
-                        sightInfos = sightInfos.sortedBy { -it.rating }
-                    } else {
-                        var userLat = dataStoreManager.getLastLocation().latitude
-                        var userLon = dataStoreManager.getLastLocation().longitude
-                        sightInfos = sightInfos.sortedBy {
-                            var lat = it.latitude
-                            var lon = it.longitude
-                            (lat - userLat).pow(2) + (lon - userLon).pow(2)
-                        }
-                    }
-                    sightResult.addAll(sightInfos.map {
+
+                    searchResult.addAll(sightInfos.map {
                         SightTourThumbnail(
+                            isTour = false,
                             sightId = it.id.toLong(),
                             name = it.name,
                             rating = it.rating,
-                            proximity = 0f,
+                            proximity = proximityKm(dataStoreManager.getLastLocation().latitude, it.latitude.toDouble(), dataStoreManager.getLastLocation().longitude, it.longitude.toDouble()),
                             imageLink = it.imageLink
                         )
                     });
@@ -100,21 +87,21 @@ class SearchScreenViewModel @Inject constructor(
                             minDuration = minDuration,
                             maxDuration = maxDuration,
                             minDistance = minDistance,
-                            maxDistance = maxDistance
+                            maxDistance = maxDistance,
+                            latitude = dataStoreManager.getLastLocation().latitude,
+                            longitude = dataStoreManager.getLastLocation().longitude
                         )
                     }
                 if (tourInfos == null) Log.e("SEARCH", "NIGGA")
                 if (tourInfos != null) {
-                    tourResult.addAll(tourInfos.map { ti ->
-                        SightTourThumbnail(
-                            sightId = ti.sightId,
-                            name = ti.name,
-                            rating = ti.rating,
-                            proximity = 0f,
-                            imageLink = ti.imageLink
-                        )
-                    });
+                    searchResult.addAll(tourInfos);
                 }
+            }
+
+            if (sortingOptions == SortingOptions.RATING) {
+                searchResult.sortBy { -it.rating }
+            } else {
+                searchResult.sortBy { it.proximity }
             }
 
             loading = false

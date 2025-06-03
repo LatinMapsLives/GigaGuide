@@ -5,5 +5,7 @@ data class PreviewTourDTO(
     var name: String,
     var distanceKm: Float?,
     var rating: Float,
-    var imagePath: String
+    var imagePath: String,
+    var latitude: Double,
+    var longitude: Double
 )

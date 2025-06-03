@@ -404,28 +404,15 @@ fun SearchScreen(
                 verticalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.padding(vertical = 15.dp)
             ) {
-                if (searchScreenViewModel.sightResult.isNotEmpty() || searchScreenViewModel.tourResult.isNotEmpty()) {
-                    for (thumbnail in searchScreenViewModel.sightResult) {
+                if (!searchScreenViewModel.searchResult.isEmpty()) {
+                    for (thumbnail in searchScreenViewModel.searchResult) {
                         SightTourSearchResult(
                             modifier = Modifier
-                                .clickable(onClick = {
-                                    navController.navigate(
-                                        SightPageScreenClass(thumbnail.sightId)
-                                    )
-                                })
-                                .fillMaxWidth(0.5f)
-                                .padding(start = 5.dp, end = 5.dp, bottom = 10.dp),
-                            sightTourThumbnail = thumbnail
-                        )
-                    }
-                    for (thumbnail in searchScreenViewModel.tourResult) {
-                        SightTourSearchResult(
-                            modifier = Modifier
-                                .clickable(onClick = {
+                                .clickable(onClick = if(thumbnail.isTour){{
                                     navController.navigate(
                                         TourPageScreenClass(thumbnail.sightId)
                                     )
-                                })
+                                }} else {{navController.navigate(SightPageScreenClass(thumbnail.sightId))}})
                                 .fillMaxWidth(0.5f)
                                 .padding(start = 5.dp, end = 5.dp, bottom = 10.dp),
                             sightTourThumbnail = thumbnail

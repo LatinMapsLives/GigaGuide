@@ -340,6 +340,7 @@ fun EditUserDataTextField(
     isPassword: Boolean
 ) {
     TextField(
+        singleLine = true,
         value = value,
         onValueChange = onValueChange,
         colors = TextFieldDefaults.colors(

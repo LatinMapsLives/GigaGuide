@@ -1,16 +1,16 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.retrofit
 
-import android.util.Log
 import retrofit2.Response
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.api.TourAPI
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.TourDTO
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.PreviewTourDTO
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.TourDTO
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.mapper.TourDTOMapper
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.TourInfo
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.SightTourThumbnail
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.TourRepository
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.proximityKm
 
-class TourRepositoryRetrofit(private val tourAPI: TourAPI): TourRepository {
+class TourRepositoryRetrofit(private val tourAPI: TourAPI) : TourRepository {
 
     override suspend fun getTourInfoById(id: Long, language: String): TourInfo? {
         var call = tourAPI.getTourById(id, language)
@@ -22,7 +22,16 @@ class TourRepositoryRetrofit(private val tourAPI: TourAPI): TourRepository {
         }
     }
 
-    override suspend fun searchFilterTours(name: String, language: String, minDuration: Int?, maxDuration: Int?, minDistance: Double?, maxDistance: Double?): List<SightTourThumbnail>? {
+    override suspend fun searchFilterTours(
+        name: String,
+        language: String,
+        userLatitude: Double,
+        userLongitude: Double,
+        minDuration: Int?,
+        maxDuration: Int?,
+        minDistance: Double?,
+        maxDistance: Double?
+    ): List<SightTourThumbnail>? {
 
         var params: MutableMap<String, String> = HashMap()
         params.put("query", name)
@@ -35,7 +44,21 @@ class TourRepositoryRetrofit(private val tourAPI: TourAPI): TourRepository {
         var call = tourAPI.searchTours(params)
         var response: Response<List<PreviewTourDTO>> = call.execute()
         return if (response.isSuccessful) {
-            response.body()!!.map { dto -> SightTourThumbnail(sightId = dto.id.toLong(), rating = dto.rating, name = dto.name, proximity = 0f, imageLink = dto.imagePath) }
+            response.body()!!.map { dto ->
+                SightTourThumbnail(
+                    isTour = true,
+                    sightId = dto.id.toLong(),
+                    rating = dto.rating,
+                    name = dto.name,
+                    proximity = proximityKm(
+                        userLatitude,
+                        dto.latitude,
+                        userLongitude,
+                        dto.longitude
+                    ),
+                    imageLink = dto.imagePath
+                )
+            }
         } else {
             null
         }

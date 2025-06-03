@@ -17,7 +17,7 @@ class TourDTOMapper: Mapper<TourDTO, TourInfo>{
             type = value.type,
             rating = value.rating,
             imageLink = ServerUtils.imageLink(value.imagePath),
-            sights = value.sights.map { s -> SightTourThumbnail(sightId = s.id.toLong(), name = s.name, rating = value.rating, proximity = 0f, imageLink = s.imagePath) }
+            sights = value.sights.map { s -> SightTourThumbnail(sightId = s.id.toLong(), name = s.name, rating = value.rating, proximity = 0f, isTour = false, imageLink = s.imagePath) }
         )
     }
 

@@ -50,7 +50,8 @@ fun CustomTextField(
     hint: String,
     value: String,
     onValueChange: (String) -> Unit,
-    isPassword: Boolean = false
+    isPassword: Boolean = false,
+    multiline: Boolean = false
 ) {
     TextField(
         value = value,
@@ -68,7 +69,8 @@ fun CustomTextField(
         modifier = modifier
             .clip(RoundedCornerShape(10.dp))
             .background(color = Invisible),
-        visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None
+        visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
+        singleLine = !multiline
     )
 }
 
