@@ -33,7 +33,7 @@ public class RouteService {
         }
 
         RouteType routeType = RouteType.fromString(routeTypeString);
-        String profile = routeType.getGraphHopperProfile(); // Например: "car", "foot", "bike"
+        String profile = routeType.getGraphHopperProfile();
 
         UriComponentsBuilder builder = UriComponentsBuilder
                 .fromHttpUrl(GRAPHHOPPER_URL)
