@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.rogotovskiy.toursight.dto.create.CreateTourDto;
 import ru.rogotovskiy.toursight.dto.read.PreviewTourDto;
 import ru.rogotovskiy.toursight.dto.read.TourDto;
+import ru.rogotovskiy.toursight.entity.Sight;
 import ru.rogotovskiy.toursight.entity.Tour;
 import ru.rogotovskiy.toursight.entity.TourTranslation;
 
@@ -26,6 +27,8 @@ public class TourMapper {
                 translation.getType(),
                 tour.getRating(),
                 tour.getImagePath(),
+                null,
+                null,
                 null
         );
     }
@@ -41,12 +44,14 @@ public class TourMapper {
         );
     }
 
-    public PreviewTourDto toPreviewDto(Tour tour, TourTranslation translation) {
+    public PreviewTourDto toPreviewDto(Tour tour, TourTranslation translation, Sight sight) {
         return new PreviewTourDto(
                 tour.getId(),
                 translation.getName(),
                 tour.getDistanceKm(),
                 tour.getRating(),
+                sight.getLatitude(),
+                sight.getLongitude(),
                 tour.getImagePath()
         );
     }

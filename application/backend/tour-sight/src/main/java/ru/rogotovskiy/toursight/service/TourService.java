@@ -6,10 +6,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import ru.rogotovskiy.toursight.dto.create.CreateTourDto;
+import ru.rogotovskiy.toursight.dto.read.PreviewSightDto;
 import ru.rogotovskiy.toursight.dto.read.PreviewTourDto;
 import ru.rogotovskiy.toursight.dto.read.TourDto;
 import ru.rogotovskiy.toursight.dto.update.UpdateTourDto;
+import ru.rogotovskiy.toursight.entity.Sight;
 import ru.rogotovskiy.toursight.entity.Tour;
+import ru.rogotovskiy.toursight.entity.TourSight;
 import ru.rogotovskiy.toursight.entity.TourTranslation;
 import ru.rogotovskiy.toursight.exception.TourNotFoundException;
 import ru.rogotovskiy.toursight.mapper.SightMapper;
@@ -54,18 +57,28 @@ public class TourService {
     public TourDto getById(Integer id, String languageCode) {
         Tour tour = getTourById(id);
         TourDto tourDto = tourMapper.toDto(tour, tourTranslationService.getTranslation(tour.getId(), languageCode));
-        tourDto.setSights(tour.getSights().stream()
-                .map(sight -> sightService.getPreviewSightDto(sight.getId(), languageCode))
-                .toList());
+        List<PreviewSightDto> sights = tour.getTourSights().stream()
+                .map(ts -> sightService.getPreviewSightDto(ts.getSight().getId(), languageCode))
+                .toList();
+        tourDto.setSights(sights);
+        tourDto.setLatitude(sights.getFirst().latitude());
+        tourDto.setLongitude(sights.getFirst().longitude());
         return tourDto;
     }
 
     public void createTour(CreateTourDto dto, MultipartFile image) throws IOException {
         Tour tour = tourMapper.toEntity(dto);
-        tour.setSights(dto.getSights().stream()
-                .map(sightService::getSightById)
-                .toList());
         tour.setImagePath(imageService.saveImage(image, "tours"));
+        tourRepository.save(tour);
+        List<TourSight> tourSights = new ArrayList<>();
+        for (Integer sightId : dto.getSights()) {
+            Sight sight = sightService.getSightById(sightId);
+            TourSight tourSight = new TourSight();
+            tourSight.setTour(tour);
+            tourSight.setSight(sight);
+            tourSights.add(tourSight);
+        }
+        tour.setTourSights(tourSights);
         tourRepository.save(tour);
         tourTranslationService.createTourTranslation(dto, tour.getId());
         String url = String.format("%s/api/map/tour?tourId=%d", "http://localhost:8086", tour.getId());
@@ -158,7 +171,7 @@ public class TourService {
                             .findFirst()
                             .orElse(null);
 
-                    return tourMapper.toPreviewDto(tour, translation);
+                    return tourMapper.toPreviewDto(tour, translation, tour.getTourSights().getFirst().getSight());
                 })
                 .toList();
     }

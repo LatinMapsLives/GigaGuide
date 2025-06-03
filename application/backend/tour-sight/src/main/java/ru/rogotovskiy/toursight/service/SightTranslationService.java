@@ -30,7 +30,7 @@ public class SightTranslationService {
     }
 
     public List<SightTranslation> searchSightsTranslation(String name, String languageCode) {
-        return repository.findByNameContainingIgnoreCaseAndLanguage_Code(name, languageCode);
+        return repository.findByNameOrCityLikeIgnoreCaseAndLanguage(name, languageCode);
     }
 
     public void createSightTranslation(CreateSightDto dto, Integer sightId) {
