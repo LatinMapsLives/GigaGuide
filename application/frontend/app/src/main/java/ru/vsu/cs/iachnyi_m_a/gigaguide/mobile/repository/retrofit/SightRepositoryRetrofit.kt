@@ -23,7 +23,8 @@ class SightRepositoryRetrofit(private val sightAPI: SightAPI) : SightRepository 
                     name = it.name,
                     description = it.description,
                     time = 30,
-                    imageLink = ServerUtils.imageLink(it.imagePath)
+                    imageLink = ServerUtils.imageLink(it.imagePath),
+                    city = it.city
                 )
             }
         } else {

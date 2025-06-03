@@ -42,6 +42,7 @@ class HomeScreenViewModel @Inject constructor(
             var sightInfos: List<SightSearchResult>? =
                 ServerUtils.executeNetworkCall { sightRepository.search("", LocaleManager.currentLanguage) }
 
+            if(sightInfos == null || sightInfos.isEmpty()) return@launch
             closestSights.clear()
             popularSights.clear()
             if (sightInfos != null) {
@@ -62,9 +63,37 @@ class HomeScreenViewModel @Inject constructor(
                 });
 
                 closestSights.sortWith { s1, s2 -> s1.proximity.compareTo(s2.proximity) }
+                if(closestSights.size >= 3) {
+                    var closestSlice = closestSights.slice(IntRange(0, 2));
+                    closestSights.clear()
+                    closestSights.addAll(closestSlice)
+                }
 
-                popularSights.addAll(closestSights)
+                var sight1 = ServerUtils.executeNetworkCall { sightRepository.getSightInfoById(id = closestSights[0].sightId, language = LocaleManager.currentLanguage)}
+                if(sight1 == null) return@launch
+                var city = ServerUtils.executeNetworkCall { sightRepository.search(string = sight1.city, language = LocaleManager.currentLanguage) }
+                if(city != null){
+                    popularSights.addAll(city.map {
+                            si ->
+                        var proximity_km = proximityKm(si.latitude.toDouble(), si.longitude.toDouble(), currentLocation.latitude, currentLocation.longitude)
+
+                        SightTourThumbnail(
+                            isTour = false,
+                            sightId = si.id.toLong(),
+                            name = si.name,
+                            rating = si.rating,
+                            proximity = proximity_km,
+                            imageLink = si.imageLink
+                        )
+                    });
+                }
+
                 popularSights.sortWith { s1, s2 -> s2.rating.compareTo(s1.rating) }
+                if(popularSights.size >= 3) {
+                    var popularSlice = popularSights.slice(IntRange(0, 2));
+                    popularSights.clear()
+                    popularSights.addAll(popularSlice)
+                }
             }
             loading.value = false;
         }
