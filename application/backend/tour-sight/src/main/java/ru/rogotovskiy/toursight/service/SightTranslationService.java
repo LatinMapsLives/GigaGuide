@@ -30,7 +30,8 @@ public class SightTranslationService {
     }
 
     public List<SightTranslation> searchSightsTranslation(String name, String languageCode) {
-        return repository.findByNameOrCityLikeIgnoreCaseAndLanguage(name, languageCode);
+        String query = "%" + name.toLowerCase() + "%";
+        return repository.findByNameOrCityLikeIgnoreCaseAndLanguage(query, languageCode);
     }
 
     public void createSightTranslation(CreateSightDto dto, Integer sightId) {

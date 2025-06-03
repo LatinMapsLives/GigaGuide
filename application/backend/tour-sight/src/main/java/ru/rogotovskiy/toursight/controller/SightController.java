@@ -157,7 +157,7 @@ public class SightController {
             )
     })
     @Parameter(name = "name", description = "Название достопримечательности")
-    @GetMapping("/search")
+    @GetMapping("/sights/search")
     public ResponseEntity<?> searchSights(@RequestParam(required = false) String name,
                                           @RequestParam(defaultValue = "ru") String language) {
         return ResponseEntity.ok(sightService.searchSights(name, language));
