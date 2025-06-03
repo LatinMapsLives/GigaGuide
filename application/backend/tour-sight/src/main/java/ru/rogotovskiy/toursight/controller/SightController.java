@@ -24,7 +24,7 @@ import ru.rogotovskiy.toursight.service.SightService;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/api/tour-sight/sights")
+@RequestMapping("/api/tour-sight")
 @RequiredArgsConstructor
 @Tag(name = "Достопримечательности", description = "Просмотр, добавление, обновление и удаление достопримечательностей")
 public class SightController {
@@ -32,7 +32,7 @@ public class SightController {
     private final SightService sightService;
 
     @Hidden
-    @GetMapping("/all")
+    @GetMapping("/sights/all")
     public ResponseEntity<?> getAll(@RequestParam(defaultValue = "ru") String language) {
         return ResponseEntity.ok(sightService.getAll(language));
     }
@@ -57,7 +57,7 @@ public class SightController {
             )
     })
     @Parameter(name = "id", description = "ID достопримечательности")
-    @GetMapping
+    @GetMapping("/sights")
     public ResponseEntity<?> getSightById(@RequestParam Integer id, @RequestParam(defaultValue = "ru") String language) {
         return ResponseEntity.ok(sightService.getById(id, language));
     }
@@ -77,7 +77,7 @@ public class SightController {
                     description = "Внутренняя ошибка сервера"
             )
     })
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/admin/sights", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createSight(@RequestParam(value = "sight") String sightJson,
                                          @RequestParam(value = "image", required = false) MultipartFile image) {
         ObjectMapper mapper = new ObjectMapper();
@@ -110,7 +110,7 @@ public class SightController {
                     )
             )
     })
-    @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/admin/sights", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateSight(@RequestParam(value = "sight") String updateSightJson,
                                          @RequestParam(value = "image", required = false) MultipartFile image) {
         ObjectMapper mapper = new ObjectMapper();
@@ -143,7 +143,7 @@ public class SightController {
                     )
             )
     })
-    @DeleteMapping
+    @DeleteMapping("/admin/sights")
     public ResponseEntity<?> deleteSight(@RequestParam Integer id) {
         sightService.deleteSight(id);
         return ResponseEntity.ok(new SuccessResponse("Достопримечательность успешно удалена"));

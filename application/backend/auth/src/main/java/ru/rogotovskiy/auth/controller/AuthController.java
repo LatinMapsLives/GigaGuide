@@ -104,7 +104,7 @@ public class AuthController {
     public ResponseEntity<?> loginAdmin(@RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(new JwtResponse(
                 "Вы успешно авторизовались",
-                authService.authorize(loginRequest)
+                authService.authorizeAdmin(loginRequest)
         ));
     }
 

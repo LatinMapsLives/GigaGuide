@@ -11,6 +11,8 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import ru.rogotovskiy.apigateway.service.JwtService;
 
+import java.util.List;
+
 @Component
 public class JwtAuthenticationFilter implements GlobalFilter {
 
@@ -61,5 +63,10 @@ public class JwtAuthenticationFilter implements GlobalFilter {
         String path = request.getURI().getPath();
         return path.startsWith("/api/user") ||
                 (path.startsWith("/api/reviews") && request.getMethod() != HttpMethod.GET);
+    }
+
+    private boolean isAdminOnly(ServerHttpRequest request) {
+        String path = request.getURI().getPath();
+        return path.startsWith("/api/auth/admin");
     }
 }

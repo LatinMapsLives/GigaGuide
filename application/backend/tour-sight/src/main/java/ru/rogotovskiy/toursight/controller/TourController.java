@@ -22,7 +22,7 @@ import ru.rogotovskiy.toursight.dto.update.UpdateTourDto;
 import ru.rogotovskiy.toursight.service.TourService;
 
 @RestController
-@RequestMapping("/api/tour-sight/tours")
+@RequestMapping("/api/tour-sight")
 @RequiredArgsConstructor
 @Tag(name = "Туры", description = "Просмотр, добавление, обновление и удаление туров")
 public class TourController {
@@ -30,7 +30,7 @@ public class TourController {
     private final TourService tourService;
 
     @Hidden
-    @GetMapping("/all")
+    @GetMapping("/tours/all")
     public ResponseEntity<?> getAll(@RequestParam(defaultValue = "ru") String language) {
         return ResponseEntity.ok(tourService.getAll(language));
     }
@@ -55,7 +55,7 @@ public class TourController {
             )
     })
     @Parameter(name = "id", description = "ID тура")
-    @GetMapping
+    @GetMapping("/tours")
     public ResponseEntity<?> getTourById(@RequestParam Integer id,
                                          @RequestParam(defaultValue = "ru") String language) {
         return ResponseEntity.ok(tourService.getById(id, language));
@@ -76,7 +76,7 @@ public class TourController {
                     description = "Внутренняя ошибка сервера"
             )
     })
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/admin/tours", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createTour(@RequestPart(value = "tour") String json,
                                         @RequestPart(value = "image", required = false) MultipartFile image) {
         try {
@@ -108,7 +108,7 @@ public class TourController {
                     )
             )
     })
-    @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/admin/tours", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateTour(@RequestParam(value = "tour") String updateTourJson,
                                         @RequestParam(value = "image", required = false) MultipartFile image) {
         try {
@@ -141,7 +141,7 @@ public class TourController {
             )
     })
     @Parameter(name = "id", description = "ID тура")
-    @DeleteMapping
+    @DeleteMapping("/admin/tours")
     public ResponseEntity<?> deleteTour(@RequestParam Integer id) {
         tourService.deleteTour(id);
         return ResponseEntity.ok("Тур успешно удалён");

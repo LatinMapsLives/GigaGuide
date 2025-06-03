@@ -17,7 +17,7 @@ import ru.rogotovskiy.reviews.service.SightReviewService;
 import java.util.Locale;
 
 @RestController
-@RequestMapping("/api/reviews/sights")
+@RequestMapping("/api/reviews")
 @RequiredArgsConstructor
 @Tag(
         name = "Отзывы о достопримечательностях",
@@ -37,7 +37,7 @@ public class SightReviewController {
             description = "Список отзывов успешно получен",
             content = @Content(array = @ArraySchema(schema = @Schema(implementation = SightReviewDto.class)))
     )
-    @GetMapping
+    @GetMapping("/sights")
     public ResponseEntity<?> getAll(@RequestParam Integer sightId, @RequestHeader(value = "X-User-Id", required = false) String userId) {
         return ResponseEntity.ok(service.getAll(sightId, userId));
     }
@@ -50,7 +50,7 @@ public class SightReviewController {
             responseCode = "200",
             description = "Отзыв успешно добавлен"
     )
-    @PostMapping
+    @PostMapping("/sights")
     public ResponseEntity<?> addReview(@RequestHeader("X-User-Id") String userId, @RequestParam Integer sightId,
                                        @RequestBody CreateSightReviewDto dto) {
         service.addReview(Integer.parseInt(userId), sightId, dto);
@@ -65,13 +65,13 @@ public class SightReviewController {
             responseCode = "200",
             description = "Отзыв успешно удалён"
     )
-    @DeleteMapping
+    @DeleteMapping("/sights")
     public ResponseEntity<?> deleteReview(@RequestHeader("X-User-Id") String userId, @RequestParam Integer reviewId) {
         service.deleteReview(Integer.parseInt(userId), reviewId);
         return ResponseEntity.ok(messageSource.getMessage("reviews.success.delete_review", null, Locale.ROOT));
     }
 
-    @DeleteMapping("/admin")
+    @DeleteMapping("/admin/sights")
     public ResponseEntity<?> adminDeleteReview(@RequestParam Integer reviewId) {
         service.deleteReview(reviewId);
         return ResponseEntity.ok(messageSource.getMessage("reviews.success.delete_review", null, Locale.ROOT));

@@ -6,6 +6,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Service;
 import ru.rogotovskiy.auth.dto.LoginRequest;
 import ru.rogotovskiy.auth.dto.RegistrationUserDTO;
+import ru.rogotovskiy.auth.entity.User;
+import ru.rogotovskiy.auth.exception.AccessDeniedException;
 import ru.rogotovskiy.auth.exception.PasswordMismatchException;
 import ru.rogotovskiy.auth.exception.UserAlreadyExistsException;
 import ru.rogotovskiy.auth.exception.UserNotFoundException;
@@ -42,5 +44,22 @@ public class AuthService {
         return jwtService.generateToken(userService.findByEmail(loginRequest.email()).orElseThrow(
                 () -> new UserNotFoundException("Пользователь с почтой %s не найден".formatted(loginRequest.email()))
         ));
+    }
+
+    public String authorizeAdmin(LoginRequest loginRequest) {
+        User user = userService.findByEmail(loginRequest.email()).orElseThrow(
+                () -> new UserNotFoundException("Пользователь с почтой %s не найден".formatted(loginRequest.email())
+        ));
+
+        boolean isAdmin = user.getRoles().stream()
+                .anyMatch(role -> role.getName().equalsIgnoreCase("ROLE_ADMIN"));
+
+        if (!isAdmin) {
+            throw new AccessDeniedException("Отказано в доступе");
+        }
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                loginRequest.email(), loginRequest.password())
+        );
+        return jwtService.generateToken(user);
     }
 }
