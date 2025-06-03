@@ -17,5 +17,6 @@ public interface SightTranslationRepository extends JpaRepository<SightTranslati
     List<SightTranslation> findBySightId(Integer sightId);
     @Query("SELECT s FROM SightTranslation s WHERE s.language.code = :languageCode AND " +
             "(LOWER(s.name) LIKE :query OR LOWER(s.city) LIKE :query)")
-    List<SightTranslation> findByNameOrCityLikeIgnoreCaseAndLanguage(@Param("query") String query, @Param("languageCode") String languageCode);
+    List<SightTranslation> findByNameOrCityLikeIgnoreCaseAndLanguage(@Param("query") String query,
+                                                                     @Param("languageCode") String languageCode);
 }
