@@ -28,7 +28,7 @@ public class JwtAuthenticationFilter implements GlobalFilter {
         String authHeader = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 
         if (!(authHeader != null && authHeader.startsWith("Bearer "))) {
-            if (isSecured(request)) {
+            if (isSecured(request) || isAdminOnly(request)) {
                 return onError(exchange, "Missing or invalid Authorization header", HttpStatus.UNAUTHORIZED);
             }
 
@@ -43,6 +43,12 @@ public class JwtAuthenticationFilter implements GlobalFilter {
             }
 
             String userId = jwtService.getUserId(token);
+            List<String> roles = jwtService.getRoles(token);
+
+            if (isAdminOnly(request) && !roles.contains("ROLE_ADMIN")) {
+                return onError(exchange, "Access denied: admin only", HttpStatus.FORBIDDEN);
+            }
+
             ServerHttpRequest modifiedRequest = request.mutate()
                     .header("X-User-Id", userId)
                     .build();
@@ -67,6 +73,6 @@ public class JwtAuthenticationFilter implements GlobalFilter {
 
     private boolean isAdminOnly(ServerHttpRequest request) {
         String path = request.getURI().getPath();
-        return path.startsWith("/api/auth/admin");
+        return path.startsWith("/api/tour-sight/admin") || path.startsWith("/api/reviews/admin");
     }
 }
