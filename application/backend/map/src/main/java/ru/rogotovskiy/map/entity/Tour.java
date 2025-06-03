@@ -26,11 +26,7 @@ public class Tour {
     @Column(name = "distance")
     private BigDecimal distanceKm;
 
-    @ManyToMany
-    @JoinTable(
-            name = "tour_sights",
-            joinColumns = @JoinColumn(name = "tour_id"),
-            inverseJoinColumns = @JoinColumn(name = "sight_id")
-    )
-    private List<Sight> sights = new ArrayList<>();
+    @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("id ASC")
+    private List<TourSight> tourSights = new ArrayList<>();
 }

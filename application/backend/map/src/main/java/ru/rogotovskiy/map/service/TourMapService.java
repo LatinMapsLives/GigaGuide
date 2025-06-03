@@ -9,6 +9,7 @@ import ru.rogotovskiy.map.dto.PointDto;
 import ru.rogotovskiy.map.dto.RouteInfoDto;
 import ru.rogotovskiy.map.entity.Sight;
 import ru.rogotovskiy.map.entity.Tour;
+import ru.rogotovskiy.map.entity.TourSight;
 import ru.rogotovskiy.map.repository.TourRepository;
 
 import java.util.List;
@@ -25,7 +26,9 @@ public class TourMapService {
         Tour tour = tourRepository.findById(tourId)
                 .orElseThrow(() -> new EntityNotFoundException("Тур с id " + tourId + " не найден"));
 
-        List<Sight> sights = tour.getSights();
+        List<Sight> sights = tour.getTourSights().stream()
+                .map(TourSight::getSight)
+                .toList();
         String routeType = tourTranslationService.getTourTranslation(tourId).getType();
         RouteInfoDto dto = routeService.calculateRouteInfo(sights, routeType);
         tour.setDistanceKm(dto.distanceKm());
@@ -37,7 +40,9 @@ public class TourMapService {
         Tour tour = tourRepository.findById(tourId)
                 .orElseThrow(() -> new EntityNotFoundException("Тур с id " + tourId + " не найден"));
 
-        List<Sight> sights = tour.getSights();
+        List<Sight> sights = tour.getTourSights().stream()
+                .map(TourSight::getSight)
+                .toList();
         String routeType = tourTranslationService.getTourTranslation(tourId).getType();
 
         return routeService.getRoutePath(sights, routeType);
