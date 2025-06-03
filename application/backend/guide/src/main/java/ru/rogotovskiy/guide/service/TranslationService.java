@@ -48,7 +48,7 @@ public class TranslationService {
         }
     }
 
-    private String extractTranslatedText(String json) throws IOException {
+    public String extractTranslatedText(String json) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root = mapper.readTree(json);
         JsonNode translations = root.path("translations");
@@ -58,7 +58,7 @@ public class TranslationService {
         return translations.get(0).path("text").asText();
     }
 
-    private String escapeJson(String text) {
+    public String escapeJson(String text) {
         return text.replace("\"", "\\\"").replace("\n", "\\n");
     }
 }
