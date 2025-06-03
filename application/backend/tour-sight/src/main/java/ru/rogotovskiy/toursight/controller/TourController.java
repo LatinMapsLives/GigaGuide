@@ -147,7 +147,7 @@ public class TourController {
         return ResponseEntity.ok("Тур успешно удалён");
     }
 
-    @GetMapping("/search-filter")
+    @GetMapping("/tours/search-filter")
     public ResponseEntity<?> searchAndFilterTours(
             @RequestParam(required = false) String query,
             @RequestParam(required = false) String category,
