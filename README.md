@@ -48,7 +48,7 @@
   - Анализ рынка SAM/SOM [DOCX](https://github.com/LatinMapsLives/GigaGuide/blob/main/documentation/%D0%90%D0%BD%D0%B0%D0%BB%D0%B8%D0%B7%20%D1%80%D1%8B%D0%BD%D0%BA%D0%B0.docx) [PDF](https://github.com/LatinMapsLives/GigaGuide/blob/main/documentation/%D0%90%D0%BD%D0%B0%D0%BB%D0%B8%D0%B7%20%D1%80%D1%8B%D0%BD%D0%BA%D0%B0.pdf)
     
 ### Отзывы
-  - Отзывы на мобильное приложение [Google таблицы](https://docs.google.com/spreadsheets/d/1C7T9KYMnapQI_Wtye3VQm0zV3VtzeGSRsVesDMdFEfk/edit?usp=sharing)
+  - Отзывы на мобильное приложение [Google таблицы](https://docs.google.com/spreadsheets/d/1MUYW6_LTj51q_BtiiJdC2KO-qv7HzKocRIFZB-TxXZc/edit?usp=sharing)
 
 ### Кросс-проверка
   - Наш чеклист по 1 аттестации [PDF](https://github.com/LatinMapsLives/GigaGuide/blob/main/documentation/%D0%A7%D0%B5%D0%BA%D0%BB%D0%B8%D1%81%D1%82%209.2.pdf) [XLSX](https://github.com/LatinMapsLives/GigaGuide/blob/main/documentation/%D0%A7%D0%B5%D0%BA%D0%BB%D0%B8%D1%81%D1%82%209.2.xlsx)
