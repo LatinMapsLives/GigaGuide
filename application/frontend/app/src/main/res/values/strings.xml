@@ -112,4 +112,8 @@
     <string name="profile_screen_email_success">Почта успешно обновлена</string>
     <string name="profile_screen_password_success">Пароль успешно обновлён</string>
     <string name="profile_screen_username_success">Имя успешно обновлено</string>
+    <string name="search_screen_filter_none">Все</string>
+    <string name="search_screen_filter_category_header">Категория</string>
+    <string name="search_screen_filter_historical">Исторический</string>
+    <string name="search_screen_filter_leisure">Досуг</string>
 </resources>

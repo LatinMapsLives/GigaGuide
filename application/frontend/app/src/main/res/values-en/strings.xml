@@ -112,4 +112,8 @@
     <string name="profile_screen_email_success">Email change success</string>
     <string name="profile_screen_password_success">Password change success</string>
     <string name="profile_screen_username_success">Username change success</string>
+    <string name="search_screen_filter_none">All</string>
+    <string name="search_screen_filter_category_header">Category</string>
+    <string name="search_screen_filter_historical">Historical</string>
+    <string name="search_screen_filter_leisure">Leisure</string>
 </resources>

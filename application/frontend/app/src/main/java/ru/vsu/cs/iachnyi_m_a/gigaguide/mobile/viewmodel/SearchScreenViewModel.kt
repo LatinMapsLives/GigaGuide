@@ -27,6 +27,12 @@ enum class SortingOptions {
     REMOTENESS
 }
 
+enum class FilterOptions {
+    NONE,
+    HISTORICAL,
+    LEISURE
+}
+
 
 @HiltViewModel
 class SearchScreenViewModel @Inject constructor(
@@ -46,6 +52,9 @@ class SearchScreenViewModel @Inject constructor(
     var maxDistance by mutableDoubleStateOf(100.0)
 
     var sortingOptions by mutableStateOf(SortingOptions.NONE)
+    var filterOptions by mutableStateOf(FilterOptions.NONE)
+    var historicalOption = ""
+    var leisureOption = ""
     var searchBarValue by mutableStateOf("")
 
     fun loadSearchResult() {
@@ -79,6 +88,9 @@ class SearchScreenViewModel @Inject constructor(
             }
 
             if(searchTours) {
+                var category: String? = null
+                if(filterOptions == FilterOptions.HISTORICAL) category = historicalOption
+                if(filterOptions == FilterOptions.LEISURE) category = leisureOption
                 var tourInfos: List<SightTourThumbnail>? =
                     ServerUtils.executeNetworkCall {
                         tourRepository.searchFilterTours(
@@ -89,10 +101,10 @@ class SearchScreenViewModel @Inject constructor(
                             minDistance = minDistance,
                             maxDistance = maxDistance,
                             latitude = dataStoreManager.getLastLocation().latitude,
-                            longitude = dataStoreManager.getLastLocation().longitude
+                            longitude = dataStoreManager.getLastLocation().longitude,
+                            category = category
                         )
                     }
-                if (tourInfos == null) Log.e("SEARCH", "NIGGA")
                 if (tourInfos != null) {
                     searchResult.addAll(tourInfos);
                 }

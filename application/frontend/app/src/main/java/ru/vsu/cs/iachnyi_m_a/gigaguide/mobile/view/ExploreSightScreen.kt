@@ -230,14 +230,6 @@ fun ExploreSightScreen(
                     view.overlays.add(userMarker)
                 }
 
-                var line = Polyline()
-                line.width = 5f
-                line.color = MediumBlue.toArgb()
-                for (point in exploreSightScreenViewModel.route) {
-                    line.addPoint(GeoPoint(point.latitude, point.longitude))
-                }
-                view.overlays.add(line)
-
                 for (i in 0..exploreSightScreenViewModel.momentOnMaps.size - 1) {
                     var m = exploreSightScreenViewModel.momentOnMaps[i]
                     view.overlays.add(

@@ -30,7 +30,8 @@ class TourRepositoryRetrofit(private val tourAPI: TourAPI) : TourRepository {
         minDuration: Int?,
         maxDuration: Int?,
         minDistance: Double?,
-        maxDistance: Double?
+        maxDistance: Double?,
+        category: String?
     ): List<SightTourThumbnail>? {
 
         var params: MutableMap<String, String> = HashMap()
@@ -40,7 +41,7 @@ class TourRepositoryRetrofit(private val tourAPI: TourAPI) : TourRepository {
         maxDuration?.let { params.put("maxDuration", maxDuration.toString()) }
         minDistance?.let { params.put("minDistance", minDistance.toString()) }
         maxDistance?.let { params.put("maxDistance", maxDistance.toString()) }
-
+        category?.let { params.put("category", category) }
         var call = tourAPI.searchTours(params)
         var response: Response<List<PreviewTourDTO>> = call.execute()
         return if (response.isSuccessful) {

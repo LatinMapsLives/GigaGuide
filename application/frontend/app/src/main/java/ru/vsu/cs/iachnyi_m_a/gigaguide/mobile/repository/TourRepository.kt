@@ -6,5 +6,5 @@ import kotlin.time.Duration
 
 interface TourRepository {
     suspend fun getTourInfoById(id: Long, language: String): TourInfo?
-    suspend fun searchFilterTours(name: String, language: String, latitude: Double, longitude: Double, minDuration: Int?, maxDuration: Int?, minDistance: Double?, maxDistance: Double?): List<SightTourThumbnail>?
+    suspend fun searchFilterTours(name: String, language: String, latitude: Double, longitude: Double, minDuration: Int?, maxDuration: Int?, minDistance: Double?, maxDistance: Double?, category: String?): List<SightTourThumbnail>?
 }

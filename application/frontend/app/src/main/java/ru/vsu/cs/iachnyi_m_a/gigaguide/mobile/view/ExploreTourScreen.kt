@@ -237,14 +237,6 @@ fun ExploreTourScreen(
                         )
                     }
                     if (exploreTourScreenViewModel.exploringSight.value) {
-                        var sightRouteLine = Polyline()
-                        sightRouteLine.width = 5f
-                        sightRouteLine.color =
-                            MediumBlue.toArgb()
-                        for (point in exploreTourScreenViewModel.sightRoutes[exploreTourScreenViewModel.selectedSightIndex.intValue]) {
-                            sightRouteLine.addPoint(GeoPoint(point.latitude, point.longitude))
-                        }
-                        view.overlays.add(sightRouteLine)
                         for (i in 0..exploreTourScreenViewModel.momentOnMaps[exploreTourScreenViewModel.selectedSightIndex.intValue].size - 1) {
                             var momentOnMapInfo =
                                 exploreTourScreenViewModel.momentOnMaps[exploreTourScreenViewModel.selectedSightIndex.intValue][i]

@@ -120,12 +120,31 @@ fun TourPageScreen(
                         horizontalAlignment = Alignment.Start
                     ) {
 
-                        Text(
-                            modifier = Modifier.fillMaxWidth(0.75f),
-                            style = MaterialTheme.typography.headlineMedium,
-                            text = tourPageScreenViewModel.tour.value!!.name,
-                            color = White
-                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.Bottom
+                        ) {
+                            Text(
+                                style = MaterialTheme.typography.headlineMedium,
+                                text = tourPageScreenViewModel.tour.value!!.name,
+                                color = White
+                            )
+                            Row {
+
+                                Text(
+                                    text = "${tourPageScreenViewModel.tour.value!!.durationMinutes} ${stringResource(R.string.sight_page_screen_minutes)}",
+                                    color = White
+                                )
+
+                                Icon(
+                                    modifier = Modifier.padding(horizontal = 10.dp),
+                                    imageVector = ImageVector.vectorResource(R.drawable.time),
+                                    tint = White,
+                                    contentDescription = "time"
+                                )
+                            }
+                        }
 
 
                         Row(

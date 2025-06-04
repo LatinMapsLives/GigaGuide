@@ -66,6 +66,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.Red
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.White
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.FilterOptions
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.SearchScreenViewModel
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.SortingOptions
 
@@ -79,12 +80,15 @@ fun SearchScreen(
     LaunchedEffect(Unit) {
         searchScreenViewModel.loadSearchResult()
     }
+    searchScreenViewModel.historicalOption =
+        stringResource(R.string.search_screen_filter_historical)
+    searchScreenViewModel.leisureOption = stringResource(R.string.search_screen_filter_leisure)
     var sortDialogOpen by remember { mutableStateOf(false) }
     var filterDialogOpen by remember { mutableStateOf(false) }
     GigaGuideMobileTheme {
         when {
             sortDialogOpen -> {
-                Dialog(onDismissRequest = {sortDialogOpen = false}) {
+                Dialog(onDismissRequest = { sortDialogOpen = false }) {
                     Column(
                         modifier = Modifier
                             .clip(RoundedCornerShape(20.dp))
@@ -169,7 +173,7 @@ fun SearchScreen(
         }
         when {
             filterDialogOpen -> {
-                Dialog(onDismissRequest = {filterDialogOpen = false}) {
+                Dialog(onDismissRequest = { filterDialogOpen = false }) {
                     Column(
                         modifier = Modifier
                             .clip(RoundedCornerShape(20.dp))
@@ -186,74 +190,206 @@ fun SearchScreen(
                         var searchTours by remember { mutableStateOf(searchScreenViewModel.searchTours) }
                         var searchSights by remember { mutableStateOf(searchScreenViewModel.searchSights) }
 
-                        Row (modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically){
-                            Box(modifier = Modifier.size(35.dp), contentAlignment = Alignment.Center){
-                                Checkbox(checked = searchSights, onCheckedChange = {searchSights = it})
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Box(
+                                modifier = Modifier.size(35.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Checkbox(
+                                    checked = searchSights,
+                                    onCheckedChange = { searchSights = it })
                             }
-                            Text(modifier = Modifier.padding(start = 5.dp).clickable(onClick = {searchSights = !searchSights}), text = stringResource(R.string.search_screen_filter_search_sights), color = MaterialTheme.colorScheme.onBackground)
+                            Text(
+                                modifier = Modifier
+                                    .padding(start = 5.dp)
+                                    .clickable(onClick = { searchSights = !searchSights }),
+                                text = stringResource(R.string.search_screen_filter_search_sights),
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
                         }
 
-                        Row (modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically){
-                            Box(modifier = Modifier.size(35.dp), contentAlignment = Alignment.Center){
-                                Checkbox(checked = searchTours, onCheckedChange = {searchTours = it})
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Box(
+                                modifier = Modifier.size(35.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Checkbox(
+                                    checked = searchTours,
+                                    onCheckedChange = { searchTours = it })
                             }
-                            Text(modifier = Modifier.padding(start = 5.dp).clickable(onClick = {searchTours = !searchTours}), text = stringResource(R.string.search_screen_filter_search_tours), color = MaterialTheme.colorScheme.onBackground)
+                            Text(
+                                modifier = Modifier
+                                    .padding(start = 5.dp)
+                                    .clickable(onClick = { searchTours = !searchTours }),
+                                text = stringResource(R.string.search_screen_filter_search_tours),
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
                         }
 
                         var newMinDuration by remember { mutableIntStateOf(searchScreenViewModel.minDuration) }
                         var newMaxDuration by remember { mutableIntStateOf(searchScreenViewModel.maxDuration) }
                         var newMinDistance by remember { mutableDoubleStateOf(searchScreenViewModel.minDistance) }
                         var newMaxDistance by remember { mutableDoubleStateOf(searchScreenViewModel.maxDistance) }
+                        var currentOption by
+                        remember { mutableStateOf(FilterOptions.valueOf(searchScreenViewModel.filterOptions.name)) }
 
                         AnimatedVisibility(visible = searchTours) {
-                            Column (modifier = Modifier.fillMaxWidth()){
-                                Text(color = MaterialTheme.colorScheme.onBackground, text = stringResource(R.string.search_screen_filter_tours_header), style = MaterialTheme.typography.titleMedium)
-                                Text(color = MaterialTheme.colorScheme.onBackground, text = stringResource(R.string.search_screen_filters_duration))
-                                Row (verticalAlignment = Alignment.CenterVertically){
-                                    Text(color = MaterialTheme.colorScheme.onBackground, modifier = Modifier.weight(1f), text = stringResource(R.string.search_screen_filters_from))
-                                    CustomTextField(modifier = Modifier.weight(2f), value = newMinDuration.toString(), onValueChange = {
-                                        try {
-                                            val int = it.toInt()
-                                            if (int >= 0) newMinDuration = int
-                                        } catch (e: Exception){
+                            Column(modifier = Modifier.fillMaxWidth()) {
+                                Text(
+                                    color = MaterialTheme.colorScheme.onBackground,
+                                    text = stringResource(R.string.search_screen_filter_tours_header),
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                                Text(
+                                    color = MaterialTheme.colorScheme.onBackground,
+                                    text = stringResource(R.string.search_screen_filters_duration)
+                                )
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Text(
+                                        color = MaterialTheme.colorScheme.onBackground,
+                                        modifier = Modifier.weight(1f),
+                                        text = stringResource(R.string.search_screen_filters_from)
+                                    )
+                                    CustomTextField(
+                                        modifier = Modifier.weight(2f),
+                                        value = newMinDuration.toString(),
+                                        onValueChange = {
+                                            try {
+                                                val int = it.toInt()
+                                                if (int >= 0) newMinDuration = int
+                                            } catch (e: Exception) {
 
-                                        }
-                                    }, hint = "")
-                                    Text(color = MaterialTheme.colorScheme.onBackground, modifier = Modifier.weight(1f), text = stringResource(R.string.search_screen_filters_to))
-                                    CustomTextField(modifier = Modifier.weight(2f), value = newMaxDuration.toString(), onValueChange = {
-                                        try {
-                                            val int = it.toInt()
-                                            if(int >= 0) newMaxDuration = int
-                                        } catch (e: Exception){
+                                            }
+                                        },
+                                        hint = ""
+                                    )
+                                    Text(
+                                        color = MaterialTheme.colorScheme.onBackground,
+                                        modifier = Modifier.weight(1f),
+                                        text = stringResource(R.string.search_screen_filters_to)
+                                    )
+                                    CustomTextField(
+                                        modifier = Modifier.weight(2f),
+                                        value = newMaxDuration.toString(),
+                                        onValueChange = {
+                                            try {
+                                                val int = it.toInt()
+                                                if (int >= 0) newMaxDuration = int
+                                            } catch (e: Exception) {
 
-                                        }
-                                    }, hint = "")
-                                    Text(color = MaterialTheme.colorScheme.onBackground, modifier = Modifier.weight(1f), text = stringResource(R.string.sight_page_screen_minutes))
+                                            }
+                                        },
+                                        hint = ""
+                                    )
+                                    Text(
+                                        color = MaterialTheme.colorScheme.onBackground,
+                                        modifier = Modifier.weight(1f),
+                                        text = stringResource(R.string.sight_page_screen_minutes)
+                                    )
                                 }
-                                Text(color = MaterialTheme.colorScheme.onBackground, text = stringResource(R.string.search_screen_filters_length))
-                                Row (verticalAlignment = Alignment.CenterVertically){
-                                    Text(color = MaterialTheme.colorScheme.onBackground, modifier = Modifier.weight(1f), text = stringResource(R.string.search_screen_filters_from))
-                                    CustomTextField(modifier = Modifier.weight(2f), value = newMinDistance.toString(), onValueChange = {
-                                        try {
-                                            val int = it.toDouble()
-                                            if(int >= 0) newMinDistance = int
-                                        } catch (e: Exception){
+                                Text(
+                                    color = MaterialTheme.colorScheme.onBackground,
+                                    text = stringResource(R.string.search_screen_filters_length)
+                                )
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Text(
+                                        color = MaterialTheme.colorScheme.onBackground,
+                                        modifier = Modifier.weight(1f),
+                                        text = stringResource(R.string.search_screen_filters_from)
+                                    )
+                                    CustomTextField(
+                                        modifier = Modifier.weight(2f),
+                                        value = newMinDistance.toString(),
+                                        onValueChange = {
+                                            try {
+                                                val int = it.toDouble()
+                                                if (int >= 0) newMinDistance = int
+                                            } catch (e: Exception) {
 
-                                        }
-                                    }, hint = "")
-                                    Text(color = MaterialTheme.colorScheme.onBackground, modifier = Modifier.weight(1f), text = stringResource(R.string.search_screen_filters_to))
-                                    CustomTextField(modifier = Modifier.weight(2f), value = newMaxDistance.toString(), onValueChange = {
-                                        try {
-                                            val int = it.toDouble()
-                                            if(int >= 0) newMaxDistance = int
-                                        } catch (e: Exception){
+                                            }
+                                        },
+                                        hint = ""
+                                    )
+                                    Text(
+                                        color = MaterialTheme.colorScheme.onBackground,
+                                        modifier = Modifier.weight(1f),
+                                        text = stringResource(R.string.search_screen_filters_to)
+                                    )
+                                    CustomTextField(
+                                        modifier = Modifier.weight(2f),
+                                        value = newMaxDistance.toString(),
+                                        onValueChange = {
+                                            try {
+                                                val int = it.toDouble()
+                                                if (int >= 0) newMaxDistance = int
+                                            } catch (e: Exception) {
 
-                                        }
-                                    }, hint = "")
-                                    Text(color = MaterialTheme.colorScheme.onBackground, modifier = Modifier.weight(1f), text = "км")
+                                            }
+                                        },
+                                        hint = ""
+                                    )
+                                    Text(
+                                        color = MaterialTheme.colorScheme.onBackground,
+                                        modifier = Modifier.weight(1f),
+                                        text = "км"
+                                    )
                                 }
+
+                                Text(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    color = MaterialTheme.colorScheme.onBackground,
+                                    text = stringResource(R.string.search_screen_filter_category_header)
+                                )
+
+                                val radioOptions = listOf(
+                                    FilterOptions.NONE, FilterOptions.HISTORICAL,
+                                    FilterOptions.LEISURE
+                                )
+                                val radioLabels = listOf(
+                                    stringResource(R.string.search_screen_filter_none),
+                                    stringResource(R.string.search_screen_filter_historical),
+                                    stringResource(R.string.search_screen_filter_leisure)
+                                )
+                                Column(Modifier.selectableGroup()) {
+                                    radioOptions.forEachIndexed { i, option ->
+                                        Row(
+                                            Modifier
+                                                .fillMaxWidth()
+                                                .selectable(
+                                                    selected = (option == currentOption),
+                                                    onClick = {
+                                                        currentOption = option
+                                                    },
+                                                    role = Role.RadioButton
+                                                )
+                                                .padding(top = 10.dp),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            RadioButton(
+                                                selected = (option == currentOption),
+                                                onClick = null
+                                            )
+                                            Text(
+                                                color = MaterialTheme.colorScheme.onBackground,
+                                                text = radioLabels[i],
+                                                style = MaterialTheme.typography.bodyLarge,
+                                                modifier = Modifier.padding(start = 16.dp)
+                                            )
+                                        }
+                                    }
+                                }
+
                             }
+
                         }
+
+
 
                         Row {
                             Button(
@@ -269,14 +405,13 @@ fun SearchScreen(
                             Button(
                                 modifier = Modifier.padding(start = 10.dp),
                                 onClick = {
+                                    searchScreenViewModel.filterOptions = currentOption
                                     searchScreenViewModel.searchTours = searchTours
                                     searchScreenViewModel.searchSights = searchSights
                                     searchScreenViewModel.minDuration = newMinDuration
                                     searchScreenViewModel.maxDuration = newMaxDuration
                                     searchScreenViewModel.minDistance = newMinDistance
                                     searchScreenViewModel.maxDistance = newMaxDistance
-
-
                                     searchScreenViewModel.loadSearchResult()
                                     filterDialogOpen = false
                                 },
@@ -381,7 +516,10 @@ fun SearchScreen(
                         }
                     }
                 }
-                Row(modifier = Modifier.clickable(onClick = {filterDialogOpen = true}), verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    modifier = Modifier.clickable(onClick = { filterDialogOpen = true }),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Text(
                         text = stringResource(R.string.search_screen_filters),
                         style = MaterialTheme.typography.labelLarge,
@@ -409,11 +547,16 @@ fun SearchScreen(
                     for (thumbnail in searchScreenViewModel.searchResult) {
                         SightTourSearchResult(
                             modifier = Modifier
-                                .clickable(onClick = if(thumbnail.isTour){{
-                                    navController.navigate(
-                                        TourPageScreenClass(thumbnail.sightId)
-                                    )
-                                }} else {{navController.navigate(SightPageScreenClass(thumbnail.sightId))}})
+                                .clickable(
+                                    onClick = if (thumbnail.isTour) {
+                                    {
+                                        navController.navigate(
+                                            TourPageScreenClass(thumbnail.sightId)
+                                        )
+                                    }
+                                } else {
+                                    { navController.navigate(SightPageScreenClass(thumbnail.sightId)) }
+                                })
                                 .fillMaxWidth(0.5f)
                                 .padding(start = 5.dp, end = 5.dp, bottom = 10.dp),
                             sightTourThumbnail = thumbnail
@@ -451,7 +594,7 @@ fun SightTourSearchResult(modifier: Modifier, sightTourThumbnail: SightTourThumb
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onBackground
             )
-            Column(){
+            Column() {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = Icons.Filled.Star,
