@@ -47,6 +47,9 @@
   - SWOT-анализ [Google таблицы](https://docs.google.com/spreadsheets/d/1jxUEAsRuFycXZ_KhZAxvzojmkwrpYNN-9BWg3r2WFRo/edit?usp=sharing)
   - Анализ рынка SAM/SOM [DOCX](https://github.com/LatinMapsLives/GigaGuide/blob/main/documentation/%D0%90%D0%BD%D0%B0%D0%BB%D0%B8%D0%B7%20%D1%80%D1%8B%D0%BD%D0%BA%D0%B0.docx) [PDF](https://github.com/LatinMapsLives/GigaGuide/blob/main/documentation/%D0%90%D0%BD%D0%B0%D0%BB%D0%B8%D0%B7%20%D1%80%D1%8B%D0%BD%D0%BA%D0%B0.pdf)
     
+### Отзывы
+  - Отзывы на мобильное приложение [Google таблицы](https://docs.google.com/spreadsheets/d/1C7T9KYMnapQI_Wtye3VQm0zV3VtzeGSRsVesDMdFEfk/edit?usp=sharing)
+
 ### Кросс-проверка
   - Наш чеклист по 1 аттестации [PDF](https://github.com/LatinMapsLives/GigaGuide/blob/main/documentation/%D0%A7%D0%B5%D0%BA%D0%BB%D0%B8%D1%81%D1%82%209.2.pdf) [XLSX](https://github.com/LatinMapsLives/GigaGuide/blob/main/documentation/%D0%A7%D0%B5%D0%BA%D0%BB%D0%B8%D1%81%D1%82%209.2.xlsx)
   - Наш чеклист по 2 аттестации [PDF](https://github.com/LatinMapsLives/GigaGuide/blob/main/documentation/%D0%A7%D0%B5%D0%BA%D0%BB%D0%B8%D1%81%D1%82%209.2%202%20%D0%B0%D1%82%D1%82%D0%B5%D1%81%D1%82%D0%B0%D1%86%D0%B8%D1%8F.pdf) [XLSX](https://github.com/LatinMapsLives/GigaGuide/blob/main/documentation/%D0%A7%D0%B5%D0%BA%D0%BB%D0%B8%D1%81%D1%82%209.2%202%20%D0%B0%D1%82%D1%82%D0%B5%D1%81%D1%82%D0%B0%D1%86%D0%B8%D1%8F.xlsx)
