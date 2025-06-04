@@ -81,7 +81,7 @@ public class TourService {
         tour.setTourSights(tourSights);
         tourRepository.save(tour);
         tourTranslationService.createTourTranslation(dto, tour.getId());
-        String url = String.format("%s/api/map/tour?tourId=%d", "http://localhost:8086", tour.getId());
+        String url = String.format("%s/api/map/tour?tourId=%d", "http://158.160.179.56:8086", tour.getId());
         try {
             restTemplate.postForEntity(url, null, Void.class);
         } catch (Exception e) {
