@@ -12,6 +12,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.SightTourThumbnail
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.FavoritesRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.SightRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.TourRepository
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.LocaleManager
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
 
 @HiltViewModel
@@ -45,10 +46,12 @@ class FavoritesScreenViewModel @Inject constructor(
                 var favorites = ServerUtils.executeNetworkCall { favoritesRepository.getFavorites(token) }
                 favorites?.let {
                     for (id in favorites.sightIds) {
-                        var sight = ServerUtils.executeNetworkCall { sightRepository.getSightInfoById(id.toLong()) }
+                        var sight = ServerUtils.executeNetworkCall { sightRepository.getSightInfoById(id.toLong(),
+                            LocaleManager.currentLanguage) }
                         sight?.let {
                             sights.add(
                                 SightTourThumbnail(
+                                    isTour = false,
                                     sightId = sight.id,
                                     name = sight.name,
                                     rating = 4.5f,
@@ -59,10 +62,12 @@ class FavoritesScreenViewModel @Inject constructor(
                         }
                     }
                     for (id in favorites.tourIds) {
-                        var tour = ServerUtils.executeNetworkCall { tourRepository.getTourInfoById(id.toLong()) }
+                        var tour = ServerUtils.executeNetworkCall { tourRepository.getTourInfoById(id.toLong(),
+                            LocaleManager.currentLanguage) }
                         tour?.let {
                             tours.add(
                                 SightTourThumbnail(
+                                    isTour = true,
                                     sightId = tour.id,
                                     name = tour.name,
                                     rating = 4.5f,

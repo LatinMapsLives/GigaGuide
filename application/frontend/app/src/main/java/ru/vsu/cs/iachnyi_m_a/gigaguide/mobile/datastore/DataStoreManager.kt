@@ -24,7 +24,7 @@ class DataStoreManager(val context: Context) {
     suspend fun getCurrentLanguage(): String {
         var prefs = context.dataStore.data.first()
         var str = prefs[stringPreferencesKey(LANGUAGE_KEY)]
-        return str?: "en"
+        return str?: "ru"
     }
 
     suspend fun setLanguage(language: String) {

@@ -3,6 +3,7 @@ package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.retrofit
 import retrofit2.Response
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.api.MapAPI
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.CoordinatesDTO
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.dto.mapper.CoordinatesDTOMapper
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.MapPoint
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.MapRepository
 
@@ -32,6 +33,15 @@ class MapRepositoryRetrofit(private val mapAPI: MapAPI): MapRepository {
             MapPoint(51.673811, 39.211592),
             MapPoint(51.673825, 39.211688),
         )
+    }
+
+    override suspend fun getRouteOfTour(tourId: Long): List<MapPoint>? {
+        var response: Response<List<CoordinatesDTO>> = mapAPI.getTourRoute(tourId).execute()
+        return if (response.isSuccessful){
+            response.body()!!.map { CoordinatesDTOMapper().map(it) }
+        } else {
+            null
+        }
     }
 
 }

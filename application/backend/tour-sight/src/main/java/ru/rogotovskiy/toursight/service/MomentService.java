@@ -24,11 +24,12 @@ public class MomentService {
     private final MomentRepository momentRepository;
     private final MomentMapper momentMapper;
     private final SightService sightService;
+    private final MomentTranslationService momentTranslationService;
     private final ImageService imageService;
 
 
-    public MomentDto getById(Integer id) {
-        return momentMapper.toDto(getMomentById(id));
+    public MomentDto getById(Integer id, String languageCode) {
+        return momentMapper.toDto(getMomentById(id), momentTranslationService.getMomentTranslation(id, languageCode));
     }
 
     private Moment getMomentById(Integer id) {
@@ -42,6 +43,7 @@ public class MomentService {
         moment.setSight(sightService.getSightById(dto.sightId()));
         moment.setImagePath(imageService.saveImage(image, "moments"));
         momentRepository.save(moment);
+        momentTranslationService.createMomentTranslation(dto, moment.getId());
     }
 
     public void deleteMoment(Integer id) {
@@ -52,27 +54,36 @@ public class MomentService {
 
     public void updateMoment(UpdateMomentDto dto, MultipartFile image) throws IOException {
         Moment moment = getMomentById(dto.id());
-        moment.setName(dto.name());
-        moment.setOrderNumber(dto.orderNumber());
-        moment.setContent(dto.content());
-        moment.setLatitude(dto.latitude());
-        moment.setLongitude(dto.longitude());
+        if (dto.orderNumber() != null) {
+            moment.setOrderNumber(dto.orderNumber());
+        }
+        if (dto.latitude() != null) {
+            moment.setLatitude(dto.latitude());
+        }
+        if (dto.longitude() != null) {
+            moment.setLongitude(dto.longitude());
+        }
         if (image != null) {
             imageService.deleteImage(moment.getImagePath());
             moment.setImagePath(imageService.saveImage(image, "moments"));
         }
         momentRepository.save(moment);
+        momentTranslationService.updateMomentTranslation(dto, moment.getId());
     }
 
-    public List<MomentDto> getAll() {
-        return StreamSupport.stream(momentRepository.findAll().spliterator(), false)
-                .map(momentMapper::toDto)
-                .toList();
+    public List<MomentDto> getAll(String language) {
+        return momentRepository.findAll().stream()
+                .map(moment -> momentMapper.toDto(
+                        moment,
+                        momentTranslationService.getMomentTranslation(moment.getId(), language)
+                )).toList();
     }
 
-    public List<MomentDto> getMomentsBySightId(Integer sightId) {
+    public List<MomentDto> getMomentsBySightId(Integer sightId, String languageCode) {
         return momentRepository.findMomentsBySightIdOrderByOrderNumberAsc(sightId).stream()
-                .map(momentMapper::toDto)
-                .toList();
+                .map(moment -> momentMapper.toDto(
+                        moment,
+                        momentTranslationService.getMomentTranslation(moment.getId(), languageCode)
+                )).toList();
     }
 }

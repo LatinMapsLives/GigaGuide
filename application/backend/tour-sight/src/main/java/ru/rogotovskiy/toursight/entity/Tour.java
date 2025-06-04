@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -20,26 +21,11 @@ public class Tour {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "description")
-    private String description;
-
-    @Column(name = "city")
-    private String city;
-
     @Column(name = "duration")
     private Integer durationMinutes;
 
     @Column(name = "distance")
     private BigDecimal distanceKm;
-
-    @Column(name = "category")
-    private String category;
-
-    @Column(name = "type")
-    private String type;
 
     @Column(name = "rating")
     private BigDecimal rating;
@@ -47,11 +33,14 @@ public class Tour {
     @Column(name = "image_url")
     private String imagePath;
 
-    @ManyToMany
-    @JoinTable(
-            name = "tour_sights",
-            joinColumns = @JoinColumn(name = "tour_id"),
-            inverseJoinColumns = @JoinColumn(name = "sight_id")
-    )
-    private List<Sight> sights = new ArrayList<>();
+    /*    @ManyToMany
+        @JoinTable(
+                name = "tour_sights",
+                joinColumns = @JoinColumn(name = "tour_id"),
+                inverseJoinColumns = @JoinColumn(name = "sight_id")
+        )
+        private List<Sight> sights = new ArrayList<>();*/
+    @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("id ASC")
+    private List<TourSight> tourSights = new ArrayList<>();
 }

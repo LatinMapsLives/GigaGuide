@@ -25,6 +25,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.MapRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.MomentRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.SightRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.TourRepository
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.LocaleManager
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.Pancake
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
 
@@ -97,11 +98,14 @@ class ExploreTourScreenViewModel @Inject constructor(
 
     fun loadTour(){
 
+        Log.e("TOUR", "LOAD")
+
         viewModelScope.launch {
             userLocation.value = dataStoreManager.getLastLocation()
             var i = 0
             loadingTour = true
-            var loadedTour = ServerUtils.executeNetworkCall { tourRepository.getTourInfoById(tourId) }
+            var loadedTour = ServerUtils.executeNetworkCall { tourRepository.getTourInfoById(tourId,
+                LocaleManager.currentLanguage) }
             if( loadedTour == null) return@launch
             var loadedSights = loadedTour.sights
             sightsOnMapInfos.clear()
@@ -109,7 +113,7 @@ class ExploreTourScreenViewModel @Inject constructor(
             tourRoute.clear()
             momentOnMaps.clear()
             indexesMap.clear()
-            if (loadedSights != null) {
+            if (true) {
                 for (sightInfo in loadedSights) {
                     var sightMapPoint = ServerUtils.executeNetworkCall {  mapRepository.getCoordinatedOfSight(sightInfo.sightId)}
                     if (sightMapPoint != null){
@@ -122,12 +126,11 @@ class ExploreTourScreenViewModel @Inject constructor(
                                 imageLink = sightInfo.imageLink
                             )
                         )
-                        tourRoute.add(MapPoint(sightMapPoint.latitude, sightMapPoint.longitude))
                     } else {
                         Pancake.serverError()
                         return@launch
                     }
-                    var loadedMoments = ServerUtils.executeNetworkCall { momentRepository.getSightMoments(sightInfo.sightId) }
+                    var loadedMoments = ServerUtils.executeNetworkCall { momentRepository.getSightMoments(sightInfo.sightId, LocaleManager.currentLanguage) }
                     if (loadedMoments != null) {
                         var indices = mutableListOf<Int>()
                         var momentOnMapsForThisSight = mutableListOf<MomentOnMap>()
@@ -157,6 +160,19 @@ class ExploreTourScreenViewModel @Inject constructor(
                         indexesMap.add(indices)
                         sightRoutes.add(thisSightRoute)
                         momentOnMaps.add(momentOnMapsForThisSight)
+                    } else {
+                        Pancake.serverError()
+                        return@launch
+                    }
+
+                    var loadedRoute = ServerUtils.executeNetworkCall { mapRepository.getRouteOfTour(tourId) }
+                    if(loadedRoute != null){
+                        tourRoute.clear()
+//                        var cropped = ArrayList<MapPoint>()
+//                        for(mp in loadedRoute){
+//                            if(!cropped.contains(mp)) cropped.add(mp)
+//                        }
+                        tourRoute.addAll(loadedRoute)
                     } else {
                         Pancake.serverError()
                         return@launch

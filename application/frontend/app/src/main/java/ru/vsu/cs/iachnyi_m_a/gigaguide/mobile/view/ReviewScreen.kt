@@ -84,7 +84,7 @@ fun ReviewScreen(
 
     GigaGuideMobileTheme {
         Column(
-            modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.background(color = MaterialTheme.colorScheme.background).fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
                 modifier = Modifier
@@ -401,12 +401,13 @@ fun ReviewBox(
                     Text(
                         modifier = Modifier.padding(start = 10.dp),
                         text = review.userName,
-                        style = MaterialTheme.typography.titleLarge
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = review.rating.toString(), style = MaterialTheme.typography.titleLarge
+                        text = review.rating.toString(), style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onBackground
                     )
                     Icon(
                         modifier = Modifier.size(35.dp),
@@ -419,7 +420,8 @@ fun ReviewBox(
             Text(
                 modifier = Modifier.padding(vertical = 10.dp),
                 text = review.text,
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onBackground
             )
             Row {
                 Text(
@@ -466,6 +468,7 @@ fun MyReviewBox(
                         )
 
                         Text(
+                            color = MaterialTheme.colorScheme.onBackground,
                             modifier = Modifier.padding(start = 10.dp),
                             text = review.userName,
                             style = MaterialTheme.typography.titleLarge
@@ -473,6 +476,7 @@ fun MyReviewBox(
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
+                            color = MaterialTheme.colorScheme.onBackground,
                             text = review.rating.toString(),
                             style = MaterialTheme.typography.titleLarge
                         )
@@ -485,6 +489,7 @@ fun MyReviewBox(
                     }
                 }
                 Text(
+                    color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.padding(vertical = 10.dp),
                     text = review.text,
                     style = MaterialTheme.typography.bodyMedium
@@ -497,9 +502,7 @@ fun MyReviewBox(
                     Text(
                         color = MediumGrey,
                         style = MaterialTheme.typography.bodyMedium,
-                        text = review.date.toString()/*SimpleDateFormat(
-                            "d MMMM yyyy", Locale("ru", "RU")
-                        ).format(review.date)*/
+                        text = review.date.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))
                     )
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
@@ -519,7 +522,7 @@ fun MyReviewBox(
                             modifier = Modifier
                                 .clickable(onClick = { optionsOpen = true })
                                 .size(25.dp),
-                            tint = Black,
+                            tint = MaterialTheme.colorScheme.onBackground,
                             contentDescription = null
                         )
                     }

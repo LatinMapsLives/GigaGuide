@@ -22,7 +22,7 @@ import ru.rogotovskiy.toursight.dto.update.UpdateTourDto;
 import ru.rogotovskiy.toursight.service.TourService;
 
 @RestController
-@RequestMapping("/api/tour-sight/tours")
+@RequestMapping("/api/tour-sight")
 @RequiredArgsConstructor
 @Tag(name = "Туры", description = "Просмотр, добавление, обновление и удаление туров")
 public class TourController {
@@ -30,9 +30,9 @@ public class TourController {
     private final TourService tourService;
 
     @Hidden
-    @GetMapping("/all")
-    public ResponseEntity<?> getAll() {
-        return ResponseEntity.ok(tourService.getAll());
+    @GetMapping("/tours/all")
+    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "ru") String language) {
+        return ResponseEntity.ok(tourService.getAll(language));
     }
 
     @Operation(summary = "Получить тур по ID")
@@ -55,9 +55,10 @@ public class TourController {
             )
     })
     @Parameter(name = "id", description = "ID тура")
-    @GetMapping
-    public ResponseEntity<?> getTourById(@RequestParam Integer id) {
-        return ResponseEntity.ok(tourService.getById(id));
+    @GetMapping("/tours")
+    public ResponseEntity<?> getTourById(@RequestParam Integer id,
+                                         @RequestParam(defaultValue = "ru") String language) {
+        return ResponseEntity.ok(tourService.getById(id, language));
     }
 
     @Operation(summary = "Создать новый тур")
@@ -75,7 +76,7 @@ public class TourController {
                     description = "Внутренняя ошибка сервера"
             )
     })
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/admin/tours", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createTour(@RequestPart(value = "tour") String json,
                                         @RequestPart(value = "image", required = false) MultipartFile image) {
         try {
@@ -107,7 +108,7 @@ public class TourController {
                     )
             )
     })
-    @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/admin/tours", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateTour(@RequestParam(value = "tour") String updateTourJson,
                                         @RequestParam(value = "image", required = false) MultipartFile image) {
         try {
@@ -140,36 +141,24 @@ public class TourController {
             )
     })
     @Parameter(name = "id", description = "ID тура")
-    @DeleteMapping
+    @DeleteMapping("/admin/tours")
     public ResponseEntity<?> deleteTour(@RequestParam Integer id) {
         tourService.deleteTour(id);
         return ResponseEntity.ok("Тур успешно удалён");
     }
 
-    @Operation(summary = "Поиск туров по названию")
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Туры найдены"
-            )
-    })
-    @Parameter(name = "name", description = "Имя тура")
-    @GetMapping("/search")
-    public ResponseEntity<?> searchTours(@RequestParam(required = false) String name) {
-        return ResponseEntity.ok(tourService.searchTours(name));
-    }
-
-    @Operation(summary = "Фильтрация туров по категории, длительности и расстоянию")
-    @GetMapping("/filter")
-    public ResponseEntity<?> filterTours(
+    @GetMapping("/tours/search-filter")
+    public ResponseEntity<?> searchAndFilterTours(
+            @RequestParam(required = false) String query,
             @RequestParam(required = false) String category,
             @RequestParam(required = false) Integer minDuration,
             @RequestParam(required = false) Integer maxDuration,
             @RequestParam(required = false) Double minDistance,
-            @RequestParam(required = false) Double maxDistance
+            @RequestParam(required = false) Double maxDistance,
+            @RequestParam(defaultValue = "ru") String language
     ) {
         return ResponseEntity.ok(
-                tourService.filterTours(category, minDuration, maxDuration, minDistance, maxDistance)
+                tourService.searchAndFilterTours(query, category, minDuration, maxDuration, minDistance, maxDistance, language)
         );
     }
 }

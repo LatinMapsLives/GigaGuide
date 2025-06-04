@@ -6,13 +6,6 @@ data class SightInfo (
     var name: String,
     var description: String,
     var time: Int,
-    var imageLink: String
-) {
-    constructor(sight: Sight) : this(
-        id = sight.id,
-        name = sight.name,
-        description = sight.description,
-        time = sight.time,
-        imageLink = "dasdaas"
-    )
-}
+    var imageLink: String,
+    var city: String
+)

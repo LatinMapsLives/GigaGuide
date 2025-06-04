@@ -1,5 +1,6 @@
 package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -32,6 +33,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -223,7 +228,10 @@ fun TourPageScreen(
                             tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+
+                    var descVisible by remember { mutableStateOf(true) }
+
+                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(bottom = 20.dp)) {
                         Text(
                             text = stringResource(R.string.sight_page_screen_header_description),
                             style = MaterialTheme.typography.headlineSmall,
@@ -231,21 +239,25 @@ fun TourPageScreen(
                         )
                         Icon(
                             modifier = Modifier
+                                .clickable(onClick = {descVisible = !descVisible})
                                 .padding(horizontal = 10.dp)
-                                .width(30.dp),
-                            imageVector = ImageVector.vectorResource(R.drawable.chevron_down),
+                                .size(30.dp),
+                            imageVector = ImageVector.vectorResource(if (descVisible) R.drawable.chevron_down else R.drawable.chevron_right_big),
                             tint = MaterialTheme.colorScheme.onBackground,
                             contentDescription = "chevron down"
                         )
                     }
 
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 20.dp),
-                        text = tourPageScreenViewModel.tour.value!!.description,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
+
+                    AnimatedVisibility(modifier = Modifier.fillMaxWidth(), visible = descVisible) {
+                        Text(
+                            modifier = Modifier
+                                .padding(bottom = 20.dp)
+                                .fillMaxWidth(),
+                            text = tourPageScreenViewModel.tour.value!!.description,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                    }
 
 
                     Row(
@@ -354,6 +366,7 @@ fun TourPageScreen(
 @Composable
 fun SightListItem(
     modifier: Modifier = Modifier, value: SightTourThumbnail = SightTourThumbnail(
+        isTour = false,
         sightId = 0,
         name = "Тур по Воронежу",
         rating = 4.5f,

@@ -11,5 +11,7 @@ data class TourDTO (
     var type: String,
     var rating: Float,
     var imagePath: String,
-    var sights: List<PreviewSightDTO>
+    var sights: List<PreviewSightDTO>,
+    var latitude: Double,
+    var longitude: Double
 )

@@ -33,5 +33,9 @@ public class TourDto {
         BigDecimal rating;
         @Schema(description = "Имя файла картинки", example = "a0d3c84b-f1d1-40e0-81ba-fabffd0d5ed4.jpg")
         String imagePath;
+        @Schema(description = "Широта", example = "51.657333")
+        BigDecimal latitude;
+        @Schema(description = "Долгота", example = "39.216445")
+        BigDecimal longitude;
         List<PreviewSightDto> sights;
 }

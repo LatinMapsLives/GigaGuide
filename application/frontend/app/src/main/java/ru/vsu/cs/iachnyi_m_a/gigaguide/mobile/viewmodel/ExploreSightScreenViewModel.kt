@@ -19,6 +19,7 @@ import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.MapPoint
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.moment.MomentOnMap
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.MapRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.MomentRepository
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.LocaleManager
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
 
 @HiltViewModel
@@ -78,7 +79,7 @@ class ExploreSightScreenViewModel @Inject constructor(
         loadingRoute = true
 
         momentOnMaps.clear()
-        var loadedMoments = ServerUtils.executeNetworkCall { momentRepository.getSightMoments(sightId) }
+        var loadedMoments = ServerUtils.executeNetworkCall { momentRepository.getSightMoments(sightId, LocaleManager.currentLanguage) }
         if (loadedMoments != null) {
             for (momentInfo in loadedMoments) {
                 var mapPoint = ServerUtils.executeNetworkCall { mapRepository.getCoordinatesOfMoment(momentInfo.id) }

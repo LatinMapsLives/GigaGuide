@@ -5,7 +5,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -125,163 +124,169 @@ fun ExploreTourScreen(
         if (exploreTourScreenViewModel.player.isPlaying) exploreTourScreenViewModel.player.pause()
     }
     Box(modifier = Modifier.fillMaxSize()) {
-        AndroidView(modifier = Modifier.fillMaxSize(), factory = { context ->
-            MapView(context).apply {
-                setBuiltInZoomControls(false)
-                setMultiTouchControls(true)
-                controller.setZoom(16.0)
-                setTileSource(TileSourceFactory.MAPNIK)
-                Configuration.getInstance().userAgentValue = "GigaGuide"
-                if (dark) {
-                    this.overlayManager.tilesOverlay.setColorFilter(TilesOverlay.INVERT_COLORS)
-                }
-                addMapListener(object : MapListener {
-                    override fun onScroll(event: ScrollEvent?): Boolean {
-                        exploreTourScreenViewModel.center = getMapCenter(null) as GeoPoint
-                        return true
+        AndroidView(
+            modifier = Modifier
+                .clip(RoundedCornerShape(1.dp))
+                .fillMaxSize(),
+            factory = { context ->
+                MapView(context).apply {
+                    setBuiltInZoomControls(false)
+                    setMultiTouchControls(true)
+                    controller.setZoom(16.0)
+                    setTileSource(TileSourceFactory.MAPNIK)
+                    Configuration.getInstance().userAgentValue = "GigaGuide"
+                    if (dark) {
+                        this.overlayManager.tilesOverlay.setColorFilter(TilesOverlay.INVERT_COLORS)
                     }
-
-                    override fun onZoom(event: ZoomEvent?): Boolean {
-                        exploreTourScreenViewModel.zoom = zoomLevelDouble
-                        return false
-                    }
-                })
-            }
-        }, update = { view ->
-
-            exploreTourScreenViewModel.animateToCurrentLocationCallback = {
-                view.controller.animateTo(
-                    GeoPoint(
-                        exploreTourScreenViewModel.userLocation.value.latitude,
-                        exploreTourScreenViewModel.userLocation.value.longitude
-                    ),
-                    17.0,
-                    400
-                )
-            }
-
-            view.controller.setCenter(exploreTourScreenViewModel.center)
-            view.controller.setZoom(exploreTourScreenViewModel.zoom)
-
-            if (!exploreTourScreenViewModel.tourRoute.isEmpty()
-                && !exploreTourScreenViewModel.loadingTour
-            ) {
-                view.overlays.clear()
-                view.overlays.add(MapEventsOverlay(object : MapEventsReceiver {
-                    override fun singleTapConfirmedHelper(p: GeoPoint): Boolean {
-                        if (exploreTourScreenViewModel.momentIsSelected) {
-                            deselectMomentCallback.invoke()
-                        } else if (exploreTourScreenViewModel.exploringSight.value) {
-                            exploreTourScreenViewModel.exploringSight.value = false
-                        } else if (exploreTourScreenViewModel.sightIsSelected) {
-                            exploreTourScreenViewModel.sightIsSelected = false
+                    addMapListener(object : MapListener {
+                        override fun onScroll(event: ScrollEvent?): Boolean {
+                            exploreTourScreenViewModel.center = getMapCenter(null) as GeoPoint
+                            return true
                         }
-                        exploreTourScreenViewModel.player.pause()
-                        return false
-                    }
 
-                    override fun longPressHelper(p: GeoPoint?): Boolean {
-                        return false
-                    }
-                }))
+                        override fun onZoom(event: ZoomEvent?): Boolean {
+                            exploreTourScreenViewModel.zoom = zoomLevelDouble
+                            return false
+                        }
+                    })
+                }
+            },
+            update = { view ->
 
-                if (locationProvider.hasLocationPermissions()) {
-                    var userMarker = Marker(view)
-                    userMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
-                    userMarker.position = GeoPoint(
-                        exploreTourScreenViewModel.userLocation.value.latitude,
-                        exploreTourScreenViewModel.userLocation.value.longitude
+                view.overlays.clear()
+
+                exploreTourScreenViewModel.animateToCurrentLocationCallback = {
+                    view.controller.animateTo(
+                        GeoPoint(
+                            exploreTourScreenViewModel.userLocation.value.latitude,
+                            exploreTourScreenViewModel.userLocation.value.longitude
+                        ),
+                        17.0,
+                        400
                     )
-                    userMarker.icon = ResourcesCompat.getDrawable(
-                        view.resources,
-                        R.drawable.user_location_marker,
-                        null
-                    )
-                    view.overlays.add(userMarker)
                 }
 
-                var tourRouteLine = Polyline()
-                tourRouteLine.width = 5f
-                tourRouteLine.color =
-                    MediumBlue.copy(if (exploreTourScreenViewModel.exploringSight.value) 0.4f else 1f)
-                        .toArgb()
-                for (point in exploreTourScreenViewModel.tourRoute) {
-                    tourRouteLine.addPoint(GeoPoint(point.latitude, point.longitude))
-                }
-                view.overlays.add(tourRouteLine)
-                for (i in 0..exploreTourScreenViewModel.sightsOnMapInfos.size - 1) {
-                    var sightOnMapInfo = exploreTourScreenViewModel.sightsOnMapInfos[i]
-                    view.overlays.add(
-                        numberedMarker(
-                            number = i + 1,
-                            point = GeoPoint(sightOnMapInfo.latitude, sightOnMapInfo.longitude),
-                            selected = (exploreTourScreenViewModel.sightIsSelected || exploreTourScreenViewModel.exploringSight.value) && exploreTourScreenViewModel.selectedSightIndex.intValue == i,
-                            mapView = view,
-                            onClick = {
-                                exploreTourScreenViewModel.sightIsSelected = true
-                                exploreTourScreenViewModel.selectedSightIndex.intValue = i
-                                view.controller.animateTo(
-                                    GeoPoint(
-                                        sightOnMapInfo.latitude,
-                                        sightOnMapInfo.longitude
-                                    ), 18.0, 400
-                                )
-                            },
-                            alpha = if (exploreTourScreenViewModel.exploringSight.value) 0.4f else 1f
+                view.controller.setCenter(exploreTourScreenViewModel.center)
+                view.controller.setZoom(exploreTourScreenViewModel.zoom)
+
+                if (!exploreTourScreenViewModel.loadingTour
+                ) {
+                    view.overlays.add(MapEventsOverlay(object : MapEventsReceiver {
+                        override fun singleTapConfirmedHelper(p: GeoPoint): Boolean {
+                            if (exploreTourScreenViewModel.momentIsSelected) {
+                                deselectMomentCallback.invoke()
+                            } else if (exploreTourScreenViewModel.exploringSight.value) {
+                                exploreTourScreenViewModel.exploringSight.value = false
+                            } else if (exploreTourScreenViewModel.sightIsSelected) {
+                                exploreTourScreenViewModel.sightIsSelected = false
+                            }
+                            exploreTourScreenViewModel.player.pause()
+                            return false
+                        }
+
+                        override fun longPressHelper(p: GeoPoint?): Boolean {
+                            return false
+                        }
+                    }))
+
+                    if (locationProvider.hasLocationPermissions()) {
+                        var userMarker = Marker(view)
+                        userMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
+                        userMarker.position = GeoPoint(
+                            exploreTourScreenViewModel.userLocation.value.latitude,
+                            exploreTourScreenViewModel.userLocation.value.longitude
                         )
-                    )
-                }
-                if (exploreTourScreenViewModel.exploringSight.value) {
-                    var sightRouteLine = Polyline()
-                    sightRouteLine.width = 5f
-                    sightRouteLine.color =
-                        MediumBlue.toArgb()
-                    for (point in exploreTourScreenViewModel.sightRoutes[exploreTourScreenViewModel.selectedSightIndex.intValue]) {
-                        sightRouteLine.addPoint(GeoPoint(point.latitude, point.longitude))
+                        userMarker.icon = ResourcesCompat.getDrawable(
+                            view.resources,
+                            R.drawable.user_location_marker,
+                            null
+                        )
+                        view.overlays.add(userMarker)
                     }
-                    view.overlays.add(sightRouteLine)
-                    for (i in 0..exploreTourScreenViewModel.momentOnMaps[exploreTourScreenViewModel.selectedSightIndex.intValue].size - 1) {
-                        var momentOnMapInfo =
-                            exploreTourScreenViewModel.momentOnMaps[exploreTourScreenViewModel.selectedSightIndex.intValue][i]
+
+                    var tourRouteLine = Polyline()
+                    tourRouteLine.width = 8f
+                    tourRouteLine.color =
+                        MediumBlue.copy(if (exploreTourScreenViewModel.exploringSight.value) 0.4f else 1f)
+                            .toArgb()
+                    for (point in exploreTourScreenViewModel.tourRoute) {
+                        tourRouteLine.addPoint(GeoPoint(point.latitude, point.longitude))
+                    }
+                    view.overlays.add(tourRouteLine)
+
+                    for (i in 0..exploreTourScreenViewModel.sightsOnMapInfos.size - 1) {
+                        var sightOnMapInfo = exploreTourScreenViewModel.sightsOnMapInfos[i]
                         view.overlays.add(
                             numberedMarker(
                                 number = i + 1,
-                                point = GeoPoint(
-                                    momentOnMapInfo.latitude,
-                                    momentOnMapInfo.longitude
-                                ),
-                                selected = exploreTourScreenViewModel.momentIsSelected && exploreTourScreenViewModel.selectedMomentIndex.intValue == i,
+                                point = GeoPoint(sightOnMapInfo.latitude, sightOnMapInfo.longitude),
+                                selected = (exploreTourScreenViewModel.sightIsSelected || exploreTourScreenViewModel.exploringSight.value) && exploreTourScreenViewModel.selectedSightIndex.intValue == i,
                                 mapView = view,
                                 onClick = {
-                                    exploreTourScreenViewModel.momentIsSelected = true
-                                    exploreTourScreenViewModel.selectedMomentIndex.intValue = i
-                                    exploreTourScreenViewModel.needToAnimateTo =
+                                    exploreTourScreenViewModel.sightIsSelected = true
+                                    exploreTourScreenViewModel.selectedSightIndex.intValue = i
+                                    view.controller.animateTo(
                                         GeoPoint(
-                                            momentOnMapInfo.latitude,
-                                            momentOnMapInfo.longitude
-                                        )
-
-                                    exploreTourScreenViewModel.player.seekTo(
-                                        exploreTourScreenViewModel.indexesMap[exploreTourScreenViewModel.selectedSightIndex.intValue][i],
-                                        0
+                                            sightOnMapInfo.latitude,
+                                            sightOnMapInfo.longitude
+                                        ), 18.0, 400
                                     )
-                                    exploreTourScreenViewModel.player.playWhenReady = true
                                 },
-                                alpha = 1f
+                                alpha = if (exploreTourScreenViewModel.exploringSight.value) 0.4f else 1f
                             )
                         )
                     }
-                    if (exploreTourScreenViewModel.needToAnimateTo != null) {
-                        view.controller.animateTo(
-                            exploreTourScreenViewModel.needToAnimateTo!!,
-                            20.0,
-                            400
-                        )
-                        exploreTourScreenViewModel.needToAnimateTo = null
+                    if (exploreTourScreenViewModel.exploringSight.value) {
+                        var sightRouteLine = Polyline()
+                        sightRouteLine.width = 5f
+                        sightRouteLine.color =
+                            MediumBlue.toArgb()
+                        for (point in exploreTourScreenViewModel.sightRoutes[exploreTourScreenViewModel.selectedSightIndex.intValue]) {
+                            sightRouteLine.addPoint(GeoPoint(point.latitude, point.longitude))
+                        }
+                        view.overlays.add(sightRouteLine)
+                        for (i in 0..exploreTourScreenViewModel.momentOnMaps[exploreTourScreenViewModel.selectedSightIndex.intValue].size - 1) {
+                            var momentOnMapInfo =
+                                exploreTourScreenViewModel.momentOnMaps[exploreTourScreenViewModel.selectedSightIndex.intValue][i]
+                            view.overlays.add(
+                                numberedMarker(
+                                    number = i + 1,
+                                    point = GeoPoint(
+                                        momentOnMapInfo.latitude,
+                                        momentOnMapInfo.longitude
+                                    ),
+                                    selected = exploreTourScreenViewModel.momentIsSelected && exploreTourScreenViewModel.selectedMomentIndex.intValue == i,
+                                    mapView = view,
+                                    onClick = {
+                                        exploreTourScreenViewModel.momentIsSelected = true
+                                        exploreTourScreenViewModel.selectedMomentIndex.intValue = i
+                                        exploreTourScreenViewModel.needToAnimateTo =
+                                            GeoPoint(
+                                                momentOnMapInfo.latitude,
+                                                momentOnMapInfo.longitude
+                                            )
+
+                                        exploreTourScreenViewModel.player.seekTo(
+                                            exploreTourScreenViewModel.indexesMap[exploreTourScreenViewModel.selectedSightIndex.intValue][i],
+                                            0
+                                        )
+                                        exploreTourScreenViewModel.player.playWhenReady = true
+                                    },
+                                    alpha = 1f
+                                )
+                            )
+                        }
+                        if (exploreTourScreenViewModel.needToAnimateTo != null) {
+                            view.controller.animateTo(
+                                exploreTourScreenViewModel.needToAnimateTo!!,
+                                20.0,
+                                400
+                            )
+                            exploreTourScreenViewModel.needToAnimateTo = null
+                        }
                     }
                 }
-            }
-        })
+            })
         Button(
             onClick = { navController.popBackStack() },
             contentPadding = PaddingValues(6.dp),

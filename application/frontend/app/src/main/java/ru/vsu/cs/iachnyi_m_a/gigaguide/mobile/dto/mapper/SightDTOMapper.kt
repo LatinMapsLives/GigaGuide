@@ -11,7 +11,8 @@ class SightDTOMapper : Mapper<SightDTO, SightInfo> {
             name = value.name,
             description = value.description,
             time = 30,
-            imageLink = ServerUtils.imageLink(value.imagePath)
+            imageLink = ServerUtils.imageLink(value.imagePath),
+            city = value.city
         )
     }
 }

@@ -11,6 +11,8 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import ru.rogotovskiy.apigateway.service.JwtService;
 
+import java.util.List;
+
 @Component
 public class JwtAuthenticationFilter implements GlobalFilter {
 
@@ -26,7 +28,7 @@ public class JwtAuthenticationFilter implements GlobalFilter {
         String authHeader = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 
         if (!(authHeader != null && authHeader.startsWith("Bearer "))) {
-            if (isSecured(request)) {
+            if (isSecured(request) || isAdminOnly(request)) {
                 return onError(exchange, "Missing or invalid Authorization header", HttpStatus.UNAUTHORIZED);
             }
 
@@ -41,6 +43,12 @@ public class JwtAuthenticationFilter implements GlobalFilter {
             }
 
             String userId = jwtService.getUserId(token);
+            List<String> roles = jwtService.getRoles(token);
+
+            if (isAdminOnly(request) && !roles.contains("ROLE_ADMIN")) {
+                return onError(exchange, "Access denied: admin only", HttpStatus.FORBIDDEN);
+            }
+
             ServerHttpRequest modifiedRequest = request.mutate()
                     .header("X-User-Id", userId)
                     .build();
@@ -49,17 +57,22 @@ public class JwtAuthenticationFilter implements GlobalFilter {
         } catch (Exception e) {
             return onError(exchange, "Token validation failed", HttpStatus.UNAUTHORIZED);
         }
-}
+    }
 
 
-private Mono<Void> onError(ServerWebExchange exchange, String error, HttpStatus status) {
-    exchange.getResponse().setStatusCode(status);
-    return exchange.getResponse().setComplete();
-}
+    private Mono<Void> onError(ServerWebExchange exchange, String error, HttpStatus status) {
+        exchange.getResponse().setStatusCode(status);
+        return exchange.getResponse().setComplete();
+    }
 
-private boolean isSecured(ServerHttpRequest request) {
-    String path = request.getURI().getPath();
-    return path.startsWith("/api/user") ||
-            (path.startsWith("/api/reviews") && request.getMethod() != HttpMethod.GET);
-}
+    private boolean isSecured(ServerHttpRequest request) {
+        String path = request.getURI().getPath();
+        return path.startsWith("/api/user") ||
+                (path.startsWith("/api/reviews") && request.getMethod() != HttpMethod.GET);
+    }
+
+    private boolean isAdminOnly(ServerHttpRequest request) {
+        String path = request.getURI().getPath();
+        return path.startsWith("/api/tour-sight/admin") || path.startsWith("/api/reviews/admin");
+    }
 }

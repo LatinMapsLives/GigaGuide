@@ -26,7 +26,8 @@ public class FavoritesController {
             content = @Content(schema = @Schema(implementation = FavoritesDto.class))
     )
     @GetMapping
-    public ResponseEntity<?> getFavorites(@RequestHeader("X-User-Id") String userId) {
-        return ResponseEntity.ok(favoritesService.getAll(Integer.parseInt(userId)));
+    public ResponseEntity<?> getFavorites(@RequestHeader("X-User-Id") String userId,
+                                          @RequestParam(defaultValue = "ru") String language) {
+        return ResponseEntity.ok(favoritesService.getAll(Integer.parseInt(userId), language));
     }
 }

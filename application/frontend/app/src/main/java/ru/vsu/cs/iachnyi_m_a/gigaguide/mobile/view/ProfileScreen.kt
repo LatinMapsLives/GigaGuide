@@ -43,6 +43,11 @@ fun ProfileScreen(
     navController: NavController,
     profileScreenViewModel: ProfileScreenViewModel = hiltViewModel<ProfileScreenViewModel>()
 ) {
+
+    profileScreenViewModel.emailSuccess = stringResource(R.string.profile_screen_email_success)
+    profileScreenViewModel.passwordSuccess = stringResource(R.string.profile_screen_password_success)
+    profileScreenViewModel.usernameSuccess = stringResource(R.string.profile_screen_username_success)
+
     LaunchedEffect(Unit) {
         profileScreenViewModel.loadUserData()
     }
@@ -67,7 +72,7 @@ fun ProfileScreen(
                 modifier = Modifier
                     .weight(1f)
                     .padding(start = 10.dp),
-                text = "Информация профиля",
+                text = stringResource(R.string.profile_screen_header),
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.headlineSmall
             )
@@ -81,7 +86,7 @@ fun ProfileScreen(
 
         Text(
             modifier = Modifier.padding(vertical = 10.dp),
-            text = "Имя пользователя",
+            text = stringResource(R.string.profile_screen_username),
             color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.titleLarge
         )
@@ -130,7 +135,7 @@ fun ProfileScreen(
                         .weight(1f),
                     value = profileScreenViewModel.newUsername,
                     onValueChange = { profileScreenViewModel.newUsername = it },
-                    hint = "Новое имя",
+                    hint = stringResource(R.string.profile_screen_hint_new_name),
                     isPassword = false
                 )
                 EditUserDataButton(
@@ -146,8 +151,8 @@ fun ProfileScreen(
             }
         }
 
-        AnimatedVisibility( visible = profileScreenViewModel.usernameChangeError.isNotEmpty()) {
-            Text(modifier = Modifier.padding(bottom = 10.dp),color = Red, text = profileScreenViewModel.usernameChangeError)
+        AnimatedVisibility( visible = profileScreenViewModel.usernameChangeError != R.string.empty) {
+            Text(modifier = Modifier.padding(bottom = 10.dp),color = Red, text = stringResource(profileScreenViewModel.usernameChangeError))
         }
 
         GradientSeparator(
@@ -158,7 +163,7 @@ fun ProfileScreen(
 
         Text(
             modifier = Modifier.padding(vertical = 10.dp),
-            text = "Электронная почта",
+            text = stringResource(R.string.profile_screen_email),
             color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.titleLarge
         )
@@ -207,7 +212,7 @@ fun ProfileScreen(
                         .weight(1f),
                     value = profileScreenViewModel.newEmail,
                     onValueChange = { profileScreenViewModel.newEmail = it },
-                    hint = "Новая почта",
+                    hint = stringResource(R.string.profile_screen_hint_new_email),
                     isPassword = false
                 )
                 EditUserDataButton(
@@ -223,8 +228,8 @@ fun ProfileScreen(
             }
         }
 
-        AnimatedVisibility( visible = profileScreenViewModel.emailChangeError.isNotEmpty()) {
-            Text(modifier = Modifier.padding(bottom = 10.dp),color = Red, text = profileScreenViewModel.emailChangeError)
+        AnimatedVisibility( visible = profileScreenViewModel.emailChangeError != R.string.empty) {
+            Text(modifier = Modifier.padding(bottom = 10.dp),color = Red, text = stringResource(profileScreenViewModel.emailChangeError))
         }
 
         GradientSeparator(
@@ -235,7 +240,7 @@ fun ProfileScreen(
 
         Text(
             modifier = Modifier.padding(vertical = 10.dp),
-            text = "Пароль",
+            text = stringResource(R.string.profile_screen_password),
             color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.titleLarge
         )
@@ -269,7 +274,7 @@ fun ProfileScreen(
                         .fillMaxWidth(0.5f),
                     value = profileScreenViewModel.oldPassword,
                     onValueChange = { profileScreenViewModel.oldPassword = it },
-                    hint = "Текущий пароль",
+                    hint = stringResource(R.string.profile_screen_current_password),
                     isPassword = true
                 )
                 Row(
@@ -282,7 +287,7 @@ fun ProfileScreen(
                             .weight(1f),
                         value = profileScreenViewModel.newPassword,
                         onValueChange = { profileScreenViewModel.newPassword = it },
-                        hint = "Новый пароль",
+                        hint = stringResource(R.string.profile_screen_new_password),
                         isPassword = true
                     )
                     EditUserDataButton(
@@ -300,8 +305,8 @@ fun ProfileScreen(
             }
         }
 
-        AnimatedVisibility( visible = profileScreenViewModel.passwordChangeError.isNotEmpty()) {
-            Text(modifier = Modifier.padding(bottom = 10.dp),color = Red, text = profileScreenViewModel.passwordChangeError)
+        AnimatedVisibility( visible = profileScreenViewModel.passwordChangeError != R.string.empty) {
+            Text(modifier = Modifier.padding(bottom = 10.dp),color = Red, text = stringResource(profileScreenViewModel.passwordChangeError))
         }
 
         GradientSeparator(
@@ -311,7 +316,7 @@ fun ProfileScreen(
         )
 
         Text(
-            text = "Выйти",
+            text = stringResource(R.string.profile_screen_log_out),
             style = MaterialTheme.typography.titleMedium,
             color = Red,
             modifier = Modifier
@@ -335,6 +340,7 @@ fun EditUserDataTextField(
     isPassword: Boolean
 ) {
     TextField(
+        singleLine = true,
         value = value,
         onValueChange = onValueChange,
         colors = TextFieldDefaults.colors(

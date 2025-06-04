@@ -1,6 +1,5 @@
 package ru.rogotovskiy.toursight.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,7 +24,7 @@ import ru.rogotovskiy.toursight.service.MomentService;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/api/tour-sight/moments")
+@RequestMapping("/api/tour-sight")
 @RequiredArgsConstructor
 @Tag(name = "Моменты", description = "Методы для работы с моментами")
 public class MomentController {
@@ -33,9 +32,9 @@ public class MomentController {
     private final MomentService momentService;
 
     @Hidden
-    @GetMapping("/all")
-    public ResponseEntity<?> getAll() {
-        return ResponseEntity.ok(momentService.getAll());
+    @GetMapping("/moments/all")
+    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "ru") String language) {
+        return ResponseEntity.ok(momentService.getAll(language));
     }
 
     @Operation(summary = "Получить момент по ID")
@@ -58,9 +57,9 @@ public class MomentController {
             )
     })
     @Parameter(name = "id", description = "ID момента")
-    @GetMapping
-    public ResponseEntity<?> getMomentById(@RequestParam Integer id) {
-        return ResponseEntity.ok(momentService.getById(id));
+    @GetMapping("/moments")
+    public ResponseEntity<?> getMomentById(@RequestParam Integer id, @RequestParam(defaultValue = "ru") String language) {
+        return ResponseEntity.ok(momentService.getById(id, language));
     }
 
     @Operation(summary = "Получить список моментов по ID достопримечательности")
@@ -71,9 +70,10 @@ public class MomentController {
             )
     })
     @Parameter(name = "id", description = "ID достопримечательности")
-    @GetMapping("/sight")
-    public ResponseEntity<?> getMomentsBySightId(@RequestParam Integer sightId) {
-        return ResponseEntity.ok(momentService.getMomentsBySightId(sightId));
+    @GetMapping("/moments/sight")
+    public ResponseEntity<?> getMomentsBySightId(@RequestParam Integer sightId,
+                                                 @RequestParam(defaultValue = "ru") String language) {
+        return ResponseEntity.ok(momentService.getMomentsBySightId(sightId, language));
     }
 
     @Operation(summary = "Создать новый момент")
@@ -91,7 +91,7 @@ public class MomentController {
                     description = "Внутренняя ошибка сервера"
             )
     })
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/admin/moments", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createMoment(@RequestPart(value = "moment") String momentJson,
                                           @RequestPart(value = "image", required = false) MultipartFile image) {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -124,7 +124,7 @@ public class MomentController {
                     )
             )
     })
-    @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/admin/moments", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateMoment(@RequestParam(value = "moment") String momentUpdateJson,
                                           @RequestParam(value = "image", required = false) MultipartFile image) {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -157,7 +157,7 @@ public class MomentController {
                     )
             )
     })
-    @DeleteMapping
+    @DeleteMapping("/admin/moments")
     public ResponseEntity<?> deleteMoment(@RequestParam Integer id) {
         momentService.deleteMoment(id);
         return ResponseEntity.ok(new SuccessResponse("Момент удалён успешно"));

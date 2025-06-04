@@ -6,4 +6,5 @@ interface MapRepository {
     suspend fun getCoordinatedOfSight(sightId: Long): MapPoint?
     suspend fun getCoordinatesOfMoment(sightId: Long): MapPoint?
     suspend fun getRouteOfSight(sightId: Long): List<MapPoint>?
+    suspend fun getRouteOfTour(tourId: Long): List<MapPoint>?
 }

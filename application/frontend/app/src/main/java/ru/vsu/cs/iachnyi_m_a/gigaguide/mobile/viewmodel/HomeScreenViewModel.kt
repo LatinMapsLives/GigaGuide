@@ -9,10 +9,10 @@ import jakarta.inject.Inject
 import kotlinx.coroutines.launch
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.datastore.DataStoreManager
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.SightSearchResult
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.Sight
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.model.sight.SightTourThumbnail
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.repository.SightRepository
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.CurrentThemeSettings
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.LocaleManager
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.ServerUtils
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -24,8 +24,8 @@ class HomeScreenViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    var closestTours = mutableStateListOf<SightTourThumbnail>()
-    var popularTours = mutableStateListOf<SightTourThumbnail>()
+    var closestSights = mutableStateListOf<SightTourThumbnail>()
+    var popularSights = mutableStateListOf<SightTourThumbnail>()
     var loading = mutableStateOf<Boolean>(false)
 
     fun updateAppTheme() {
@@ -40,24 +40,20 @@ class HomeScreenViewModel @Inject constructor(
         viewModelScope.launch {
 
             var sightInfos: List<SightSearchResult>? =
-                ServerUtils.executeNetworkCall { sightRepository.search("") }
+                ServerUtils.executeNetworkCall { sightRepository.search("", LocaleManager.currentLanguage) }
 
-            closestTours.clear()
-            popularTours.clear()
+            if(sightInfos == null || sightInfos.isEmpty()) return@launch
+            closestSights.clear()
+            popularSights.clear()
             if (sightInfos != null) {
                 var currentLocation = dataStoreManager.getLastLocation()
-                closestTours.addAll(sightInfos.map {
+                closestSights.addAll(sightInfos.map {
+                    si ->
 
-                        si ->
-                    var proximity_coords = sqrt(
-                        (si.latitude - currentLocation.latitude).pow(2.0) + (si.longitude - currentLocation.longitude).pow(
-                            2.0
-                        )
-                    )
-
-                    var proximity_km = ((proximity_coords * 100) * 10).toInt() / 10f
+                    var proximity_km = proximityKm(si.latitude.toDouble(), si.longitude.toDouble(), currentLocation.latitude, currentLocation.longitude)
 
                     SightTourThumbnail(
+                        isTour = false,
                         sightId = si.id.toLong(),
                         name = si.name,
                         rating = si.rating,
@@ -66,13 +62,53 @@ class HomeScreenViewModel @Inject constructor(
                     )
                 });
 
-                closestTours.sortWith { s1, s2 -> s1.proximity.compareTo(s2.proximity) }
+                closestSights.sortWith { s1, s2 -> s1.proximity.compareTo(s2.proximity) }
+                if(closestSights.size >= 3) {
+                    var closestSlice = closestSights.slice(IntRange(0, 2));
+                    closestSights.clear()
+                    closestSights.addAll(closestSlice)
+                }
 
-                popularTours.addAll(closestTours)
-                popularTours.sortWith { s1, s2 -> s2.rating.compareTo(s1.rating) }
+                var sight1 = ServerUtils.executeNetworkCall { sightRepository.getSightInfoById(id = closestSights[0].sightId, language = LocaleManager.currentLanguage)}
+                if(sight1 == null) return@launch
+                var city = ServerUtils.executeNetworkCall { sightRepository.search(string = sight1.city, language = LocaleManager.currentLanguage) }
+                if(city != null){
+                    popularSights.addAll(city.map {
+                            si ->
+                        var proximity_km = proximityKm(si.latitude.toDouble(), si.longitude.toDouble(), currentLocation.latitude, currentLocation.longitude)
+
+                        SightTourThumbnail(
+                            isTour = false,
+                            sightId = si.id.toLong(),
+                            name = si.name,
+                            rating = si.rating,
+                            proximity = proximity_km,
+                            imageLink = si.imageLink
+                        )
+                    });
+                }
+
+                popularSights.sortWith { s1, s2 -> s2.rating.compareTo(s1.rating) }
+                if(popularSights.size >= 3) {
+                    var popularSlice = popularSights.slice(IntRange(0, 2));
+                    popularSights.clear()
+                    popularSights.addAll(popularSlice)
+                }
             }
             loading.value = false;
         }
     }
 
+}
+
+fun proximityKm(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Float{
+    var proximity_coords = sqrt(
+        (lat1 - lat2).pow(2.0) + (lon1 - lon2).pow(
+            2.0
+        )
+    )
+
+    var proximity_km = ((proximity_coords * 100) * 10).toInt() / 10f
+
+    return proximity_km
 }

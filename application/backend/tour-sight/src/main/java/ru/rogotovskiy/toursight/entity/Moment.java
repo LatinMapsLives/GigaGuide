@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "moments")
@@ -18,14 +20,8 @@ public class Moment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "name")
-    private String name;
-
     @Column(name = "order_number")
     private Integer orderNumber;
-
-    @Column(name = "content")
-    private String content;
 
     @Column(name = "image_url")
     private String imagePath;

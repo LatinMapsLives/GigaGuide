@@ -3,14 +3,12 @@ package ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -38,15 +36,13 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import kotlinx.coroutines.delay
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.R
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.HomeScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SearchScreenObject
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.navigation.SightPageScreenClass
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.GigaGuideMobileTheme
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.ui.theme.MediumBlue
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.CurrentThemeSettings
-import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.RememberLocale
+import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.util.LocaleManager
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.view.util.dropShadow
 import ru.vsu.cs.iachnyi_m_a.gigaguide.mobile.viewmodel.HomeScreenViewModel
 
@@ -60,7 +56,7 @@ fun HomeScreen(
         Modifier
             .fillMaxWidth()
     ) {
-        LaunchedEffect(Unit) {
+        LaunchedEffect(LocaleManager.recomposeFlag) {
             homeScreenViewModel.loadClosestTours()
             homeScreenViewModel.updateAppTheme()
         }
@@ -76,15 +72,15 @@ fun HomeScreen(
                     id = R.drawable.logo_dark
                 ),
                 contentScale = ContentScale.Fit,
-                contentDescription = "logo",
-                modifier = Modifier.fillMaxHeight()
+                contentDescription = null,
+                modifier = Modifier.weight(1f)
             )
             GigaGuideMobileTheme {
                 Button(
                     onClick = {},
                     contentPadding = PaddingValues(6.dp),
                     modifier = Modifier
-                        .defaultMinSize(minWidth = 1.dp, minHeight = 1.dp)
+                        .padding(start = 30.dp)
                         .fillMaxHeight()
                         .aspectRatio(1f)
                         .dropShadow(
@@ -145,7 +141,7 @@ fun HomeScreen(
                     LoadingThumbnailBox(modifier = Modifier.width(275.dp))
                 }
             } else {
-                for (sight in homeScreenViewModel.closestTours) {
+                for (sight in homeScreenViewModel.closestSights) {
                     Spacer(Modifier.width(20.dp))
                     SightTourThumbnailBox(
                         modifier = Modifier
@@ -190,7 +186,7 @@ fun HomeScreen(
                     LoadingThumbnailBox(modifier = Modifier.width(275.dp))
                 }
             } else {
-                for (sight in homeScreenViewModel.popularTours) {
+                for (sight in homeScreenViewModel.popularSights) {
                     Spacer(Modifier.width(20.dp))
                     SightTourThumbnailBox(modifier = Modifier
                         .width(275.dp)

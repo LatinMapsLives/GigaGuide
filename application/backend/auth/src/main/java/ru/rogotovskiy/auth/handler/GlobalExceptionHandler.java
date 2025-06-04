@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.rogotovskiy.auth.dto.ErrorResponse;
+import ru.rogotovskiy.auth.exception.AccessDeniedException;
 import ru.rogotovskiy.auth.exception.PasswordMismatchException;
 import ru.rogotovskiy.auth.exception.UserAlreadyExistsException;
 import ru.rogotovskiy.auth.exception.UserNotFoundException;
@@ -35,6 +36,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleUserAlreadyExistsException(UserAlreadyExistsException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(toErrorResponse(e));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(toErrorResponse(e));
     }
 
     private ErrorResponse toErrorResponse(Exception e) {
